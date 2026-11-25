@@ -1,0 +1,111 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:netherite_sword",
+    "minecraft:netherite_axe",
+    {
+      "id": "weaponsexpanded:netherite_battleaxe",
+      "required": false
+    },
+    {
+      "id": "weaponsexpanded:netherite_broadsword",
+      "required": false
+    },
+    {
+      "id": "weaponsexpanded:netherite_glaive",
+      "required": false
+    },
+    {
+      "id": "weaponsexpanded:netherite_greatsword",
+      "required": false
+    },
+    {
+      "id": "weaponsexpanded:netherite_halberd",
+      "required": false
+    },
+    {
+      "id": "weaponsexpanded:netherite_hammer",
+      "required": false
+    },
+    {
+      "id": "weaponsexpanded:netherite_hatchet",
+      "required": false
+    },
+    {
+      "id": "weaponsexpanded:netherite_katana",
+      "required": false
+    },
+    {
+      "id": "weaponsexpanded:netherite_longsword",
+      "required": false
+    },
+    {
+      "id": "weaponsexpanded:netherite_morningstar",
+      "required": false
+    },
+    {
+      "id": "weaponsexpanded:netherite_rapier",
+      "required": false
+    },
+    {
+      "id": "weaponsexpanded:netherite_scythe",
+      "required": false
+    },
+    {
+      "id": "weaponsexpanded:netherite_sickle",
+      "required": false
+    },
+    {
+      "id": "weaponsexpanded:netherite_warhammer",
+      "required": false
+    },
+    {
+      "id": "basicweapons:netherite_club",
+      "required": false
+    },
+    {
+      "id": "basicweapons:netherite_dagger",
+      "required": false
+    },
+    {
+      "id": "basicweapons:netherite_glaive",
+      "required": false
+    },
+    {
+      "id": "basicweapons:netherite_hammer",
+      "required": false
+    },
+    {
+      "id": "basicweapons:netherite_pike",
+      "required": false
+    },
+    {
+      "id": "basicweapons:netherite_quarterstaff",
+      "required": false
+    },
+    {
+      "id": "basicweapons:netherite_spear",
+      "required": false
+    },
+    {
+      "id": "expanded_weaponry:netherite_dagger",
+      "required": false
+    },
+    {
+      "id": "expanded_weaponry:netherite_greatsword",
+      "required": false
+    },
+    {
+      "id": "expanded_weaponry:netherite_hammer",
+      "required": false
+    },
+    {
+      "id": "expanded_weaponry:netherite_twin_blade_sword",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:netherite_morningstar",
+      "required": false
+    }
+  ]
+}

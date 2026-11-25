@@ -53,6 +53,10 @@
       "id": "#aerialhell:boss",
       "required": false
     },
-    "mms_dungeons:wraith"
+    "mms_dungeons:wraith",
+    {
+      "id": "uselessreptile:lightning_chaser",
+      "required": false
+    }
   ]
 }

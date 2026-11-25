@@ -1,0 +1,12 @@
+{
+  "type": "uselessreptile:lightning_chaser",
+  "base_taming_progress": 3,
+  "dragon_model": "uselessreptile:lightning_chaser/purple",
+  "equipment": "uselessreptile:lightning_chaser",
+  "food_items": {
+    "#minecraft:meat": 3
+  },
+  "name": "purple",
+  "spawn_conditions": "mms_dungeons:lightning_chaser/periculum",
+  "variant_name_key": "variant.uselessreptile.lightning_chaser.purple"
+}

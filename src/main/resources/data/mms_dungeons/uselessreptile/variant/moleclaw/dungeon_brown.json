@@ -1,0 +1,21 @@
+{
+  "type": "uselessreptile:moleclaw",
+  "base_taming_progress": 64,
+  "dragon_model": "uselessreptile:moleclaw/brown",
+  "equipment": "uselessreptile:moleclaw",
+  "food_items": {
+    "#c:foods/vegetable": 2
+  },
+  "name": "brown",
+  "spawn_conditions": "mms_dungeons:moleclaw/dungeon",
+  "taming_items": [
+    {
+      "item": "minecraft:beetroot",
+      "taming_progress_increase": [
+        1,
+        2
+      ]
+    }
+  ],
+  "variant_name_key": "variant.uselessreptile.moleclaw.brown"
+}

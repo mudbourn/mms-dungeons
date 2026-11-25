@@ -1,0 +1,13 @@
+[
+  {
+    "allowed_biomes": [
+      "#mms_dungeons:nether_infestation"
+    ],
+    "allowed_blocks": [
+      "#c:netherracks",
+      "#c:gravels",
+      "minecraft:magma_block"
+    ],
+    "weight": 4
+  }
+]

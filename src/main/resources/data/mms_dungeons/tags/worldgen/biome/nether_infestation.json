@@ -1,0 +1,30 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:nether_wastes",
+    "minecraft:crimson_forest",
+    "minecraft:warped_forest",
+    "minecraft:soul_sand_valley",
+    "minecraft:basalt_deltas",
+    {
+      "id": "netherdescent:arisian_undergrowth",
+      "required": false
+    },
+    {
+      "id": "netherdescent:crimson_gardens",
+      "required": false
+    },
+    {
+      "id": "netherdescent:embur_bog",
+      "required": false
+    },
+    {
+      "id": "netherdescent:sythian_torrids",
+      "required": false
+    },
+    {
+      "id": "netherdescent:wailing_garth",
+      "required": false
+    }
+  ]
+}

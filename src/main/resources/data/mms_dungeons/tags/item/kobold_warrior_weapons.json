@@ -3,6 +3,8 @@
   "values": [
     "#minecraft:axes",
     "minecraft:bow",
-    "minecraft:crossbow"
+    "minecraft:crossbow",
+    "#mms_dungeons:kobold_arms/axe",
+    "#mms_dungeons:kobold_arms/ranged"
   ]
 }

@@ -15,6 +15,7 @@
     "ItemEntityPortalMixin",
     "VoronoiGeneratorAccessor",
     "MonsterRoomMixin",
+    "PericulumFillBiomeMixin",
     "RandomStateAccessor",
     "SealedPocketMixin",
     "TowerPieceMixin"

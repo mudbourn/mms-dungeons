@@ -1,0 +1,23 @@
+{
+  "replace": false,
+  "values": [
+    "mms_dungeons:kobold_iron_sword",
+    "minecraft:iron_sword",
+    {
+      "id": "weaponsexpanded:iron_longsword",
+      "required": false
+    },
+    {
+      "id": "weaponsexpanded:iron_broadsword",
+      "required": false
+    },
+    {
+      "id": "weaponsexpanded:iron_katana",
+      "required": false
+    },
+    {
+      "id": "weaponsexpanded:iron_rapier",
+      "required": false
+    }
+  ]
+}

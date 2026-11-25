@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:crossbow",
+    {
+      "id": "weaponsexpanded:chain_crossbow",
+      "required": false
+    }
+  ]
+}

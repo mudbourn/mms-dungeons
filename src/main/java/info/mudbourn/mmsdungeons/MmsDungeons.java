@@ -3,6 +3,7 @@ package info.mudbourn.mmsdungeons;
 import info.mudbourn.mmsdungeons.aerialhell.AerialHellPortals;
 import info.mudbourn.mmsdungeons.corpse.Corpses;
 import info.mudbourn.mmsdungeons.dungeon.DungeonDimension;
+import info.mudbourn.mmsdungeons.dungeon.DungeonFishing;
 import info.mudbourn.mmsdungeons.guild.Guilds;
 import info.mudbourn.mmsdungeons.mobs.kobolds.Kobolds;
 import info.mudbourn.mmsdungeons.mobs.orpiment.Orpiment;
@@ -21,6 +22,7 @@ public final class MmsDungeons implements ModInitializer {
     @Override
     public void onInitialize() {
         DungeonDimension.register();
+        DungeonFishing.register();
         Parties.register();
         Guilds.register();
         Corpses.register();

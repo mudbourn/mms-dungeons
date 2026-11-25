@@ -20,7 +20,7 @@ public final class ForcedArrivals {
     }
 
     private static void onChange(ServerPlayer player, ServerLevel origin, ServerLevel destination) {
-        if (DungeonPortals.portalMove()) {
+        if (DungeonPortals.takePortalMove(player)) {
             return;
         }
         boolean entering = origin.dimension() == Level.OVERWORLD && DungeonDimension.isDungeon(destination);

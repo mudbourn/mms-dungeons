@@ -1,0 +1,14 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:netherite_axe",
+    {
+      "id": "weaponsexpanded:netherite_battleaxe",
+      "required": false
+    },
+    {
+      "id": "weaponsexpanded:netherite_hatchet",
+      "required": false
+    }
+  ]
+}

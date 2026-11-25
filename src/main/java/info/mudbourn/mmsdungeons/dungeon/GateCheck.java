@@ -1,5 +1,8 @@
 package info.mudbourn.mmsdungeons.dungeon;
 
+import net.minecraft.world.item.ProjectileWeaponItem;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.tags.EnchantmentTags;
 import info.mudbourn.mmsdungeons.MmsDungeons;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import java.util.Map;
@@ -14,75 +17,123 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.spell_engine.internals.container.SpellContainerSource;
 
-// The gear a player needs to pass a dungeon portal.
+// The gear a player needs to pass a dungeon portal, and the stronger gear needed to go down into the Deep Region.
+// Fighters are judged on their kit's defence and weapon stats, so any armor or weapon counts, modded or not.
+// Mages still need class gear: tier-2 or better for the portal, enchanted netherite-tier for the Deep Region.
 public final class GateCheck {
 
     public static final TagKey<Item> GATE_BOWS = TagKey.create(Registries.ITEM, MmsDungeons.id("gate_bows"));
     public static final TagKey<Item> GATE_MAGIC_ARMOR = TagKey.create(Registries.ITEM, MmsDungeons.id("gate_magic_armor"));
     public static final TagKey<Item> GATE_MAGIC_WEAPONS = TagKey.create(Registries.ITEM, MmsDungeons.id("gate_magic_weapons"));
     // Armor only found past the dungeon, so wearing it proves the player has been through. It fills its slot on either path.
+    // Tier-2 class gear and up, enough to pass the portal.
+    public static final TagKey<Item> ENTRY_MAGIC_ARMOR = TagKey.create(Registries.ITEM, MmsDungeons.id("gate_entry_magic_armor"));
+    public static final TagKey<Item> ENTRY_MAGIC_WEAPONS = TagKey.create(Registries.ITEM, MmsDungeons.id("gate_entry_magic_weapons"));
+    // Weapons of the same materials, which meet the Deep Region's weapon bar however they are enchanted.
+    public static final TagKey<Item> GATE_PROVEN_WEAPONS = TagKey.create(Registries.ITEM, MmsDungeons.id("gate_proven_weapons"));
     public static final TagKey<Item> GATE_PROVEN_ARMOR = TagKey.create(Registries.ITEM, MmsDungeons.id("gate_proven_armor"));
 
-    // Diamond armor points per slot, the floor for the fighter path.
-    private static final Map<EquipmentSlot, Double> DIAMOND_ARMOR = Map.of(
-        EquipmentSlot.HEAD, 3.0,
-        EquipmentSlot.CHEST, 8.0,
-        EquipmentSlot.LEGS, 6.0,
-        EquipmentSlot.FEET, 3.0
+    // Fighter path, judged on the stats of the kit rather than item IDs so any armor and weapon counts.
+    // Defence is armor plus armor toughness plus the levels of protection-type enchantments, summed over the worn
+    // pieces: about 15 for iron, 28 for diamond and 32 for netherite. The weapon score is the best weapon carried:
+    // a melee weapon's attack damage bonus plus its Sharpness-type damage, or 6 plus the highest enchantment level
+    // for a bow or crossbow.
+    private static final double ENTRY_DEFENCE = 15.0;
+    private static final double ENTRY_WEAPON = 5.0;
+    public static final double DEEP_DEFENCE = 30.0;
+    public static final double DEEP_WEAPON = 7.0;
+    private static final double RANGED_BASE = 6.0;
+    // A proven armor piece counts for at least a netherite piece in its slot, toughness included.
+    private static final Map<EquipmentSlot, Double> PROVEN_FLOOR = Map.of(
+        EquipmentSlot.HEAD, 6.0,
+        EquipmentSlot.CHEST, 11.0,
+        EquipmentSlot.LEGS, 9.0,
+        EquipmentSlot.FEET, 6.0
     );
-    // Attack damage a diamond sword adds over the bare hand.
-    private static final double DIAMOND_ATTACK = 6.0;
     private static final int MIN_BOOK_SPELLS = 2;
     private static final int MIN_STAFF_ENCHANT_LEVEL = 2;
 
     private GateCheck() {
     }
 
+    // Whether the player may pass a dungeon portal.
     public static boolean passes(ServerPlayer player) {
-        return passesFighter(player) || passesMage(player);
+        return passesFighter(player, ENTRY_DEFENCE, ENTRY_WEAPON)
+            || passesMage(player, ENTRY_MAGIC_ARMOR, ENTRY_MAGIC_WEAPONS, 0);
     }
 
-    private static boolean passesFighter(ServerPlayer player) {
-        for (Map.Entry<EquipmentSlot, Double> slot : DIAMOND_ARMOR.entrySet()) {
-            ItemStack piece = player.getItemBySlot(slot.getKey());
-            boolean strong = piece.isEnchanted() && armorPoints(piece, slot.getKey()) >= slot.getValue();
-            if (!strong && !piece.is(GATE_PROVEN_ARMOR)) {
-                return false;
-            }
-        }
-        for (ItemStack stack : player.getInventory().getNonEquipmentItems()) {
-            if (stack.isEnchanted() && (stack.is(GATE_BOWS) || attackBonus(stack) >= DIAMOND_ATTACK)) {
-                return true;
-            }
-        }
-        return player.getOffhandItem().isEnchanted() && player.getOffhandItem().is(GATE_BOWS);
+    // Whether the player may go below the Sanctuary Region into the Deep Region.
+    public static boolean passesDeep(ServerPlayer player) {
+        return passesFighter(player, DEEP_DEFENCE, DEEP_WEAPON)
+            || passesMage(player, GATE_MAGIC_ARMOR, GATE_MAGIC_WEAPONS, MIN_STAFF_ENCHANT_LEVEL);
     }
 
-    private static boolean passesMage(ServerPlayer player) {
-        for (EquipmentSlot slot : DIAMOND_ARMOR.keySet()) {
+    private static boolean passesFighter(ServerPlayer player, double defence, double weapon) {
+        return defence(player) >= defence && bestWeapon(player) >= weapon;
+    }
+
+    public static double defence(ServerPlayer player) {
+        double total = 0.0;
+        for (EquipmentSlot slot : PROVEN_FLOOR.keySet()) {
             ItemStack piece = player.getItemBySlot(slot);
-            boolean robe = piece.isEnchanted() && piece.is(GATE_MAGIC_ARMOR);
+            double score = attribute(piece, slot, Attributes.ARMOR) + attribute(piece, slot, Attributes.ARMOR_TOUGHNESS)
+                + enchantLevels(piece, EnchantmentTags.ARMOR_EXCLUSIVE);
+            total += piece.is(GATE_PROVEN_ARMOR) ? Math.max(score, PROVEN_FLOOR.get(slot)) : score;
+        }
+        return total;
+    }
+
+    public static double bestWeapon(ServerPlayer player) {
+        double best = weaponScore(player.getOffhandItem());
+        for (ItemStack stack : player.getInventory().getNonEquipmentItems()) {
+            best = Math.max(best, weaponScore(stack));
+        }
+        return best;
+    }
+
+    private static double weaponScore(ItemStack stack) {
+        if (stack.isEmpty()) {
+            return 0.0;
+        }
+        double floor = stack.is(GATE_PROVEN_WEAPONS) ? DEEP_WEAPON : 0.0;
+        return Math.max(floor, statScore(stack));
+    }
+
+    private static double statScore(ItemStack stack) {
+        if (stack.getItem() instanceof ProjectileWeaponItem) {
+            return RANGED_BASE + highestEnchantLevel(stack);
+        }
+        double bonus = attribute(stack, EquipmentSlot.MAINHAND, Attributes.ATTACK_DAMAGE);
+        int sharpness = maxEnchantLevel(stack, EnchantmentTags.DAMAGE_EXCLUSIVE);
+        return bonus + (sharpness > 0 ? 0.5 * sharpness + 0.5 : 0.0);
+    }
+
+    private static boolean passesMage(ServerPlayer player, TagKey<Item> robes, TagKey<Item> staves, int staffEnchantLevel) {
+        boolean enchanted = staffEnchantLevel > 0;
+        for (EquipmentSlot slot : PROVEN_FLOOR.keySet()) {
+            ItemStack piece = player.getItemBySlot(slot);
+            boolean robe = (!enchanted || piece.isEnchanted()) && piece.is(robes);
             if (!robe && !piece.is(GATE_PROVEN_ARMOR)) {
                 return false;
             }
         }
-        return hasStaff(player) && hasBook(player);
+        return hasStaff(player, staves, staffEnchantLevel) && hasBook(player);
     }
 
-    private static boolean hasStaff(ServerPlayer player) {
+    private static boolean hasStaff(ServerPlayer player, TagKey<Item> staves, int minEnchantLevel) {
         for (ItemStack stack : player.getInventory().getNonEquipmentItems()) {
-            if (stack.is(GATE_MAGIC_WEAPONS) && highestEnchantLevel(stack) >= MIN_STAFF_ENCHANT_LEVEL) {
+            if (stack.is(staves) && highestEnchantLevel(stack) >= minEnchantLevel) {
                 return true;
             }
         }
         ItemStack offhand = player.getOffhandItem();
-        return offhand.is(GATE_MAGIC_WEAPONS) && highestEnchantLevel(offhand) >= MIN_STAFF_ENCHANT_LEVEL;
+        return offhand.is(staves) && highestEnchantLevel(offhand) >= minEnchantLevel;
     }
 
     // Whether any equipped spell source other than a staff or wand holds enough spells to count as a book.
     private static boolean hasBook(ServerPlayer player) {
         for (SpellContainerSource.SourcedContainer source : SpellContainerSource.getSpellsOf(player).sources()) {
-            boolean isWeapon = source.itemStack().is(GATE_MAGIC_WEAPONS);
+            boolean isWeapon = source.itemStack().is(ENTRY_MAGIC_WEAPONS);
             if (!isWeapon && source.container().spell_ids().size() >= MIN_BOOK_SPELLS) {
                 return true;
             }
@@ -90,24 +141,36 @@ public final class GateCheck {
         return false;
     }
 
-    private static double armorPoints(ItemStack stack, EquipmentSlot slot) {
+
+
+    private static double attribute(ItemStack stack, EquipmentSlot slot, Holder<net.minecraft.world.entity.ai.attributes.Attribute> wanted) {
         double[] total = {0.0};
         stack.forEachModifier(slot, (attribute, modifier) -> {
-            if (attribute.equals(Attributes.ARMOR)) {
+            if (attribute.equals(wanted) && modifier.operation() == AttributeModifier.Operation.ADD_VALUE) {
                 total[0] += modifier.amount();
             }
         });
         return total[0];
     }
 
-    private static double attackBonus(ItemStack stack) {
-        double[] total = {0.0};
-        stack.forEachModifier(EquipmentSlot.MAINHAND, (attribute, modifier) -> {
-            if (attribute.equals(Attributes.ATTACK_DAMAGE)) {
-                total[0] += modifier.amount();
+    private static int enchantLevels(ItemStack stack, TagKey<Enchantment> tag) {
+        int total = 0;
+        for (Object2IntMap.Entry<Holder<Enchantment>> entry : stack.getEnchantments().entrySet()) {
+            if (entry.getKey().is(tag)) {
+                total += entry.getIntValue();
             }
-        });
-        return total[0];
+        }
+        return total;
+    }
+
+    private static int maxEnchantLevel(ItemStack stack, TagKey<Enchantment> tag) {
+        int highest = 0;
+        for (Object2IntMap.Entry<Holder<Enchantment>> entry : stack.getEnchantments().entrySet()) {
+            if (entry.getKey().is(tag)) {
+                highest = Math.max(highest, entry.getIntValue());
+            }
+        }
+        return highest;
     }
 
     private static int highestEnchantLevel(ItemStack stack) {

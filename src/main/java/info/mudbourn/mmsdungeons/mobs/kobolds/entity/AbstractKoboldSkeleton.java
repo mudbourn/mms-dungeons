@@ -1,5 +1,12 @@
 package info.mudbourn.mmsdungeons.mobs.kobolds.entity;
 
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.BowItem;
+import net.minecraft.world.entity.ai.goal.RangedBowAttackGoal;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import info.mudbourn.mmsdungeons.mobs.kobolds.ai.KoboldCrossbowGoal;
+import info.mudbourn.mmsdungeons.mobs.kobolds.ai.KoboldBowGoal;
+import info.mudbourn.mmsdungeons.mobs.kobolds.KoboldArms;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -26,8 +33,32 @@ public abstract class AbstractKoboldSkeleton extends AbstractSkeleton implements
         EntityDataSerializers.BOOLEAN
     );
 
+    private KoboldCrossbowGoal<AbstractKoboldSkeleton> crossbowGoal;
+    private KoboldBowGoal<AbstractKoboldSkeleton> bowGoal;
+
     protected AbstractKoboldSkeleton(EntityType<? extends AbstractKoboldSkeleton> type, Level level) {
         super(type, level);
+    }
+
+    // Vanilla skeleton AI only shoots the vanilla bow and treats anything else as a melee weapon. Skelebolds shoot
+    // any crossbow or bow they hold, longbows and chain crossbows included.
+    @Override
+    public void reassessWeaponGoal() {
+        super.reassessWeaponGoal();
+        if (this.level() == null || this.level().isClientSide()) {
+            return;
+        }
+        if (this.crossbowGoal == null) {
+            this.crossbowGoal = new KoboldCrossbowGoal<>(this, 1.0, 12.0f);
+            this.bowGoal = new KoboldBowGoal<>(this, 1.0, 20, 15.0f);
+        }
+        this.goalSelector.removeGoal(this.crossbowGoal);
+        this.goalSelector.removeGoal(this.bowGoal);
+        Item held = this.getMainHandItem().getItem();
+        if (held instanceof CrossbowItem || held instanceof BowItem) {
+            this.goalSelector.removeAllGoals(goal -> goal instanceof MeleeAttackGoal || goal instanceof RangedBowAttackGoal);
+            this.goalSelector.addGoal(4, held instanceof CrossbowItem ? this.crossbowGoal : this.bowGoal);
+        }
     }
 
     @Override
@@ -74,7 +105,7 @@ public abstract class AbstractKoboldSkeleton extends AbstractSkeleton implements
 
     @Override
     protected void populateDefaultEquipmentSlots(RandomSource random, DifficultyInstance difficulty) {
-        this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.CROSSBOW));
+        this.setItemSlot(EquipmentSlot.MAINHAND, KoboldArms.ranged(false, random));
         this.setDropChance(EquipmentSlot.MAINHAND, 0.15f);
     }
 

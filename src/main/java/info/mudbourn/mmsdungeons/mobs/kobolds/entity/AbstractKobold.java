@@ -1,5 +1,7 @@
 package info.mudbourn.mmsdungeons.mobs.kobolds.entity;
 
+import net.minecraft.world.item.BowItem;
+import info.mudbourn.mmsdungeons.mobs.kobolds.KoboldArms;
 import info.mudbourn.mmsdungeons.MmsDungeons;
 import info.mudbourn.mmsdungeons.mobs.kobolds.KoboldItems;
 import info.mudbourn.mmsdungeons.mobs.kobolds.KoboldMobs;
@@ -151,7 +153,7 @@ public abstract class AbstractKobold extends AgeableMob implements CrossbowAttac
         ItemStack weapon = this.getItemInHand(this.rangedHand());
         if (weapon.getItem() instanceof CrossbowItem) {
             this.performCrossbowAttack(this, 2.0f);
-        } else if (weapon.is(Items.BOW)) {
+        } else if (weapon.getItem() instanceof BowItem) {
             AbstractArrow arrow = ProjectileUtil.getMobArrow(this, this.getProjectile(weapon), power, weapon);
             this.shootAt(arrow, target);
             this.playSound(SoundEvents.SKELETON_SHOOT, 1.0f, 1.0f / (this.getRandom().nextFloat() * 0.4f + 0.8f));
@@ -180,7 +182,7 @@ public abstract class AbstractKobold extends AgeableMob implements CrossbowAttac
     // The hand holding a ranged weapon, off hand when the main hand holds none.
     private InteractionHand rangedHand() {
         ItemStack main = this.getMainHandItem();
-        boolean ranged = main.getItem() instanceof CrossbowItem || main.is(Items.BOW) || main.is(Items.TRIDENT);
+        boolean ranged = main.getItem() instanceof CrossbowItem || main.getItem() instanceof BowItem || main.is(Items.TRIDENT);
         return ranged ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
     }
 
@@ -401,15 +403,17 @@ public abstract class AbstractKobold extends AgeableMob implements CrossbowAttac
     @Override
     protected void populateDefaultEquipmentSlots(RandomSource random, DifficultyInstance difficulty) {
         if (this instanceof KoboldWarrior) {
-            this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(KoboldItems.KOBOLD_IRON_AXE));
+            this.setItemSlot(EquipmentSlot.MAINHAND, KoboldArms.melee(KoboldArms.Family.AXE, KoboldArms.IRON, random));
             this.setItemSlot(EquipmentSlot.OFFHAND, new ItemStack(Items.SHIELD));
         } else if (this instanceof KoboldRascal || this instanceof KoboldCaptain) {
-            this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(KoboldItems.KOBOLD_IRON_SWORD));
+            this.setItemSlot(EquipmentSlot.MAINHAND, KoboldArms.melee(KoboldArms.Family.SWORD, KoboldArms.IRON, random));
         } else if (this instanceof KoboldEngineer) {
-            this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.CROSSBOW));
+            this.setItemSlot(EquipmentSlot.MAINHAND, KoboldArms.ranged(true, random));
         } else if (this instanceof Kobold) {
-            Item weapon = random.nextFloat() >= 0.6f ? Items.CROSSBOW : KoboldItems.KOBOLD_IRON_SWORD;
-            this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(weapon));
+            ItemStack weapon = random.nextFloat() >= 0.6f
+                ? KoboldArms.ranged(false, random)
+                : KoboldArms.melee(KoboldArms.Family.SWORD, KoboldArms.IRON, random);
+            this.setItemSlot(EquipmentSlot.MAINHAND, weapon);
         }
         this.primary = this.getMainHandItem();
         if (this.getType() == KoboldMobs.KOBOLD_PIRATE && random.nextFloat() >= 0.75f) {

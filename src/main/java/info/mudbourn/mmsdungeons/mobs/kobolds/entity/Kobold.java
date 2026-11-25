@@ -26,8 +26,8 @@ public class Kobold extends AbstractKobold {
         this.goalSelector.addGoal(1, new KoboldPotionGoal(this));
         this.goalSelector.addGoal(1, new KoboldShieldGoal(this));
         this.goalSelector.addGoal(1, new KoboldTridentGoal(this, 1.0, 40, 12.0f));
-        this.goalSelector.addGoal(1, new KoboldCrossbowGoal(this, 1.0, 12.0f));
-        this.goalSelector.addGoal(1, new KoboldBowGoal(this, 1.0, 20, 15.0f));
+        this.goalSelector.addGoal(1, new KoboldCrossbowGoal<>(this, 1.0, 12.0f));
+        this.goalSelector.addGoal(1, new KoboldBowGoal<>(this, 1.0, 20, 15.0f));
         this.goalSelector.addGoal(1, new KoboldTradeGoal(this, "trader_loot"));
         this.goalSelector.addGoal(1, new KoboldWarriorGoal(this));
         this.goalSelector.addGoal(2, new KoboldMeleeGoal(this, 1.2, false));

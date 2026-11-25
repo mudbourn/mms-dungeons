@@ -1,0 +1,14 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:diamond_axe",
+    {
+      "id": "weaponsexpanded:diamond_battleaxe",
+      "required": false
+    },
+    {
+      "id": "weaponsexpanded:diamond_hatchet",
+      "required": false
+    }
+  ]
+}

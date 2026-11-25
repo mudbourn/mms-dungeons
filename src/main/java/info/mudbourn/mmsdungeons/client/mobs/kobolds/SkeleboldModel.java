@@ -1,5 +1,6 @@
 package info.mudbourn.mmsdungeons.client.mobs.kobolds;
 
+import net.minecraft.world.item.BowItem;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.CubeListBuilder;
@@ -64,7 +65,7 @@ public class SkeleboldModel<S extends KoboldRenderState> extends KoboldModel<S> 
         }
         float side = state.isLeftHanded() ? -1.0f : 1.0f;
         if (state.isAggressive) {
-            if (held.is(Items.BOW)) {
+            if (held.getItem() instanceof BowItem) {
                 this.aim(this.mainArm(state), this.offArm(state), side, false);
             } else {
                 this.mainArm(state).xRot = -2.0944f;

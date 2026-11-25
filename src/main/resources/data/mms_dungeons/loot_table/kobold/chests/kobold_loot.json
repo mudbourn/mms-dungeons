@@ -198,18 +198,6 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:diamond_sword",
-          "weight": 3,
-          "functions": [
-            {
-              "function": "minecraft:enchant_with_levels",
-              "levels": 20,
-              "options": "#minecraft:on_random_loot"
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
           "name": "minecraft:diamond_pickaxe",
           "weight": 3,
           "functions": [
@@ -327,18 +315,6 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:diamond_sword",
-          "weight": 3,
-          "functions": [
-            {
-              "function": "minecraft:enchant_with_levels",
-              "levels": 30,
-              "options": "#minecraft:on_random_loot"
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
           "name": "minecraft:golden_apple",
           "weight": 4,
           "functions": [
@@ -402,6 +378,134 @@
         {
           "type": "minecraft:empty",
           "weight": 10
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "conditions": [
+        {
+          "condition": "minecraft:location_check",
+          "predicate": {
+            "position": {
+              "y": {
+                "max": 41
+              }
+            }
+          }
+        },
+        {
+          "condition": "minecraft:random_chance",
+          "chance": 0.5
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:tag",
+          "expand": true,
+          "weight": 1,
+          "functions": [
+            {
+              "function": "minecraft:enchant_with_levels",
+              "levels": 20,
+              "options": "#minecraft:on_random_loot"
+            }
+          ],
+          "items": "#mms_dungeons:kobold_loot/weapons_diamond"
+        },
+        {
+          "type": "minecraft:tag",
+          "expand": true,
+          "weight": 1,
+          "functions": [
+            {
+              "function": "minecraft:enchant_with_levels",
+              "levels": 20,
+              "options": "#minecraft:on_random_loot"
+            }
+          ],
+          "items": "#mms_dungeons:kobold_loot/ranged"
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "conditions": [
+        {
+          "condition": "minecraft:location_check",
+          "predicate": {
+            "position": {
+              "y": {
+                "max": -44
+              }
+            }
+          }
+        },
+        {
+          "condition": "minecraft:random_chance",
+          "chance": 0.6
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:tag",
+          "expand": true,
+          "weight": 1,
+          "functions": [
+            {
+              "function": "minecraft:enchant_with_levels",
+              "levels": 30,
+              "options": "#minecraft:on_random_loot"
+            }
+          ],
+          "items": "#mms_dungeons:kobold_loot/weapons_diamond"
+        },
+        {
+          "type": "minecraft:tag",
+          "expand": true,
+          "weight": 1,
+          "functions": [
+            {
+              "function": "minecraft:enchant_with_levels",
+              "levels": 30,
+              "options": "#minecraft:on_random_loot"
+            }
+          ],
+          "items": "#mms_dungeons:kobold_loot/ranged"
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "conditions": [
+        {
+          "condition": "minecraft:location_check",
+          "predicate": {
+            "position": {
+              "y": {
+                "max": -101
+              }
+            }
+          }
+        },
+        {
+          "condition": "minecraft:random_chance",
+          "chance": 0.35
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:tag",
+          "expand": true,
+          "weight": 1,
+          "functions": [
+            {
+              "function": "minecraft:enchant_with_levels",
+              "levels": 30,
+              "options": "#minecraft:on_random_loot"
+            }
+          ],
+          "items": "#mms_dungeons:kobold_loot/weapons_netherite"
         }
       ]
     }

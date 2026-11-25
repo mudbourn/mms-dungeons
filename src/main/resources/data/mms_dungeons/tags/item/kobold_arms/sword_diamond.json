@@ -1,0 +1,22 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:diamond_sword",
+    {
+      "id": "weaponsexpanded:diamond_longsword",
+      "required": false
+    },
+    {
+      "id": "weaponsexpanded:diamond_broadsword",
+      "required": false
+    },
+    {
+      "id": "weaponsexpanded:diamond_katana",
+      "required": false
+    },
+    {
+      "id": "weaponsexpanded:diamond_rapier",
+      "required": false
+    }
+  ]
+}

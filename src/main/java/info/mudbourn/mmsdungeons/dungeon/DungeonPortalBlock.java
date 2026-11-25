@@ -10,17 +10,20 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.Portal;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.gamerules.GameRules;
+import net.minecraft.world.level.portal.TeleportTransition;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-// The portal block inside a bedrock frame, drawn like the end portal. Walking into it starts dungeon travel.
-public class DungeonPortalBlock extends Block implements EntityBlock {
+// The portal block inside a bedrock frame, drawn like the end portal. Standing in it travels like a nether portal.
+public class DungeonPortalBlock extends Block implements EntityBlock, Portal {
 
     // The axis the portal faces, so it can lie in any of the three planes.
     public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.AXIS;
@@ -68,8 +71,29 @@ public class DungeonPortalBlock extends Block implements EntityBlock {
         InsideBlockEffectApplier effects,
         boolean intersects
     ) {
-        if (level instanceof ServerLevel serverLevel && entity instanceof ServerPlayer player) {
-            DungeonPortals.onEnter(player, serverLevel, pos);
+        if (entity instanceof ServerPlayer && entity.canUsePortal(false)) {
+            entity.setAsInsidePortal(this, pos);
         }
+    }
+
+    @Override
+    public int getPortalTransitionTime(ServerLevel level, Entity entity) {
+        if (entity instanceof ServerPlayer player) {
+            int delay = player.getAbilities().invulnerable
+                ? level.getGameRules().get(GameRules.PLAYERS_NETHER_PORTAL_CREATIVE_DELAY)
+                : level.getGameRules().get(GameRules.PLAYERS_NETHER_PORTAL_DEFAULT_DELAY);
+            return Math.max(0, delay);
+        }
+        return 0;
+    }
+
+    @Override
+    public TeleportTransition getPortalDestination(ServerLevel level, Entity entity, BlockPos pos) {
+        return entity instanceof ServerPlayer player ? DungeonPortals.destination(player, level, pos) : null;
+    }
+
+    @Override
+    public Transition getLocalTransition() {
+        return Transition.CONFUSION;
     }
 }

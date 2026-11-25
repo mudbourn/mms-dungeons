@@ -1,0 +1,22 @@
+{
+  "type": "uselessreptile:magmamuncher",
+  "base_taming_progress": 12,
+  "dragon_model": "uselessreptile:magmamuncher/magma",
+  "equipment": "uselessreptile:empty",
+  "food_items": {
+    "minecraft:magma_block": 4,
+    "minecraft:magma_cream": 2
+  },
+  "name": "magma",
+  "spawn_conditions": "mms_dungeons:magmamuncher/nether_infestation",
+  "taming_items": [
+    {
+      "item": "minecraft:blaze_rod",
+      "taming_progress_increase": [
+        1,
+        3
+      ]
+    }
+  ],
+  "variant_name_key": "variant.uselessreptile.magmamuncher.magma"
+}

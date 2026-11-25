@@ -1,5 +1,6 @@
 package info.mudbourn.mmsdungeons.client.mobs.kobolds;
 
+import net.minecraft.world.item.BowItem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
@@ -139,7 +140,7 @@ public class KoboldModel<S extends KoboldRenderState> extends HumanoidModel<S> {
         ModelPart main = this.mainArm(state);
         ModelPart off = this.offArm(state);
         float side = state.isLeftHanded() ? -1.0f : 1.0f;
-        if (held.getItem() instanceof CrossbowItem || held.is(Items.BOW)) {
+        if (held.getItem() instanceof CrossbowItem || held.getItem() instanceof BowItem) {
             if (state.isAggressive) {
                 this.aim(main, off, side, state.isCharging);
             }

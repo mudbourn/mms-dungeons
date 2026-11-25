@@ -1,5 +1,11 @@
 package info.mudbourn.mmsdungeons.mobs.kobolds.entity;
 
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.CrossbowItem;
+import net.minecraft.world.entity.ai.goal.ZombieAttackGoal;
+import net.minecraft.world.entity.monster.CrossbowAttackMob;
+import info.mudbourn.mmsdungeons.mobs.kobolds.ai.KoboldCrossbowGoal;
+import info.mudbourn.mmsdungeons.mobs.kobolds.KoboldArms;
 import info.mudbourn.mmsdungeons.mobs.kobolds.KoboldItems;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -27,7 +33,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jspecify.annotations.Nullable;
 
-public abstract class AbstractKoboldZombie extends Zombie {
+public abstract class AbstractKoboldZombie extends Zombie implements CrossbowAttackMob {
 
     private static final EntityDataAccessor<Boolean> DATA_CONVERTING = SynchedEntityData.defineId(
         AbstractKoboldZombie.class,
@@ -39,9 +45,49 @@ public abstract class AbstractKoboldZombie extends Zombie {
     );
 
     private int convert;
+    private KoboldCrossbowGoal<AbstractKoboldZombie> crossbowGoal;
 
     protected AbstractKoboldZombie(EntityType<? extends AbstractKoboldZombie> type, Level level) {
         super(type, level);
+    }
+
+    // Zombie AI only fights in melee, so a zombold holding a crossbow swaps its melee goal for a crossbow one.
+    private void reassessWeaponGoal() {
+        if (this.level() == null || this.level().isClientSide()) {
+            return;
+        }
+        if (this.crossbowGoal == null) {
+            this.crossbowGoal = new KoboldCrossbowGoal<>(this, 1.0, 12.0f);
+        }
+        this.goalSelector.removeGoal(this.crossbowGoal);
+        if (this.getMainHandItem().getItem() instanceof CrossbowItem) {
+            this.goalSelector.removeAllGoals(goal -> goal instanceof ZombieAttackGoal);
+            this.goalSelector.addGoal(2, this.crossbowGoal);
+        } else if (this.goalSelector.getAvailableGoals().stream().noneMatch(wrapped -> wrapped.getGoal() instanceof ZombieAttackGoal)) {
+            this.goalSelector.addGoal(2, new ZombieAttackGoal(this, 1.0, false));
+        }
+    }
+
+    @Override
+    public void setItemSlot(EquipmentSlot slot, ItemStack stack) {
+        super.setItemSlot(slot, stack);
+        if (slot == EquipmentSlot.MAINHAND) {
+            this.reassessWeaponGoal();
+        }
+    }
+
+    @Override
+    public void performRangedAttack(LivingEntity target, float power) {
+        this.performCrossbowAttack(this, 1.6f);
+    }
+
+    @Override
+    public void onCrossbowAttackPerformed() {
+        this.noActionTime = 0;
+    }
+
+    @Override
+    public void setChargingCrossbow(boolean charging) {
     }
 
     @Override
@@ -63,6 +109,7 @@ public abstract class AbstractKoboldZombie extends Zombie {
         super.readAdditionalSaveData(input);
         this.setZomboType(ZomboType.byId(input.getStringOr("ZomboType", ZomboType.BASE.id())));
         this.convert = input.getIntOr("Convert", 0);
+        this.reassessWeaponGoal();
     }
 
     @Override
@@ -149,14 +196,16 @@ public abstract class AbstractKoboldZombie extends Zombie {
     protected void populateDefaultEquipmentSlots(RandomSource random, DifficultyInstance difficulty) {
         switch (this.getZomboType()) {
             case WARRIOR -> {
-                this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(KoboldItems.KOBOLD_IRON_AXE));
+                this.setItemSlot(EquipmentSlot.MAINHAND, KoboldArms.melee(KoboldArms.Family.AXE, KoboldArms.IRON, random));
                 this.setItemSlot(EquipmentSlot.OFFHAND, new ItemStack(Items.SHIELD));
             }
-            case PIRATE_CAPTAIN -> this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(KoboldItems.KOBOLD_IRON_SWORD));
-            case ENGINEER -> this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.CROSSBOW));
+            case PIRATE_CAPTAIN -> this.setItemSlot(EquipmentSlot.MAINHAND, KoboldArms.melee(KoboldArms.Family.SWORD, KoboldArms.IRON, random));
+            case ENGINEER -> this.setItemSlot(EquipmentSlot.MAINHAND, KoboldArms.ranged(true, random));
             case BASE, PIRATE -> this.setItemSlot(
                 EquipmentSlot.MAINHAND,
-                new ItemStack(random.nextFloat() >= 0.6f ? Items.CROSSBOW : KoboldItems.KOBOLD_IRON_SWORD)
+                random.nextFloat() >= 0.6f
+                    ? KoboldArms.ranged(true, random)
+                    : KoboldArms.melee(KoboldArms.Family.SWORD, KoboldArms.IRON, random)
             );
             default -> {
             }

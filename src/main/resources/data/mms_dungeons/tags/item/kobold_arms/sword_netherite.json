@@ -1,0 +1,22 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:netherite_sword",
+    {
+      "id": "weaponsexpanded:netherite_longsword",
+      "required": false
+    },
+    {
+      "id": "weaponsexpanded:netherite_broadsword",
+      "required": false
+    },
+    {
+      "id": "weaponsexpanded:netherite_katana",
+      "required": false
+    },
+    {
+      "id": "weaponsexpanded:netherite_rapier",
+      "required": false
+    }
+  ]
+}

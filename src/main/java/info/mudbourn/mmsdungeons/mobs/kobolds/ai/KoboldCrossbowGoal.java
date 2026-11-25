@@ -1,6 +1,10 @@
 package info.mudbourn.mmsdungeons.mobs.kobolds.ai;
 
-import info.mudbourn.mmsdungeons.mobs.kobolds.entity.AbstractKobold;
+import java.util.function.Predicate;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.monster.CrossbowAttackMob;
+import net.minecraft.world.entity.Mob;
 import java.util.EnumSet;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.util.TimeUtil;
@@ -12,12 +16,12 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.ChargedProjectiles;
 
 // Closes to range, loads a held crossbow, waits a beat and fires at the target.
-public class KoboldCrossbowGoal extends Goal {
+public class KoboldCrossbowGoal<T extends Mob & CrossbowAttackMob> extends Goal {
 
     private static final UniformInt PATH_DELAY = TimeUtil.rangeOfSeconds(1, 2);
     private static final int MIN_SIGHT_TICKS = 5;
 
-    private final AbstractKobold mob;
+    private final T mob;
     private final double speed;
     private final float radiusSqr;
     private State state = State.UNCHARGED;
@@ -25,7 +29,7 @@ public class KoboldCrossbowGoal extends Goal {
     private int attackDelay;
     private int pathDelay;
 
-    public KoboldCrossbowGoal(AbstractKobold mob, double speed, float radius) {
+    public KoboldCrossbowGoal(T mob, double speed, float radius) {
         this.mob = mob;
         this.speed = speed;
         this.radiusSqr = radius * radius;
@@ -34,12 +38,12 @@ public class KoboldCrossbowGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        return this.hasTarget() && this.mob.isHolding(Items.CROSSBOW);
+        return this.hasTarget() && this.mob.isHolding(stack -> stack.getItem() instanceof CrossbowItem);
     }
 
     @Override
     public boolean canContinueToUse() {
-        return this.hasTarget() && (this.canUse() || !this.mob.getNavigation().isDone()) && this.mob.isHolding(Items.CROSSBOW);
+        return this.hasTarget() && (this.canUse() || !this.mob.getNavigation().isDone()) && this.mob.isHolding(stack -> stack.getItem() instanceof CrossbowItem);
     }
 
     @Override
@@ -96,7 +100,7 @@ public class KoboldCrossbowGoal extends Goal {
         switch (this.state) {
             case UNCHARGED -> {
                 if (!approach) {
-                    this.mob.startUsingItem(this.mob.handHolding(stack -> stack.is(Items.CROSSBOW)));
+                    this.mob.startUsingItem(hand(this.mob, stack -> stack.getItem() instanceof CrossbowItem));
                     this.state = State.CHARGING;
                     this.mob.setChargingCrossbow(true);
                 }
@@ -137,5 +141,10 @@ public class KoboldCrossbowGoal extends Goal {
         CHARGING,
         CHARGED,
         READY
+    }
+
+    // The hand holding a matching weapon, the main hand when both do.
+    private static InteractionHand hand(Mob mob, Predicate<ItemStack> matching) {
+        return matching.test(mob.getMainHandItem()) ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
     }
 }

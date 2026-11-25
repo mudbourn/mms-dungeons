@@ -21,13 +21,16 @@ public final class DungeonDimension {
         RegionNotices.register();
         DepthGear.register();
         ForcedArrivals.register();
+        DeepGate.register();
         NearSpawns.register();
         DungeonGeneration.register();
-        StrayFish.register();
         DddEntranceTunnel.register();
         CavernDisc.register();
         CavernTunnels.register();
         CavernGrid.register();
+        FillCavern.register();
+        FillCaverns.register();
+        NetherInfectionCore.register();
         OffsetSpreadPlacement.register();
     }
 

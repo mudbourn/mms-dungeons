@@ -19,7 +19,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.resources.Identifier;
 import info.mudbourn.mmsdungeons.MmsDungeons;
-import info.mudbourn.mmsdungeons.mobs.kobolds.KoboldItems;
+import info.mudbourn.mmsdungeons.mobs.kobolds.KoboldArms;
 import info.mudbourn.mmsdungeons.mobs.kobolds.entity.AbstractKobold;
 import info.mudbourn.mmsdungeons.mobs.kobolds.entity.AbstractKoboldSkeleton;
 import info.mudbourn.mmsdungeons.mobs.kobolds.entity.AbstractKoboldZombie;
@@ -37,18 +37,16 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 public final class DepthGear {
 
     private enum Material {
-        IRON(Items.IRON_HELMET, Items.IRON_CHESTPLATE, Items.IRON_LEGGINGS, Items.IRON_BOOTS, Items.IRON_SWORD, Items.IRON_AXE),
-        DIAMOND(Items.DIAMOND_HELMET, Items.DIAMOND_CHESTPLATE, Items.DIAMOND_LEGGINGS, Items.DIAMOND_BOOTS, Items.DIAMOND_SWORD, Items.DIAMOND_AXE),
-        NETHERITE(Items.NETHERITE_HELMET, Items.NETHERITE_CHESTPLATE, Items.NETHERITE_LEGGINGS, Items.NETHERITE_BOOTS, Items.NETHERITE_SWORD, Items.NETHERITE_AXE);
+        IRON(Items.IRON_HELMET, Items.IRON_CHESTPLATE, Items.IRON_LEGGINGS, Items.IRON_BOOTS, Items.IRON_SWORD),
+        DIAMOND(Items.DIAMOND_HELMET, Items.DIAMOND_CHESTPLATE, Items.DIAMOND_LEGGINGS, Items.DIAMOND_BOOTS, Items.DIAMOND_SWORD),
+        NETHERITE(Items.NETHERITE_HELMET, Items.NETHERITE_CHESTPLATE, Items.NETHERITE_LEGGINGS, Items.NETHERITE_BOOTS, Items.NETHERITE_SWORD);
 
         final Item[] armor;
         final Item sword;
-        final Item axe;
 
-        Material(Item head, Item chest, Item legs, Item feet, Item sword, Item axe) {
+        Material(Item head, Item chest, Item legs, Item feet, Item sword) {
             this.armor = new Item[] {head, chest, legs, feet};
             this.sword = sword;
-            this.axe = axe;
         }
     }
 
@@ -100,10 +98,8 @@ public final class DepthGear {
         Mob mob = (Mob) entity;
         int index = tier(mob.getBlockY());
         equip(mob, level, TIERS.get(index), index);
-        if (kobold) {
-            armKobold((AbstractKobold) mob, level, TIERS.get(index));
-        }
-        if (kobold || mob instanceof AbstractKoboldZombie || mob instanceof AbstractKoboldSkeleton) {
+        if (koboldKin(mob)) {
+            armKobold(mob, level, TIERS.get(index));
             toughen(mob, index);
         }
     }
@@ -113,22 +109,29 @@ public final class DepthGear {
         return Math.clamp((long) (TOP - y) * TIERS.size() / SPAN, 0, TIERS.size() - 1);
     }
 
-    // Swaps a kobold's melee weapon up to the band's material, and enchants whatever it holds in enchanted bands.
-    private static void armKobold(AbstractKobold kobold, ServerLevel level, Tier tier) {
+    private static boolean koboldKin(Mob mob) {
+        return mob instanceof AbstractKobold || mob instanceof AbstractKoboldZombie || mob instanceof AbstractKoboldSkeleton;
+    }
+
+    // Swaps a kobold's melee weapon for one of the same family in the band's material, picking among the modded
+    // variants too, and enchants whatever it holds in enchanted bands.
+    private static void armKobold(Mob kobold, ServerLevel level, Tier tier) {
         ItemStack held = kobold.getMainHandItem();
         ItemStack weapon = held;
-        if (tier.main() != Material.IRON) {
-            if (held.is(KoboldItems.KOBOLD_IRON_SWORD) || held.is(Items.IRON_SWORD)) {
-                weapon = new ItemStack(tier.main().sword);
-            } else if (held.is(KoboldItems.KOBOLD_IRON_AXE) || held.is(Items.IRON_AXE)) {
-                weapon = new ItemStack(tier.main().axe);
-            }
+        KoboldArms.Family family = KoboldArms.familyOf(held);
+        if (family != null && tier.main() != Material.IRON) {
+            String material = tier.main() == Material.DIAMOND ? KoboldArms.DIAMOND : KoboldArms.NETHERITE;
+            weapon = KoboldArms.melee(family, material, kobold.getRandom());
         }
         if (weapon != held || tier.enchanted()) {
             if (tier.enchanted() && !weapon.isEmpty()) {
                 weapon = enchant(level, kobold.getRandom(), weapon.copy());
             }
-            kobold.setDepthWeapon(weapon);
+            if (kobold instanceof AbstractKobold living) {
+                living.setDepthWeapon(weapon);
+            } else {
+                kobold.setItemSlot(EquipmentSlot.MAINHAND, weapon);
+            }
         }
     }
 
@@ -166,7 +169,7 @@ public final class DepthGear {
             boolean enchanted = isMain ? tier.enchanted() : tier.fillerEnchanted();
             give(mob, level, ARMOR_SLOTS[slot], new ItemStack(material.armor[slot]), enchanted);
         }
-        if (index == 0 || mob instanceof AbstractKobold) {
+        if (index == 0 || koboldKin(mob)) {
             return;
         }
         if (mob instanceof AbstractSkeleton) {

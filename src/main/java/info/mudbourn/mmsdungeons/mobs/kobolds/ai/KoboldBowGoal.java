@@ -1,6 +1,9 @@
 package info.mudbourn.mmsdungeons.mobs.kobolds.ai;
 
-import info.mudbourn.mmsdungeons.mobs.kobolds.entity.AbstractKobold;
+import java.util.function.Predicate;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.monster.RangedAttackMob;
 import java.util.EnumSet;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -9,13 +12,13 @@ import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.Items;
 
 // Keeps range and shoots a held bow at the target, strafing while it waits to draw.
-public class KoboldBowGoal extends Goal {
+public class KoboldBowGoal<T extends Mob & RangedAttackMob> extends Goal {
 
     private static final int DRAW_TICKS = 20;
     private static final int STRAFE_TICKS = 20;
     private static final int LOST_SIGHT_TICKS = -60;
 
-    private final AbstractKobold mob;
+    private final T mob;
     private final double speed;
     private final int attackInterval;
     private final float radiusSqr;
@@ -25,7 +28,7 @@ public class KoboldBowGoal extends Goal {
     private boolean strafingBackwards;
     private int strafingTime = -1;
 
-    public KoboldBowGoal(AbstractKobold mob, double speed, int attackInterval, float radius) {
+    public KoboldBowGoal(T mob, double speed, int attackInterval, float radius) {
         this.mob = mob;
         this.speed = speed;
         this.attackInterval = attackInterval;
@@ -36,7 +39,7 @@ public class KoboldBowGoal extends Goal {
     @Override
     public boolean canUse() {
         LivingEntity target = this.mob.getTarget();
-        return target != null && target.isAlive() && this.mob.isHolding(Items.BOW);
+        return target != null && target.isAlive() && this.mob.isHolding(stack -> stack.getItem() instanceof BowItem);
     }
 
     @Override
@@ -128,7 +131,12 @@ public class KoboldBowGoal extends Goal {
                 }
             }
         } else if (--this.attackTime <= 0 && this.seeTime >= LOST_SIGHT_TICKS) {
-            this.mob.startUsingItem(this.mob.handHolding(stack -> stack.is(Items.BOW)));
+            this.mob.startUsingItem(hand(this.mob, stack -> stack.getItem() instanceof BowItem));
         }
+    }
+
+    // The hand holding a matching weapon, the main hand when both do.
+    private static InteractionHand hand(Mob mob, Predicate<ItemStack> matching) {
+        return matching.test(mob.getMainHandItem()) ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
     }
 }

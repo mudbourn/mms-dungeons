@@ -417,7 +417,7 @@
             ],
             "depth": [
               0.9,
-              1.35
+              1.5
             ],
             "weirdness": [
               -1.0,
@@ -447,7 +447,7 @@
             ],
             "depth": [
               0.9,
-              1.35
+              1.5
             ],
             "weirdness": [
               -1.0,
@@ -477,7 +477,7 @@
             ],
             "depth": [
               0.9,
-              1.35
+              1.5
             ],
             "weirdness": [
               -1.1,
@@ -507,7 +507,7 @@
             ],
             "depth": [
               0.9,
-              1.35
+              1.5
             ],
             "weirdness": [
               0.0,
@@ -537,7 +537,7 @@
             ],
             "depth": [
               0.9,
-              1.35
+              1.5
             ],
             "weirdness": [
               0.7,
@@ -567,7 +567,7 @@
             ],
             "depth": [
               0.9,
-              1.35
+              1.5
             ],
             "weirdness": [
               0.0,
@@ -597,7 +597,7 @@
             ],
             "depth": [
               0.9,
-              1.35
+              1.5
             ],
             "weirdness": [
               0.0,
@@ -627,7 +627,7 @@
             ],
             "depth": [
               1.0,
-              1.35
+              1.5
             ],
             "weirdness": [
               0.9,
@@ -657,7 +657,7 @@
             ],
             "depth": [
               0.9,
-              1.35
+              1.5
             ],
             "weirdness": [
               0.5,
@@ -687,7 +687,7 @@
             ],
             "depth": [
               0.9,
-              1.35
+              1.5
             ],
             "weirdness": [
               -1.0,
@@ -788,6 +788,66 @@
         },
         {
           "biome": "alexscaves:candy_cavity",
+          "parameters": {
+            "temperature": 2.0,
+            "humidity": 2.0,
+            "continentalness": 2.0,
+            "erosion": 2.0,
+            "depth": 2.0,
+            "weirdness": 2.0,
+            "offset": 1.0
+          }
+        },
+        {
+          "biome": "minecraft:nether_wastes",
+          "parameters": {
+            "temperature": 2.0,
+            "humidity": 2.0,
+            "continentalness": 2.0,
+            "erosion": 2.0,
+            "depth": 2.0,
+            "weirdness": 2.0,
+            "offset": 1.0
+          }
+        },
+        {
+          "biome": "minecraft:crimson_forest",
+          "parameters": {
+            "temperature": 2.0,
+            "humidity": 2.0,
+            "continentalness": 2.0,
+            "erosion": 2.0,
+            "depth": 2.0,
+            "weirdness": 2.0,
+            "offset": 1.0
+          }
+        },
+        {
+          "biome": "minecraft:warped_forest",
+          "parameters": {
+            "temperature": 2.0,
+            "humidity": 2.0,
+            "continentalness": 2.0,
+            "erosion": 2.0,
+            "depth": 2.0,
+            "weirdness": 2.0,
+            "offset": 1.0
+          }
+        },
+        {
+          "biome": "minecraft:soul_sand_valley",
+          "parameters": {
+            "temperature": 2.0,
+            "humidity": 2.0,
+            "continentalness": 2.0,
+            "erosion": 2.0,
+            "depth": 2.0,
+            "weirdness": 2.0,
+            "offset": 1.0
+          }
+        },
+        {
+          "biome": "minecraft:basalt_deltas",
           "parameters": {
             "temperature": 2.0,
             "humidity": 2.0,

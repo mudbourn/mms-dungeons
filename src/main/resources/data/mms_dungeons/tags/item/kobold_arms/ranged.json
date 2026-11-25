@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "#mms_dungeons:kobold_arms/crossbows",
+    {
+      "id": "weaponsexpanded:longbow",
+      "required": false
+    }
+  ]
+}

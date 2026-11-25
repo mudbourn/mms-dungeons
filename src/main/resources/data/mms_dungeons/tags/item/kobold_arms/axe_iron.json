@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "mms_dungeons:kobold_iron_axe",
+    "minecraft:iron_axe",
+    {
+      "id": "weaponsexpanded:iron_battleaxe",
+      "required": false
+    },
+    {
+      "id": "weaponsexpanded:iron_hatchet",
+      "required": false
+    }
+  ]
+}

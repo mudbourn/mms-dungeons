@@ -49,19 +49,31 @@ final class KoboldArmor {
         );
     }
 
+    // Outer layer (helmet, chestplate, boots): stands 1px off the kobold on every side, like zombie and skeleton
+    // armor does. Each box keeps the standard armor texture size and is grown or shrunk per axis to fit, so the
+    // chestplate covers the 6x10x4 torso and the boots end flush with the feet.
     private static MeshDefinition outer() {
-        CubeListBuilder body = CubeListBuilder.create()
-            .texOffs(16, 16)
-            .addBox(-4.0f, 0.0f, -2.0f, 8.0f, 11.0f, 4.0f, new CubeDeformation(0.05f));
-        return mesh(0.5f, 0.75f, -0.35f, body);
+        return mesh(
+            0.5f,
+            0.75f,
+            new CubeDeformation(0.0f, -0.5f, 1.0f),
+            new CubeDeformation(0.5f, -0.5f, 0.5f),
+            new CubeDeformation(0.5f, -1.0f, 0.5f)
+        );
     }
 
+    // Inner layer (leggings): half a pixel off the legs, with a waist that sits inside the chestplate.
     private static MeshDefinition inner() {
-        CubeListBuilder body = CubeListBuilder.create().texOffs(0, 0).addBox(-4.0f, 0.0f, -2.0f, 1.0f, 1.0f, 1.0f);
-        return mesh(0.4f, 0.6f, -0.45f, body);
+        return mesh(
+            0.4f,
+            0.6f,
+            new CubeDeformation(-0.5f, -0.75f, 0.5f),
+            new CubeDeformation(0.0f, -0.5f, 0.0f),
+            new CubeDeformation(0.0f, -1.0f, 0.0f)
+        );
     }
 
-    private static MeshDefinition mesh(float head, float hat, float limb, CubeListBuilder body) {
+    private static MeshDefinition mesh(float head, float hat, CubeDeformation body, CubeDeformation arms, CubeDeformation legs) {
         MeshDefinition mesh = HumanoidModel.createMesh(CubeDeformation.NONE, 0.0f);
         PartDefinition root = mesh.getRoot();
         root.addOrReplaceChild(
@@ -74,26 +86,32 @@ final class KoboldArmor {
             CubeListBuilder.create().texOffs(32, 0).addBox(-4.0f, -7.5f, -4.0f, 8.0f, 8.0f, 8.0f, new CubeDeformation(hat)),
             PartPose.ZERO
         );
-        root.addOrReplaceChild("body", body, PartPose.offset(0.0f, 4.0f, 0.0f));
-        CubeDeformation limbs = new CubeDeformation(limb);
+        // The torso runs 10px down from the neck at y 4.
+        root.addOrReplaceChild(
+            "body",
+            CubeListBuilder.create().texOffs(16, 16).addBox(-4.0f, -1.0f, -2.0f, 8.0f, 12.0f, 4.0f, body),
+            PartPose.offset(0.0f, 4.0f, 0.0f)
+        );
+        // Legs hang 10px from the hip at y 14 down to the ground.
         root.addOrReplaceChild(
             "left_leg",
-            CubeListBuilder.create().texOffs(0, 16).mirror().addBox(-2.0f, -1.55f, -2.0f, 4.0f, 12.0f, 4.0f, limbs),
-            PartPose.offset(1.5f, 15.0f, 0.0f)
+            CubeListBuilder.create().texOffs(0, 16).mirror().addBox(-2.0f, -1.0f, -2.0f, 4.0f, 12.0f, 4.0f, legs),
+            PartPose.offset(1.5f, 14.0f, 0.0f)
         );
         root.addOrReplaceChild(
             "right_leg",
-            CubeListBuilder.create().texOffs(0, 16).addBox(-2.0f, -1.55f, -2.0f, 4.0f, 12.0f, 4.0f, limbs),
-            PartPose.offset(-1.5f, 15.0f, 0.0f)
+            CubeListBuilder.create().texOffs(0, 16).addBox(-2.0f, -1.0f, -2.0f, 4.0f, 12.0f, 4.0f, legs),
+            PartPose.offset(-1.5f, 14.0f, 0.0f)
         );
+        // Arms hang from the shoulder at y 5; the pad rises a little above the shoulder.
         root.addOrReplaceChild(
             "left_arm",
-            CubeListBuilder.create().texOffs(40, 16).mirror().addBox(-0.5f, -1.55f, -2.0f, 4.0f, 12.0f, 4.0f, limbs),
+            CubeListBuilder.create().texOffs(40, 16).mirror().addBox(-0.5f, -2.0f, -2.0f, 4.0f, 12.0f, 4.0f, arms),
             PartPose.offset(3.0f, 5.0f, 0.0f)
         );
         root.addOrReplaceChild(
             "right_arm",
-            CubeListBuilder.create().texOffs(40, 16).addBox(-3.5f, -1.55f, -2.0f, 4.0f, 12.0f, 4.0f, limbs),
+            CubeListBuilder.create().texOffs(40, 16).addBox(-3.5f, -2.0f, -2.0f, 4.0f, 12.0f, 4.0f, arms),
             PartPose.offset(-3.0f, 5.0f, 0.0f)
         );
         return mesh;

@@ -1036,5 +1036,23 @@
       "mms_dungeons:entity/zombold/death1",
       "mms_dungeons:entity/zombold/death2"
     ]
+  },
+  "sanctuary_enter": {
+    "subtitle": "sound.mms_dungeons.sanctuary_enter",
+    "sounds": [
+      "mms_dungeons:region/sanctuary_enter"
+    ]
+  },
+  "deep_enter": {
+    "subtitle": "sound.mms_dungeons.deep_enter",
+    "sounds": [
+      "mms_dungeons:region/deep_enter"
+    ]
+  },
+  "periculum_enter": {
+    "subtitle": "sound.mms_dungeons.periculum_enter",
+    "sounds": [
+      "mms_dungeons:region/periculum_enter"
+    ]
   }
 }

@@ -1,0 +1,86 @@
+{
+  "replace": false,
+  "values": [
+    "#mms_dungeons:gate_magic_armor",
+    {
+      "id": "wizards:arcane_robe_head",
+      "required": false
+    },
+    {
+      "id": "wizards:arcane_robe_chest",
+      "required": false
+    },
+    {
+      "id": "wizards:arcane_robe_legs",
+      "required": false
+    },
+    {
+      "id": "wizards:arcane_robe_feet",
+      "required": false
+    },
+    {
+      "id": "wizards:fire_robe_head",
+      "required": false
+    },
+    {
+      "id": "wizards:fire_robe_chest",
+      "required": false
+    },
+    {
+      "id": "wizards:fire_robe_legs",
+      "required": false
+    },
+    {
+      "id": "wizards:fire_robe_feet",
+      "required": false
+    },
+    {
+      "id": "wizards:frost_robe_head",
+      "required": false
+    },
+    {
+      "id": "wizards:frost_robe_chest",
+      "required": false
+    },
+    {
+      "id": "wizards:frost_robe_legs",
+      "required": false
+    },
+    {
+      "id": "wizards:frost_robe_feet",
+      "required": false
+    },
+    {
+      "id": "paladins:crusader_armor_head",
+      "required": false
+    },
+    {
+      "id": "paladins:crusader_armor_chest",
+      "required": false
+    },
+    {
+      "id": "paladins:crusader_armor_legs",
+      "required": false
+    },
+    {
+      "id": "paladins:crusader_armor_feet",
+      "required": false
+    },
+    {
+      "id": "paladins:prior_robe_head",
+      "required": false
+    },
+    {
+      "id": "paladins:prior_robe_chest",
+      "required": false
+    },
+    {
+      "id": "paladins:prior_robe_legs",
+      "required": false
+    },
+    {
+      "id": "paladins:prior_robe_feet",
+      "required": false
+    }
+  ]
+}

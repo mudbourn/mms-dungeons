@@ -3,32 +3,50 @@ package info.mudbourn.mmsdungeons.dungeon;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import info.mudbourn.mmsdungeons.MmsDungeons;
+import info.mudbourn.mmsdungeons.net.PlayerSounds;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
 
 // Tells players on screen when they move into another region of the dungeon, up or down. A move soon after a
 // notice is held back until the player settles in one region, so hopping along a border shows one notice.
 public final class RegionNotices {
 
     private enum Region {
-        SANCTUARY("The Sanctuary Region", "Safe ground under the roof", ChatFormatting.AQUA),
-        DEEP("The Deep Region", "Notorious for its shifting tides", ChatFormatting.GOLD),
-        PERICULUM("The Periculum Region", "Nobody is safe here. PvP is on.", ChatFormatting.DARK_RED);
+        SANCTUARY(
+            "The Sanctuary Region",
+            "Safe zone where the mercy of the dungeon extends.",
+            ChatFormatting.AQUA,
+            "sanctuary_enter"
+        ),
+        DEEP("The Deep Region", "Labyrinth of trickery where maps mean nothing", ChatFormatting.GOLD, "deep_enter"),
+        PERICULUM(
+            "The Periculum Region",
+            "Deadly depths where friends may turn foe",
+            ChatFormatting.DARK_RED,
+            "periculum_enter"
+        );
 
         final String title;
         final String subtitle;
         final ChatFormatting color;
+        final SoundEvent sound;
 
-        Region(String title, String subtitle, ChatFormatting color) {
+        Region(String title, String subtitle, ChatFormatting color, String sound) {
             this.title = title;
             this.subtitle = subtitle;
             this.color = color;
+            this.sound = SoundEvent.createVariableRangeEvent(MmsDungeons.id(sound));
         }
     }
 
@@ -46,6 +64,9 @@ public final class RegionNotices {
     }
 
     public static void register() {
+        for (Region region : Region.values()) {
+            Registry.register(BuiltInRegistries.SOUND_EVENT, region.sound.location(), region.sound);
+        }
         ServerTickEvents.END_SERVER_TICK.register(RegionNotices::tick);
         ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> forget(handler.player.getUUID()));
     }
@@ -107,5 +128,12 @@ public final class RegionNotices {
     private static void announce(ServerPlayer player, Region region) {
         player.connection.send(new ClientboundSetSubtitleTextPacket(Component.literal(region.subtitle)));
         player.connection.send(new ClientboundSetTitleTextPacket(Component.literal(region.title).withStyle(region.color)));
+        PlayerSounds.play(
+            player,
+            BuiltInRegistries.SOUND_EVENT.wrapAsHolder(region.sound),
+            SoundSource.MASTER,
+            1.0F,
+            1.0F
+        );
     }
 }

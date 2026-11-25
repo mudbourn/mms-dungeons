@@ -1,5 +1,9 @@
 package info.mudbourn.mmsdungeons.dungeon;
 
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import info.mudbourn.mmscombat.combatlog.CombatManager;
@@ -20,7 +24,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.datafix.DataFixTypes;
-import net.minecraft.world.level.portal.TeleportTransition;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.saveddata.SavedDataType;
 
@@ -63,6 +66,7 @@ public final class PericulumRules extends SavedData {
 
     public static void register() {
         CombatManager.get().addLogoutBodyVeto(player -> DungeonDimension.isPericulum(player.level(), player.blockPosition()));
+        CombatManager.get().addQuietCrossing(player -> DungeonDimension.isDungeon(player.level()));
         ServerLifecycleEvents.SERVER_STARTED.register(server -> ensureZone());
         ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> onDisconnect(handler.player));
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> onJoin(handler.player));
@@ -100,10 +104,10 @@ public final class PericulumRules extends SavedData {
         long until = player.level().getServer().overworld().getGameTime() + BAN_TICKS;
         rules.bans.put(player.getUUID(), until);
         rules.setDirty();
-        sendHome(player, "You left the game without exiting the Periculum Region properly. You are now forbidden to enter it for two days.");
+        moveToDeep(player, "You left the game without exiting the Periculum Region properly. You are now forbidden to enter it for two days.");
     }
 
-    // Sends banned players back out if they cross below Y 0.
+    // Moves banned players back up into the Deep Region if they cross below Y 0.
     private static void tick(MinecraftServer server) {
         long now = server.overworld().getGameTime();
         if (now % CHECK_INTERVAL != 0) {
@@ -116,13 +120,52 @@ public final class PericulumRules extends SavedData {
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
             boolean banned = rules.bans.containsKey(player.getUUID());
             if (banned && DungeonDimension.isPericulum(player.level(), player.blockPosition())) {
-                sendHome(player, "The Periculum Region is closed to you for now.");
+                moveToDeep(player, "The Periculum Region is closed to you for now.");
             }
         }
     }
 
-    private static void sendHome(ServerPlayer player, String message) {
-        player.teleport(TeleportTransition.createDefault(player, TeleportTransition.DO_NOTHING));
+    // Moves a player out of the Periculum Region to the nearest safe spot in the Deep Region above it, keeping them
+    // in the dungeon. Falls back to the Sanctuary landing spot when nothing nearby is safe to stand on.
+    private static void moveToDeep(ServerPlayer player, String message) {
+        if (player.level() instanceof ServerLevel level && DungeonDimension.isDungeon(level)) {
+            Vec3 spot = deepSpotNear(level, player.blockPosition());
+            if (spot == null) {
+                spot = DungeonPortals.arrivalSpot(level, player.getBlockX(), player.getBlockZ());
+            }
+            player.teleportTo(spot.x, spot.y, spot.z);
+        }
         player.sendSystemMessage(Component.literal(message));
+    }
+
+    // How far around the player to look for a Deep Region spot, in blocks.
+    private static final int DEEP_SEARCH_RADIUS = 16;
+
+    // The nearest column first, then the lowest safe standing spot in it above the Periculum Region.
+    private static Vec3 deepSpotNear(ServerLevel level, BlockPos origin) {
+        for (int ring = 0; ring <= DEEP_SEARCH_RADIUS; ring++) {
+            for (int dx = -ring; dx <= ring; dx++) {
+                for (int dz = -ring; dz <= ring; dz++) {
+                    if (Math.max(Math.abs(dx), Math.abs(dz)) != ring) {
+                        continue;
+                    }
+                    for (int y = DungeonDimension.PERICULUM_TOP + 1; y < DungeonDimension.SANCTUARY_BOTTOM - 1; y++) {
+                        BlockPos feet = new BlockPos(origin.getX() + dx, y, origin.getZ() + dz);
+                        if (standable(level, feet)) {
+                            return Vec3.atBottomCenterOf(feet);
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    private static boolean standable(ServerLevel level, BlockPos feet) {
+        BlockPos floor = feet.below();
+        return level.getBlockState(feet).isAir()
+            && level.getBlockState(feet.above()).isAir()
+            && level.getFluidState(floor).isEmpty()
+            && level.getBlockState(floor).isFaceSturdy(level, floor, Direction.UP);
     }
 }

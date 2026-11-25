@@ -1,0 +1,18 @@
+[
+  {
+    "allowed_biomes": [
+      "#mms_dungeons:dungeon_only"
+    ],
+    "allowed_blocks": [
+      "#minecraft:air"
+    ],
+    "altitude": {
+      "max": -1
+    },
+    "spacing": {
+      "max_entity_count": 1,
+      "range": 48.0
+    },
+    "weight": 3
+  }
+]

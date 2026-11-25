@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "#mms_dungeons:kobold_arms/sword_iron",
+    "#mms_dungeons:kobold_arms/sword_diamond",
+    "#mms_dungeons:kobold_arms/sword_netherite"
+  ]
+}

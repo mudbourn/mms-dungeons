@@ -1,0 +1,21 @@
+[
+  {
+    "allowed_biomes": [
+      "#mms_dungeons:dungeon_only",
+      "#mms_dungeons:dungeon_grassy"
+    ],
+    "allowed_blocks": [
+      "#c:sands",
+      "#c:gravels",
+      "minecraft:clay"
+    ],
+    "altitude": {
+      "max": 150
+    },
+    "spacing": {
+      "max_entity_count": 3,
+      "range": 12.0
+    },
+    "weight": 4
+  }
+]

@@ -71,7 +71,7 @@ public final class KoboldsClient {
                 KoboldLooks.kobold("kobolds/rascal")
             )
                 .holdItems(true)
-                .dress(context, KoboldModel::new)
+                .dress(context, RascalModel::new)
         );
         EntityRendererRegistry.register(
             KoboldMobs.KOBOLD_CHILD,

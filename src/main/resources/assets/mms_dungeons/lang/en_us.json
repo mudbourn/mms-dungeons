@@ -228,5 +228,8 @@
   "subtitles.mms_dungeons.skelebold.death": "Skelebold dies",
   "subtitles.mms_dungeons.zombold.idle": "Zombold groans",
   "subtitles.mms_dungeons.zombold.hurt": "Zombold hurts",
-  "subtitles.mms_dungeons.zombold.death": "Zombold dies"
+  "subtitles.mms_dungeons.zombold.death": "Zombold dies",
+  "sound.mms_dungeons.sanctuary_enter": "Entering The Sanctuary Region",
+  "sound.mms_dungeons.deep_enter": "Entering The Deep Region",
+  "sound.mms_dungeons.periculum_enter": "Entering The Periculum Region"
 }

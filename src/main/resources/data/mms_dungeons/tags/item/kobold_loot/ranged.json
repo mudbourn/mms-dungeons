@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "#mms_dungeons:kobold_arms/ranged",
+    {
+      "id": "expanded_weaponry:longbow",
+      "required": false
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "replace": false,
+  "values": [
+    "#mms_dungeons:gate_magic_weapons",
+    {
+      "id": "wizards:staff_arcane",
+      "required": false
+    },
+    {
+      "id": "wizards:staff_fire",
+      "required": false
+    },
+    {
+      "id": "wizards:staff_frost",
+      "required": false
+    },
+    {
+      "id": "wizards:wand_arcane",
+      "required": false
+    },
+    {
+      "id": "wizards:wand_fire",
+      "required": false
+    },
+    {
+      "id": "wizards:wand_frost",
+      "required": false
+    },
+    {
+      "id": "paladins:holy_staff",
+      "required": false
+    },
+    {
+      "id": "paladins:holy_wand",
+      "required": false
+    },
+    {
+      "id": "paladins:diamond_holy_staff",
+      "required": false
+    },
+    {
+      "id": "paladins:diamond_holy_wand",
+      "required": false
+    }
+  ]
+}

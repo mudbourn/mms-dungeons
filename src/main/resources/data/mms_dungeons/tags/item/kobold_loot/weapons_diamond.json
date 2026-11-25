@@ -1,0 +1,107 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:diamond_sword",
+    "minecraft:diamond_axe",
+    {
+      "id": "weaponsexpanded:diamond_battleaxe",
+      "required": false
+    },
+    {
+      "id": "weaponsexpanded:diamond_broadsword",
+      "required": false
+    },
+    {
+      "id": "weaponsexpanded:diamond_glaive",
+      "required": false
+    },
+    {
+      "id": "weaponsexpanded:diamond_greatsword",
+      "required": false
+    },
+    {
+      "id": "weaponsexpanded:diamond_halberd",
+      "required": false
+    },
+    {
+      "id": "weaponsexpanded:diamond_hammer",
+      "required": false
+    },
+    {
+      "id": "weaponsexpanded:diamond_hatchet",
+      "required": false
+    },
+    {
+      "id": "weaponsexpanded:diamond_katana",
+      "required": false
+    },
+    {
+      "id": "weaponsexpanded:diamond_longsword",
+      "required": false
+    },
+    {
+      "id": "weaponsexpanded:diamond_morningstar",
+      "required": false
+    },
+    {
+      "id": "weaponsexpanded:diamond_rapier",
+      "required": false
+    },
+    {
+      "id": "weaponsexpanded:diamond_scythe",
+      "required": false
+    },
+    {
+      "id": "weaponsexpanded:diamond_sickle",
+      "required": false
+    },
+    {
+      "id": "weaponsexpanded:diamond_warhammer",
+      "required": false
+    },
+    {
+      "id": "basicweapons:diamond_club",
+      "required": false
+    },
+    {
+      "id": "basicweapons:diamond_dagger",
+      "required": false
+    },
+    {
+      "id": "basicweapons:diamond_glaive",
+      "required": false
+    },
+    {
+      "id": "basicweapons:diamond_hammer",
+      "required": false
+    },
+    {
+      "id": "basicweapons:diamond_pike",
+      "required": false
+    },
+    {
+      "id": "basicweapons:diamond_quarterstaff",
+      "required": false
+    },
+    {
+      "id": "basicweapons:diamond_spear",
+      "required": false
+    },
+    {
+      "id": "expanded_weaponry:diamond_dagger",
+      "required": false
+    },
+    {
+      "id": "expanded_weaponry:diamond_greatsword",
+      "required": false
+    },
+    {
+      "id": "expanded_weaponry:diamond_hammer",
+      "required": false
+    },
+    {
+      "id": "expanded_weaponry:diamond_twin_blade_sword",
+      "required": false
+    }
+  ]
+}

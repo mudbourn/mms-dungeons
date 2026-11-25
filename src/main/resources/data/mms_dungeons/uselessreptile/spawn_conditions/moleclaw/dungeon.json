@@ -1,0 +1,22 @@
+[
+  {
+    "allowed_biomes": [
+      "#mms_dungeons:dungeon_only"
+    ],
+    "allowed_blocks": [
+      "#c:ores",
+      "#c:stones",
+      "minecraft:dirt",
+      "minecraft:gravel"
+    ],
+    "light_level": {
+      "block": {
+        "max": 0
+      },
+      "sky": {
+        "max": 0
+      }
+    },
+    "weight": 10
+  }
+]

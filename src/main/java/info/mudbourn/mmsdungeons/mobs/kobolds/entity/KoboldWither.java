@@ -1,5 +1,6 @@
 package info.mudbourn.mmsdungeons.mobs.kobolds.entity;
 
+import info.mudbourn.mmsdungeons.mobs.kobolds.KoboldArms;
 import info.mudbourn.mmsdungeons.mobs.kobolds.KoboldTags;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
@@ -101,7 +102,7 @@ public class KoboldWither extends AbstractKoboldSkeleton {
 
     @Override
     protected void populateDefaultEquipmentSlots(RandomSource random, DifficultyInstance difficulty) {
-        this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.NETHERITE_SWORD));
+        this.setItemSlot(EquipmentSlot.MAINHAND, KoboldArms.melee(KoboldArms.Family.SWORD, KoboldArms.NETHERITE, random));
         this.setDropChance(EquipmentSlot.MAINHAND, 0.0f);
     }
 

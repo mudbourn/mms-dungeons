@@ -3,12 +3,14 @@ package info.mudbourn.mmsdungeons.dungeon;
 import java.util.ArrayDeque;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.portal.TeleportTransition;
@@ -18,7 +20,6 @@ import net.minecraft.world.phys.Vec3;
 public final class DungeonPortals {
 
     private static final Component GATEKEEPER_LAUGHS = Component.literal("The gatekeeper notices your effort, and laughs.");
-    private static final int COOLDOWN_TICKS = 100;
     // Flood fill cap when finding a portal's anchor block.
     private static final int MAX_PORTAL_BLOCKS = 256;
     // The roof's lowest bedrock layer.
@@ -29,21 +30,28 @@ public final class DungeonPortals {
     private static final int SEARCH_TOP = ROOF_Y - ROOF_GAP - MIN_HEADROOM;
     // Arrivals stay in the Sanctuary Region, never deeper.
     private static final int SEARCH_BOTTOM = DungeonDimension.SANCTUARY_BOTTOM;
-    // Where an exit portal and its chamber are carved when the Sanctuary Region has no open space in this column.
+    // Where an exit portal and its chamber are carved when no open space is found.
     private static final int FALLBACK_Y = 111;
     // Width and height of a portal's opening.
     private static final int OPENING = 3;
+    // How far from the dungeon's centre a new exit portal may be placed.
+    private static final int SITE_RADIUS = 4096;
+    // Random spots tried before carving a chamber at the last one.
+    private static final int SITE_ATTEMPTS = 24;
+    // Open floor kept on every side of an exit portal's frame.
+    private static final int ROOM_MARGIN = 2;
     // How far around a portal to look for somewhere to stand.
     private static final int STAND_RADIUS = 4;
 
-    // True while a portal is moving a player, so ForcedArrivals leaves that move alone.
-    private static boolean portalMove;
+    // Players a portal is moving, so ForcedArrivals leaves that move alone.
+    private static final Set<UUID> PORTAL_MOVES = new HashSet<>();
 
     private DungeonPortals() {
     }
 
-    static boolean portalMove() {
-        return portalMove;
+    // True once for a player a portal is moving, clearing the mark.
+    static boolean takePortalMove(ServerPlayer player) {
+        return PORTAL_MOVES.remove(player.getUUID());
     }
 
     // Where a player forced into the dungeon at this column lands: the open Sanctuary floor an exit portal would
@@ -55,73 +63,60 @@ public final class DungeonPortals {
         if (hasHeadroom(dungeon, feet) && dungeon.getBlockState(feet.below()).isFaceSturdy(dungeon, feet.below(), Direction.UP)) {
             return Vec3.atBottomCenterOf(feet);
         }
-        return Vec3.atBottomCenterOf(buildExit(dungeon, x, z).offset(1, 0, 1));
+        BlockPos exit = buildExit(dungeon, new BlockPos(x, floor, z));
+        return Vec3.atBottomCenterOf(standingSpotNear(dungeon, exit));
     }
 
-    public static void onEnter(ServerPlayer player, ServerLevel level, BlockPos pos) {
-        if (player.isOnPortalCooldown()) {
-            return;
-        }
-        player.setPortalCooldown(COOLDOWN_TICKS);
+    // Where the portal at pos sends the player, or null when it sends them nowhere.
+    public static TeleportTransition destination(ServerPlayer player, ServerLevel level, BlockPos pos) {
         BlockPos anchor = anchorOf(level, pos);
         if (DungeonDimension.isDungeon(level)) {
-            leaveDungeon(player, anchor);
-        } else {
-            enterDungeon(player, level, anchor);
+            return leaveDungeon(player, anchor);
         }
+        return enterDungeon(player, level, anchor);
     }
 
-    private static void enterDungeon(ServerPlayer player, ServerLevel level, BlockPos anchor) {
+    private static TeleportTransition enterDungeon(ServerPlayer player, ServerLevel level, BlockPos anchor) {
         if (!GateCheck.passes(player)) {
             player.sendSystemMessage(GATEKEEPER_LAUGHS, true);
             Vec3 spot = Vec3.atBottomCenterOf(standingSpotNear(level, anchor));
             player.teleportTo(spot.x, spot.y, spot.z);
-            return;
+            return null;
         }
         ServerLevel dungeon = level.getServer().getLevel(DungeonDimension.LEVEL);
         if (dungeon == null) {
-            return;
+            return null;
         }
         PortalLinks links = PortalLinks.get(level.getServer());
         GlobalPos surface = GlobalPos.of(level.dimension(), anchor);
         BlockPos exit = links.exitFor(surface);
         if (exit == null || !dungeon.getBlockState(exit).is(DungeonBlocks.DUNGEON_PORTAL)) {
-            exit = buildExit(dungeon, anchor.getX(), anchor.getZ());
+            exit = buildExit(dungeon, findExitSite(dungeon));
             links.link(surface, exit);
         }
-        Vec3 landing = Vec3.atBottomCenterOf(exit.offset(1, 0, 1));
-        teleport(player, dungeon, landing);
+        return transition(player, dungeon, Vec3.atBottomCenterOf(standingSpotNear(dungeon, exit)));
     }
 
-    private static void leaveDungeon(ServerPlayer player, BlockPos anchor) {
+    private static TeleportTransition leaveDungeon(ServerPlayer player, BlockPos anchor) {
         GlobalPos surface = PortalLinks.get(player.level().getServer()).surfaceFor(anchor);
         ServerLevel target = surface == null ? null : player.level().getServer().getLevel(surface.dimension());
+        PORTAL_MOVES.add(player.getUUID());
         if (target == null) {
-            portalMove = true;
-            try {
-                player.teleport(TeleportTransition.createDefault(player, TeleportTransition.PLAY_PORTAL_SOUND));
-            } finally {
-                portalMove = false;
-            }
-            return;
+            return player.findRespawnPositionAndUseSpawnBlock(false, TeleportTransition.PLAY_PORTAL_SOUND);
         }
-        teleport(player, target, Vec3.atBottomCenterOf(standingSpotNear(target, surface.pos())));
+        return transition(player, target, Vec3.atBottomCenterOf(standingSpotNear(target, surface.pos())));
     }
 
-    private static void teleport(ServerPlayer player, ServerLevel level, Vec3 position) {
-        portalMove = true;
-        try {
-            player.teleport(new TeleportTransition(
-                level,
-                position,
-                Vec3.ZERO,
-                player.getYRot(),
-                player.getXRot(),
-                TeleportTransition.PLAY_PORTAL_SOUND
-            ));
-        } finally {
-            portalMove = false;
-        }
+    private static TeleportTransition transition(ServerPlayer player, ServerLevel level, Vec3 position) {
+        PORTAL_MOVES.add(player.getUUID());
+        return new TeleportTransition(
+            level,
+            position,
+            Vec3.ZERO,
+            player.getYRot(),
+            player.getXRot(),
+            TeleportTransition.PLAY_PORTAL_SOUND.then(moved -> PORTAL_MOVES.remove(moved.getUUID()))
+        );
     }
 
     // The lowest, then most north-west portal block connected to this one, which names the whole portal.
@@ -147,15 +142,48 @@ public final class DungeonPortals {
         return anchor;
     }
 
-    // Builds a bedrock-framed 3x3 exit portal at the highest open point of the column and returns its anchor.
-    private static BlockPos buildExit(ServerLevel dungeon, int x, int z) {
+    // A random open spot in the Sanctuary Region with room for an exit portal, or a spot to carve one when none is found.
+    private static BlockPos findExitSite(ServerLevel dungeon) {
+        RandomSource random = dungeon.getRandom();
+        BlockPos site = null;
+        for (int attempt = 0; attempt < SITE_ATTEMPTS; attempt++) {
+            int x = random.nextIntBetweenInclusive(-SITE_RADIUS, SITE_RADIUS);
+            int z = random.nextIntBetweenInclusive(-SITE_RADIUS, SITE_RADIUS);
+            dungeon.getChunk(x >> 4, z >> 4);
+            site = new BlockPos(x, highestOpenFloor(dungeon, x, z), z);
+            if (roomIsSafe(dungeon, site)) {
+                return site;
+            }
+        }
+        return site;
+    }
+
+    // True when every column of the exit room has headroom and a solid, dry floor.
+    private static boolean roomIsSafe(ServerLevel dungeon, BlockPos site) {
+        for (int dx = -1 - ROOM_MARGIN; dx <= OPENING + ROOM_MARGIN; dx++) {
+            for (int dz = -ROOM_MARGIN; dz <= ROOM_MARGIN; dz++) {
+                BlockPos feet = site.offset(dx, 0, dz);
+                BlockState floor = dungeon.getBlockState(feet.below());
+                boolean dry = floor.getFluidState().isEmpty();
+                if (!dry || !hasHeadroom(dungeon, feet) || !floor.isFaceSturdy(dungeon, feet.below(), Direction.UP)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    // Builds a bedrock-framed 3x3 exit portal standing on site, clears its room, and returns its anchor.
+    private static BlockPos buildExit(ServerLevel dungeon, BlockPos site) {
+        int x = site.getX();
+        int z = site.getZ();
+        int floor = site.getY();
         dungeon.getChunk(x >> 4, z >> 4);
-        int floor = highestOpenFloor(dungeon, x, z);
         BlockState air = Blocks.AIR.defaultBlockState();
         BlockState bedrock = Blocks.BEDROCK.defaultBlockState();
         BlockState stone = Blocks.STONE.defaultBlockState();
-        for (int dx = -2; dx <= 3; dx++) {
-            for (int dz = -2; dz <= 2; dz++) {
+        for (int dx = -1 - ROOM_MARGIN; dx <= OPENING + ROOM_MARGIN; dx++) {
+            for (int dz = -ROOM_MARGIN; dz <= ROOM_MARGIN; dz++) {
                 dungeon.setBlockAndUpdate(new BlockPos(x + dx, floor - 1, z + dz), stone);
                 for (int dy = 0; dy < MIN_HEADROOM; dy++) {
                     dungeon.setBlockAndUpdate(new BlockPos(x + dx, floor + dy, z + dz), air);

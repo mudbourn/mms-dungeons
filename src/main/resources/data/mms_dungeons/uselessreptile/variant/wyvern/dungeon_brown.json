@@ -1,0 +1,39 @@
+{
+  "type": "uselessreptile:wyvern",
+  "base_taming_progress": 256,
+  "dragon_model": "uselessreptile:wyvern/brown",
+  "equipment": "uselessreptile:wyvern",
+  "food_items": {
+    "#minecraft:meat": 2,
+    "minecraft:chicken": 4,
+    "minecraft:cooked_chicken": 4
+  },
+  "name": "brown",
+  "spawn_conditions": "mms_dungeons:wyvern/dungeon",
+  "taming_items": [
+    {
+      "item": "minecraft:chicken",
+      "priority": 1,
+      "taming_progress_increase": [
+        2,
+        4
+      ]
+    },
+    {
+      "item": "minecraft:cooked_chicken",
+      "priority": 1,
+      "taming_progress_increase": [
+        2,
+        4
+      ]
+    },
+    {
+      "item": "#minecraft:meat",
+      "taming_progress_increase": [
+        1,
+        1
+      ]
+    }
+  ],
+  "variant_name_key": "variant.uselessreptile.wyvern.brown"
+}

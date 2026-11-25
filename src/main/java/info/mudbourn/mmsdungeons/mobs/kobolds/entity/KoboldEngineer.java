@@ -22,8 +22,8 @@ public class KoboldEngineer extends AbstractKobold {
         super.registerGoals();
         this.targetSelector.addGoal(0, new KoboldRevengeGoal(this));
         this.goalSelector.addGoal(1, new KoboldPotionGoal(this));
-        this.goalSelector.addGoal(1, new KoboldCrossbowGoal(this, 1.0, 12.0f));
-        this.goalSelector.addGoal(1, new KoboldBowGoal(this, 1.0, 20, 15.0f));
+        this.goalSelector.addGoal(1, new KoboldCrossbowGoal<>(this, 1.0, 12.0f));
+        this.goalSelector.addGoal(1, new KoboldBowGoal<>(this, 1.0, 20, 15.0f));
         this.goalSelector.addGoal(1, new KoboldTradeGoal(this, "engineer_loot"));
         this.targetSelector.addGoal(2, new KoboldTargetGoal(this));
     }

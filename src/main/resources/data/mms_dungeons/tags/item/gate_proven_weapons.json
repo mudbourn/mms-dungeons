@@ -1,0 +1,529 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "aerialhell:arsonist_axe",
+      "required": false
+    },
+    {
+      "id": "aerialhell:arsonist_shuriken",
+      "required": false
+    },
+    {
+      "id": "aerialhell:arsonist_spear",
+      "required": false
+    },
+    {
+      "id": "aerialhell:arsonist_sword",
+      "required": false
+    },
+    {
+      "id": "aerialhell:azurite_axe",
+      "required": false
+    },
+    {
+      "id": "aerialhell:azurite_shuriken",
+      "required": false
+    },
+    {
+      "id": "aerialhell:azurite_spear",
+      "required": false
+    },
+    {
+      "id": "aerialhell:azurite_sword",
+      "required": false
+    },
+    {
+      "id": "aerialhell:lunatic_axe",
+      "required": false
+    },
+    {
+      "id": "aerialhell:lunatic_spear",
+      "required": false
+    },
+    {
+      "id": "aerialhell:lunatic_sword",
+      "required": false
+    },
+    {
+      "id": "aerialhell:magmatic_gel_axe",
+      "required": false
+    },
+    {
+      "id": "aerialhell:magmatic_gel_shuriken",
+      "required": false
+    },
+    {
+      "id": "aerialhell:magmatic_gel_spear",
+      "required": false
+    },
+    {
+      "id": "aerialhell:magmatic_gel_sword",
+      "required": false
+    },
+    {
+      "id": "aerialhell:obsidian_axe",
+      "required": false
+    },
+    {
+      "id": "aerialhell:obsidian_shuriken",
+      "required": false
+    },
+    {
+      "id": "aerialhell:obsidian_spear",
+      "required": false
+    },
+    {
+      "id": "aerialhell:obsidian_sword",
+      "required": false
+    },
+    {
+      "id": "aerialhell:ruby_axe",
+      "required": false
+    },
+    {
+      "id": "aerialhell:ruby_shuriken",
+      "required": false
+    },
+    {
+      "id": "aerialhell:ruby_spear",
+      "required": false
+    },
+    {
+      "id": "aerialhell:ruby_sword",
+      "required": false
+    },
+    {
+      "id": "aerialhell:volucite_axe",
+      "required": false
+    },
+    {
+      "id": "aerialhell:volucite_shuriken",
+      "required": false
+    },
+    {
+      "id": "aerialhell:volucite_spear",
+      "required": false
+    },
+    {
+      "id": "aerialhell:volucite_sword",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:arsonist_arcane_staff",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:arsonist_arcane_wand",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:arsonist_battleaxe",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:arsonist_fire_staff",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:arsonist_fire_wand",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:arsonist_frost_staff",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:arsonist_frost_wand",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:arsonist_halberd",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:arsonist_hammer",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:arsonist_holy_staff",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:arsonist_holy_wand",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:arsonist_katana",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:arsonist_longsword",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:arsonist_morningstar",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:arsonist_rapier",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:arsonist_sickle",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:arsonist_twin_blade_sword",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:arsonist_warhammer",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:azurite_battleaxe",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:azurite_halberd",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:azurite_hammer",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:azurite_holy_staff",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:azurite_holy_wand",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:azurite_katana",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:azurite_longsword",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:azurite_morningstar",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:azurite_rapier",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:azurite_sickle",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:azurite_twin_blade_sword",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:azurite_warhammer",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:lunatic_battleaxe",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:lunatic_halberd",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:lunatic_hammer",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:lunatic_holy_staff",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:lunatic_holy_wand",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:lunatic_katana",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:lunatic_longsword",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:lunatic_morningstar",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:lunatic_rapier",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:lunatic_sickle",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:lunatic_twin_blade_sword",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:lunatic_warhammer",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:magmatic_gel_battleaxe",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:magmatic_gel_halberd",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:magmatic_gel_hammer",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:magmatic_gel_holy_staff",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:magmatic_gel_holy_wand",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:magmatic_gel_katana",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:magmatic_gel_longsword",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:magmatic_gel_morningstar",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:magmatic_gel_rapier",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:magmatic_gel_sickle",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:magmatic_gel_twin_blade_sword",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:magmatic_gel_warhammer",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:obsidian_battleaxe",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:obsidian_halberd",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:obsidian_hammer",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:obsidian_holy_staff",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:obsidian_holy_wand",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:obsidian_katana",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:obsidian_longsword",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:obsidian_morningstar",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:obsidian_rapier",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:obsidian_sickle",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:obsidian_twin_blade_sword",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:obsidian_warhammer",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:ruby_battleaxe",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:ruby_halberd",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:ruby_hammer",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:ruby_holy_staff",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:ruby_holy_wand",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:ruby_katana",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:ruby_longsword",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:ruby_morningstar",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:ruby_rapier",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:ruby_sickle",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:ruby_twin_blade_sword",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:ruby_warhammer",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:shadow_axe",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:shadow_battleaxe",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:shadow_halberd",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:shadow_hammer",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:shadow_holy_staff",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:shadow_holy_wand",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:shadow_katana",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:shadow_longsword",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:shadow_morningstar",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:shadow_rapier",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:shadow_sickle",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:shadow_sword",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:shadow_twin_blade_sword",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:shadow_warhammer",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:volucite_battleaxe",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:volucite_halberd",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:volucite_hammer",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:volucite_holy_staff",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:volucite_holy_wand",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:volucite_katana",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:volucite_longsword",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:volucite_morningstar",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:volucite_rapier",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:volucite_sickle",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:volucite_twin_blade_sword",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:volucite_warhammer",
+      "required": false
+    }
+  ]
+}
