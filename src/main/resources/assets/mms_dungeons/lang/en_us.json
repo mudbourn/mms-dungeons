@@ -1,0 +1,8 @@
+{
+  "block.mms_dungeons.dungeon_portal": "Dungeon Portal",
+  "item.mms_dungeons.recovery_cross": "Recovery Cross",
+  "sound.mms_dungeons.chained_god_roar": "The Chained God roars",
+  "death.attack.mms_dungeons.chained_god": "%1$s succumbed to a curse",
+  "biome.mms_dungeons.dungeon_caves": "Caves",
+  "biome.mms_dungeons.aerial_hell_cavern": "Aerial Hell Cavern"
+}

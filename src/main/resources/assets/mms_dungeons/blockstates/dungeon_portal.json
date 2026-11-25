@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "mms_dungeons:block/dungeon_portal"
+    },
+    "axis=y": {
+      "model": "mms_dungeons:block/dungeon_portal"
+    },
+    "axis=z": {
+      "model": "mms_dungeons:block/dungeon_portal"
+    }
+  }
+}

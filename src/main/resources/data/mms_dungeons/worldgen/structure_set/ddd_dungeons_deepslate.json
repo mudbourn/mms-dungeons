@@ -1,0 +1,15 @@
+{
+  "placement": {
+    "type": "mms_dungeons:offset_spread",
+    "salt": 518203378,
+    "spacing": 160,
+    "separation": 126,
+    "grid_offset": 80
+  },
+  "structures": [
+    {
+      "structure": "mms_dungeons:ddd_plains_deepslate",
+      "weight": 1
+    }
+  ]
+}

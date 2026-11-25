@@ -1,0 +1,25 @@
+{
+  "required": true,
+  "package": "info.mudbourn.mmsdungeons.mixin.dungeon",
+  "compatibilityLevel": "JAVA_25",
+  "mixins": [
+    "AlexsCavesConditionMixin",
+    "AlexsCavesRarityMixin",
+    "CommandsMixin",
+    "DddPieceMixin",
+    "DddPruneMixin",
+    "DddStructurePlaceMixin",
+    "DddStructureStartMixin",
+    "DungeonDifficultyMixin",
+    "ItemEntityPortalMixin",
+    "VoronoiGeneratorAccessor",
+    "MonsterRoomMixin",
+    "RandomStateAccessor",
+    "SealedPocketMixin",
+    "TowerPieceMixin"
+  ],
+  "client": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

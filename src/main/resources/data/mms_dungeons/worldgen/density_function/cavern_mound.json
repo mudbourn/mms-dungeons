@@ -1,0 +1,7 @@
+{
+  "type": "mms_dungeons:cavern_disc",
+  "radius": 18.0,
+  "bottom": -125,
+  "top": -111,
+  "rounding": 6.0
+}

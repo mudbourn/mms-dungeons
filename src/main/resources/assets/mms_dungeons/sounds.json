@@ -1,0 +1,8 @@
+{
+  "chained_god_roar": {
+    "subtitle": "sound.mms_dungeons.chained_god_roar",
+    "sounds": [
+      "mms_dungeons:chained_god_roar"
+    ]
+  }
+}

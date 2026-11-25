@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "mms_dungeons",
+  "version": "${version}",
+  "name": "MMS Dungeons",
+  "description": "A dungeon dimension that leads to Aerial Hell, plus guilds and parties, for MMSLive01.",
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "info.mudbourn.mmsdungeons.MmsDungeons"
+    ],
+    "client": [
+      "info.mudbourn.mmsdungeons.client.MmsDungeonsClient"
+    ]
+  },
+  "mixins": [
+    "mms_dungeons.dungeon.mixins.json",
+    "mms_dungeons.features.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.20.1",
+    "minecraft": "~26.3",
+    "java": ">=25",
+    "fabric-api": "*",
+    "mms_economy": "*",
+    "mms_combat": "*",
+    "mms_uproot": "*",
+    "openpartiesandclaims": "*",
+    "spell_engine": "*",
+    "aerialhell": "*",
+    "alexscaves": "*",
+    "undergroundworlds": "*",
+    "mr_deadly_deadlydungeon": "*",
+    "mutantmonsters": "*",
+    "mob-ai-tweaks": "*"
+  }
+}

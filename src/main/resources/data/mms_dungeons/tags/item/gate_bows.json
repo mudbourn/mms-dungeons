@@ -1,0 +1,14 @@
+{
+  "values": [
+    "minecraft:bow",
+    "minecraft:crossbow",
+    {
+      "id": "expanded_weaponry:longbow",
+      "required": false
+    },
+    {
+      "id": "weaponsexpanded:chain_crossbow",
+      "required": false
+    }
+  ]
+}

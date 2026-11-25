@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:range_choice",
+  "input": "mms_dungeons:cavern_biome",
+  "min_inclusive": -1000000.0,
+  "max_exclusive": 0.0,
+  "when_in_range": 2.0,
+  "when_out_of_range": 0.0
+}

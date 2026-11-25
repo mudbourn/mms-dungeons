@@ -1,0 +1,94 @@
+{
+  "type": "minecraft:max",
+  "left": {
+    "type": "minecraft:max",
+    "left": {
+      "type": "minecraft:add",
+      "left": {
+        "type": "minecraft:add",
+        "left": {
+          "type": "minecraft:mul",
+          "left": "mms_dungeons:cavern_chamber",
+          "right": 0.15
+        },
+        "right": 0.8
+      },
+      "right": {
+        "type": "minecraft:add",
+        "left": {
+          "type": "minecraft:mul",
+          "left": {
+            "type": "minecraft:noise",
+            "noise": "minecraft:cave_cheese",
+            "xz_scale": 1.5,
+            "y_scale": 1.0
+          },
+          "right": 0.7
+        },
+        "right": {
+          "type": "minecraft:mul",
+          "left": {
+            "type": "minecraft:noise",
+            "noise": "minecraft:spaghetti_roughness",
+            "xz_scale": 1.0,
+            "y_scale": 1.0
+          },
+          "right": 0.3
+        }
+      }
+    },
+    "right": {
+      "type": "minecraft:mul",
+      "left": "mms_dungeons:cavern_mound",
+      "right": -0.3
+    }
+  },
+  "right": {
+    "type": "minecraft:add",
+    "left": {
+      "type": "minecraft:mul",
+      "left": {
+        "type": "minecraft:add",
+        "left": "minecraft:overworld/caves/pillars",
+        "right": -0.1
+      },
+      "right": 4.0
+    },
+    "right": {
+      "type": "minecraft:add",
+      "left": {
+        "type": "minecraft:mul",
+        "left": {
+          "type": "minecraft:noise",
+          "noise": "minecraft:spaghetti_roughness",
+          "xz_scale": 2.0,
+          "y_scale": 1.0
+        },
+        "right": 0.6
+      },
+      "right": {
+        "type": "minecraft:mul",
+        "left": {
+          "type": "minecraft:min",
+          "left": {
+            "type": "minecraft:gradient",
+            "axis": "y",
+            "from_coordinate": -117,
+            "from_value": 0.0,
+            "to_coordinate": -101,
+            "to_value": 1.2
+          },
+          "right": {
+            "type": "minecraft:gradient",
+            "axis": "y",
+            "from_coordinate": -101,
+            "from_value": 1.2,
+            "to_coordinate": -85,
+            "to_value": 0.0
+          }
+        },
+        "right": -1.0
+      }
+    }
+  }
+}

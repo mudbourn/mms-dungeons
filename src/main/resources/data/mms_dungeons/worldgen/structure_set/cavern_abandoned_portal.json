@@ -1,0 +1,14 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 731902211,
+    "separation": 48,
+    "spacing": 64
+  },
+  "structures": [
+    {
+      "structure": "mms_dungeons:cavern_abandoned_portal",
+      "weight": 1
+    }
+  ]
+}

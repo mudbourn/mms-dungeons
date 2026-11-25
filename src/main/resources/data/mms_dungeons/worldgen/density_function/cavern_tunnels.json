@@ -1,0 +1,9 @@
+{
+  "type": "mms_dungeons:cavern_tunnels",
+  "count": 4,
+  "start": 30.0,
+  "length": 110.0,
+  "radius": 3.5,
+  "base_y": -108,
+  "rise": 10.0
+}

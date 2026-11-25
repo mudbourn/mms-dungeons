@@ -1,0 +1,57 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "mutantmonsters:mutant_creeper",
+      "required": false
+    },
+    {
+      "id": "mutantmonsters:mutant_enderman",
+      "required": false
+    },
+    {
+      "id": "mutantmonsters:mutant_skeleton",
+      "required": false
+    },
+    {
+      "id": "mutantmonsters:mutant_zombie",
+      "required": false
+    },
+    {
+      "id": "alexscaves:luxtructosaurus",
+      "required": false
+    },
+    {
+      "id": "alexscaves:tremorzilla",
+      "required": false
+    },
+    {
+      "id": "alexscaves:hullbreaker",
+      "required": false
+    },
+    {
+      "id": "alexscaves:forsaken",
+      "required": false
+    },
+    {
+      "id": "alexscaves:watcher",
+      "required": false
+    },
+    {
+      "id": "alexscaves:gum_worm",
+      "required": false
+    },
+    {
+      "id": "friendsandfoes:wildfire",
+      "required": false
+    },
+    {
+      "id": "undergroundworlds:abyssal_guardian",
+      "required": false
+    },
+    {
+      "id": "#aerialhell:boss",
+      "required": false
+    }
+  ]
+}

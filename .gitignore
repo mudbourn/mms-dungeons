@@ -1,0 +1,16 @@
+.gradle/
+build/
+run/
+
+# Compile-only redistributables, several ARR; provided at runtime by the pack.
+libs/
+
+.DS_Store
+*.pem
+*.log
+*.txt
+*.md
+!README.md
+!docs/*.md
+
+.claude/settings.local.json
