@@ -18,8 +18,9 @@ public class CrawModel extends EntityModel<CrawRenderState> {
 
     public CrawModel(ModelPart root) {
         super(root);
-        this.head = root.getChild("head");
-        this.headTuft = this.head.getChild("head_tuft");
+        // the saddle layer has wings, legs and body only, so the head and its tuft are absent there
+        this.head = root.hasChild("head") ? root.getChild("head") : null;
+        this.headTuft = this.head != null && this.head.hasChild("head_tuft") ? this.head.getChild("head_tuft") : null;
         this.leftWing = root.getChild("left_wing");
         this.rightWing = root.getChild("right_wing");
         this.walking = CrawAnimations.walking.bake(root);
@@ -29,11 +30,13 @@ public class CrawModel extends EntityModel<CrawRenderState> {
     public void setupAnim(CrawRenderState state) {
         super.setupAnim(state);
         this.walking.applyWalk(state.walkAnimationPos, state.walkAnimationSpeed, 4.0f, 4.0f);
-        this.head.yRot = state.yRot * (float) (Math.PI / 180.0);
-        this.head.xRot = state.xRot * (float) (Math.PI / 180.0);
+        if (this.head != null) {
+            this.head.yRot = state.yRot * (float) (Math.PI / 180.0);
+            this.head.xRot = state.xRot * (float) (Math.PI / 180.0);
+        }
         float angle = Mth.cos(state.flap) * WING_SWING * Math.max(state.flapSpeed, MIN_FLAP_SPEED);
         this.rightWing.zRot = angle;
         this.leftWing.zRot = -angle;
-        this.headTuft.visible = !state.isBaby;
+        if (this.headTuft != null) this.headTuft.visible = !state.isBaby;
     }
 }
