@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "mms_dungeons:kobold_iron_sword",
+    "mms_dungeons:kobold_iron_pickaxe",
+    "mms_dungeons:kobold_iron_axe",
+    "mms_dungeons:kobold_iron_shovel",
+    "mms_dungeons:kobold_iron_hoe"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "a": "mms_dungeons:tarred_sandstone"
+  },
+  "pattern": [
+    "aaa",
+    "aaa"
+  ],
+  "result": {
+    "id": "mms_dungeons:tarred_sandstone_wall",
+    "count": 6
+  }
+}

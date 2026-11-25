@@ -1,0 +1,160 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "mms_dungeons:block/orpiment/amber_druse"
+      },
+      "when": {
+        "facing": "north",
+        "flower_amount": "1|2|3|4"
+      }
+    },
+    {
+      "apply": {
+        "model": "mms_dungeons:block/orpiment/amber_druse",
+        "y": 90
+      },
+      "when": {
+        "facing": "east",
+        "flower_amount": "1|2|3|4"
+      }
+    },
+    {
+      "apply": {
+        "model": "mms_dungeons:block/orpiment/amber_druse",
+        "y": 180
+      },
+      "when": {
+        "facing": "south",
+        "flower_amount": "1|2|3|4"
+      }
+    },
+    {
+      "apply": {
+        "model": "mms_dungeons:block/orpiment/amber_druse",
+        "y": 270
+      },
+      "when": {
+        "facing": "west",
+        "flower_amount": "1|2|3|4"
+      }
+    },
+    {
+      "apply": {
+        "model": "mms_dungeons:block/orpiment/amber_druse_2_model"
+      },
+      "when": {
+        "facing": "north",
+        "flower_amount": "2|3|4"
+      }
+    },
+    {
+      "apply": {
+        "model": "mms_dungeons:block/orpiment/amber_druse_2_model",
+        "y": 90
+      },
+      "when": {
+        "facing": "east",
+        "flower_amount": "2|3|4"
+      }
+    },
+    {
+      "apply": {
+        "model": "mms_dungeons:block/orpiment/amber_druse_2_model",
+        "y": 180
+      },
+      "when": {
+        "facing": "south",
+        "flower_amount": "2|3|4"
+      }
+    },
+    {
+      "apply": {
+        "model": "mms_dungeons:block/orpiment/amber_druse_2_model",
+        "y": 270
+      },
+      "when": {
+        "facing": "west",
+        "flower_amount": "2|3|4"
+      }
+    },
+    {
+      "apply": {
+        "model": "mms_dungeons:block/orpiment/amber_druse_3_model"
+      },
+      "when": {
+        "facing": "north",
+        "flower_amount": "3|4"
+      }
+    },
+    {
+      "apply": {
+        "model": "mms_dungeons:block/orpiment/amber_druse_3_model",
+        "y": 90
+      },
+      "when": {
+        "facing": "east",
+        "flower_amount": "3|4"
+      }
+    },
+    {
+      "apply": {
+        "model": "mms_dungeons:block/orpiment/amber_druse_3_model",
+        "y": 180
+      },
+      "when": {
+        "facing": "south",
+        "flower_amount": "3|4"
+      }
+    },
+    {
+      "apply": {
+        "model": "mms_dungeons:block/orpiment/amber_druse_3_model",
+        "y": 270
+      },
+      "when": {
+        "facing": "west",
+        "flower_amount": "3|4"
+      }
+    },
+    {
+      "apply": {
+        "model": "mms_dungeons:block/orpiment/amber_druse_4_model"
+      },
+      "when": {
+        "facing": "north",
+        "flower_amount": "4"
+      }
+    },
+    {
+      "apply": {
+        "model": "mms_dungeons:block/orpiment/amber_druse_4_model",
+        "y": 90
+      },
+      "when": {
+        "facing": "east",
+        "flower_amount": "4"
+      }
+    },
+    {
+      "apply": {
+        "model": "mms_dungeons:block/orpiment/amber_druse_4_model",
+        "y": 180
+      },
+      "when": {
+        "facing": "south",
+        "flower_amount": "4"
+      }
+    },
+    {
+      "apply": {
+        "model": "mms_dungeons:block/orpiment/amber_druse_4_model",
+        "y": 270
+      },
+      "when": {
+        "facing": "west",
+        "flower_amount": "4"
+      }
+    }
+  ]
+}

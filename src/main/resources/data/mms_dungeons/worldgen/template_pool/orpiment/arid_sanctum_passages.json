@@ -1,0 +1,50 @@
+{
+  "fallback": "mms_dungeons:orpiment/arid_sanctum_passage_blocked_pool",
+  "elements": [
+    {
+      "weight": 2,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "mms_dungeons:orpiment/arid_sanctum_passage_basic",
+        "projection": "rigid",
+        "processors": "mms_dungeons:orpiment/arid_sanctum_degradation"
+      }
+    },
+    {
+      "weight": 2,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "mms_dungeons:orpiment/arid_sanctum_passage_right",
+        "projection": "rigid",
+        "processors": "mms_dungeons:orpiment/arid_sanctum_degradation"
+      }
+    },
+    {
+      "weight": 2,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "mms_dungeons:orpiment/arid_sanctum_passage_left",
+        "projection": "rigid",
+        "processors": "mms_dungeons:orpiment/arid_sanctum_degradation"
+      }
+    },
+    {
+      "weight": 2,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "mms_dungeons:orpiment/arid_sanctum_passage_enclosures",
+        "projection": "rigid",
+        "processors": "mms_dungeons:orpiment/arid_sanctum_degradation"
+      }
+    },
+    {
+      "weight": 2,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "mms_dungeons:orpiment/arid_sanctum_passage_tar_falls",
+        "projection": "rigid",
+        "processors": "mms_dungeons:orpiment/arid_sanctum_degradation"
+      }
+    }
+  ]
+}

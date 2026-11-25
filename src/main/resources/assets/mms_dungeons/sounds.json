@@ -4,5 +4,972 @@
     "sounds": [
       "mms_dungeons:chained_god_roar"
     ]
+  },
+  "kobold_trade": {
+    "subtitle": "sound.mms_dungeons.kobold_trade",
+    "sounds": [
+      {
+        "name": "mms_dungeons:kobolds/kobold_trade_1",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:kobolds/kobold_trade_2",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:kobolds/kobold_trade_3",
+        "stream": false
+      }
+    ]
+  },
+  "kobold_purr": {
+    "subtitle": "sound.mms_dungeons.kobold_purr",
+    "sounds": [
+      {
+        "name": "mms_dungeons:kobolds/kobold_purr_1",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:kobolds/kobold_purr_2",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:kobolds/kobold_purr_3",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:kobolds/kobold_purr_4",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:kobolds/kobold_purr_5",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:kobolds/kobold_purr_6",
+        "stream": false
+      }
+    ]
+  },
+  "kobold_death": {
+    "subtitle": "sound.mms_dungeons.kobold_death",
+    "sounds": [
+      {
+        "name": "mms_dungeons:kobolds/kobold_death_1",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:kobolds/kobold_death_2",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:kobolds/kobold_death_3",
+        "stream": false
+      }
+    ]
+  },
+  "kobold_hurt": {
+    "subtitle": "sound.mms_dungeons.kobold_hurt",
+    "sounds": [
+      {
+        "name": "mms_dungeons:kobolds/kobold_hit_1",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:kobolds/kobold_hit_2",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:kobolds/kobold_hit_3",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:kobolds/kobold_hit_4",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:kobolds/kobold_hit_5",
+        "stream": false
+      }
+    ]
+  },
+  "kobold_idle": {
+    "subtitle": "sound.mms_dungeons.kobold_idle",
+    "sounds": [
+      {
+        "name": "mms_dungeons:kobolds/kobold_idle_1",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:kobolds/kobold_idle_2",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:kobolds/kobold_idle_3",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:kobolds/kobold_idle_4",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:kobolds/kobold_idle_5",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:kobolds/kobold_idle_6",
+        "stream": false
+      }
+    ]
+  },
+  "music_kobblestone": {
+    "subtitle": "sound.mms_dungeons.music_kobblestone",
+    "sounds": [
+      {
+        "name": "mms_dungeons:music_discs/kobblestone",
+        "stream": true
+      }
+    ]
+  },
+  "kobold_yip": {
+    "subtitle": "sound.mms_dungeons.kobold_yip",
+    "sounds": [
+      {
+        "name": "mms_dungeons:kobolds/kobold_yip_10",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:kobolds/kobold_yip_09",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:kobolds/kobold_yip_08",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:kobolds/kobold_yip_07",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:kobolds/kobold_yip_06",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:kobolds/kobold_yip_05",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:kobolds/kobold_yip_04",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:kobolds/kobold_yip_03",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:kobolds/kobold_yip_02",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:kobolds/kobold_yip_01",
+        "stream": false
+      }
+    ]
+  },
+  "tar_cube_jump": {
+    "subtitle": "sound.mms_dungeons.tar_cube_jump",
+    "sounds": [
+      {
+        "name": "mms_dungeons:orpiment/tar_cube_jump_1",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/tar_cube_jump_2",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/tar_cube_jump_3",
+        "stream": false
+      }
+    ]
+  },
+  "tar_cube_hurt": {
+    "subtitle": "sound.mms_dungeons.tar_cube_hurt",
+    "sounds": [
+      {
+        "name": "mms_dungeons:orpiment/tar_cube_hurt_1",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/tar_cube_hurt_2",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/tar_cube_hurt_3",
+        "stream": false
+      }
+    ]
+  },
+  "tar_cube_death": {
+    "subtitle": "sound.mms_dungeons.tar_cube_death",
+    "sounds": [
+      {
+        "name": "mms_dungeons:orpiment/tar_cube_death_1",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/tar_cube_death_2",
+        "stream": false
+      }
+    ]
+  },
+  "tarred_sand_hit": {
+    "subtitle": "sound.mms_dungeons.tarred_sand_hit",
+    "sounds": [
+      {
+        "name": "mms_dungeons:orpiment/tarred_sand_hit_1",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/tarred_sand_hit_2",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/tarred_sand_hit_3",
+        "stream": false
+      }
+    ]
+  },
+  "tarred_sand_break": {
+    "subtitle": "sound.mms_dungeons.tarred_sand_break",
+    "sounds": [
+      {
+        "name": "mms_dungeons:orpiment/tarred_sand_break_1",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/tarred_sand_break_2",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/tarred_sand_break_3",
+        "stream": false
+      }
+    ]
+  },
+  "tarred_sandstone_hit": {
+    "subtitle": "sound.mms_dungeons.tarred_sandstone_hit",
+    "sounds": [
+      {
+        "name": "mms_dungeons:orpiment/tarred_sandstone_hit_1",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/tarred_sandstone_hit_2",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/tarred_sandstone_hit_3",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/tarred_sandstone_hit_4",
+        "stream": false
+      }
+    ]
+  },
+  "tarred_sandstone_break": {
+    "subtitle": "sound.mms_dungeons.tarred_sandstone_break",
+    "sounds": [
+      {
+        "name": "mms_dungeons:orpiment/tarred_sandstone_break_1",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/tarred_sandstone_break_2",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/tarred_sandstone_break_3",
+        "stream": false
+      }
+    ]
+  },
+  "orpiment_amber_place": {
+    "subtitle": "sound.mms_dungeons.orpiment_amber_place",
+    "sounds": [
+      {
+        "name": "mms_dungeons:orpiment/amber_place_1",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/amber_place_2",
+        "stream": false
+      }
+    ]
+  },
+  "orpiment_amber_break": {
+    "subtitle": "sound.mms_dungeons.orpiment_amber_break",
+    "sounds": [
+      {
+        "name": "mms_dungeons:orpiment/amber_place_3",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/stone_dig1",
+        "stream": false
+      }
+    ]
+  },
+  "music_disc_fossil": {
+    "sounds": [
+      {
+        "name": "mms_dungeons:orpiment/fossil_v8",
+        "stream": true
+      }
+    ]
+  },
+  "tar_empty": {
+    "subtitle": "sound.mms_dungeons.tar_empty",
+    "sounds": [
+      {
+        "name": "mms_dungeons:orpiment/tar_place_1",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/tar_place_2",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/tar_place_3",
+        "stream": false
+      }
+    ]
+  },
+  "orpiment_lignite_break": {
+    "subtitle": "sound.mms_dungeons.orpiment_lignite_break",
+    "sounds": [
+      {
+        "name": "mms_dungeons:orpiment/lignite_break_1",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/lignite_break_2",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/lignite_break_3",
+        "stream": false
+      }
+    ]
+  },
+  "orpiment_lignite_hit": {
+    "subtitle": "sound.mms_dungeons.orpiment_lignite_hit",
+    "sounds": [
+      {
+        "name": "mms_dungeons:orpiment/lignite_hit_1",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/lignite_hit_2",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/lignite_hit_3",
+        "stream": false
+      }
+    ]
+  },
+  "wisp_ambient": {
+    "subtitle": "sound.mms_dungeons.wisp_ambient",
+    "sounds": [
+      {
+        "name": "mms_dungeons:orpiment/wisp_ambient_1",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/wisp_ambient_2",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/wisp_ambient_3",
+        "stream": false
+      }
+    ]
+  },
+  "wisp_hurt": {
+    "subtitle": "sound.mms_dungeons.wisp_hurt",
+    "sounds": [
+      {
+        "name": "mms_dungeons:orpiment/wisp_hurt_1",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/wisp_hurt_2",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/wisp_hurt_3",
+        "stream": false
+      }
+    ]
+  },
+  "wisp_death": {
+    "subtitle": "sound.mms_dungeons.wisp_death",
+    "sounds": [
+      {
+        "name": "mms_dungeons:orpiment/wisp_death_1",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/wisp_death_2",
+        "stream": false
+      }
+    ]
+  },
+  "wraith_hurt": {
+    "subtitle": "sound.mms_dungeons.wraith_hurt",
+    "sounds": [
+      {
+        "name": "mms_dungeons:orpiment/wraith_hurt_1",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/wraith_hurt_2",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/wraith_hurt_3",
+        "stream": false
+      }
+    ]
+  },
+  "wraith_death": {
+    "subtitle": "sound.mms_dungeons.wraith_death",
+    "sounds": [
+      {
+        "name": "mms_dungeons:orpiment/wraith_death_1",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/wraith_death_2",
+        "stream": false
+      }
+    ]
+  },
+  "wraith_shoot": {
+    "subtitle": "sound.mms_dungeons.wraith_shoot",
+    "sounds": [
+      {
+        "name": "mms_dungeons:orpiment/wraith_shoot_1",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/wraith_shoot_2",
+        "stream": false
+      }
+    ]
+  },
+  "wraith_smash": {
+    "subtitle": "sound.mms_dungeons.wraith_smash",
+    "sounds": [
+      {
+        "name": "mms_dungeons:orpiment/wraith_smash_1",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/wraith_smash_2",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/wraith_smash_3",
+        "stream": false
+      }
+    ]
+  },
+  "wraith_bite": {
+    "subtitle": "sound.mms_dungeons.wraith_bite",
+    "sounds": [
+      {
+        "name": "mms_dungeons:orpiment/wraith_bite_1",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/wraith_bite_2",
+        "stream": false
+      }
+    ]
+  },
+  "wraith_summon": {
+    "subtitle": "sound.mms_dungeons.wraith_summon",
+    "sounds": [
+      {
+        "name": "mms_dungeons:orpiment/wraith_summon_1",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/wraith_summon_2",
+        "stream": false
+      }
+    ]
+  },
+  "wraith_swoop": {
+    "subtitle": "sound.mms_dungeons.wraith_swoop",
+    "sounds": [
+      {
+        "name": "mms_dungeons:orpiment/wraith_swoop_1",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/wraith_swoop_2",
+        "stream": false
+      }
+    ]
+  },
+  "wraith_ambient": {
+    "subtitle": "sound.mms_dungeons.wraith_ambient",
+    "sounds": [
+      {
+        "name": "mms_dungeons:orpiment/wraith_ambient_1",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/wraith_ambient_2",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/wraith_ambient_3",
+        "stream": false
+      }
+    ]
+  },
+  "wraith_spawn": {
+    "subtitle": "sound.mms_dungeons.wraith_spawn",
+    "sounds": [
+      {
+        "name": "mms_dungeons:orpiment/wraith_spawn_1",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/wraith_spawn_2",
+        "stream": false
+      }
+    ]
+  },
+  "ectoplasm_scaffold_break": {
+    "subtitle": "sound.mms_dungeons.ectoplasm_scaffold_break",
+    "sounds": [
+      {
+        "name": "mms_dungeons:orpiment/ghost_block_break_1",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/ghost_block_break_2",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/ghost_block_break_3",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/ghost_block_break_4",
+        "stream": false
+      }
+    ]
+  },
+  "ectoplasm_scaffold_hit": {
+    "subtitle": "sound.mms_dungeons.ectoplasm_scaffold_hit",
+    "sounds": [
+      {
+        "name": "mms_dungeons:orpiment/ghost_block_break_1",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/ghost_block_break_2",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/ghost_block_break_3",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/ghost_block_break_4",
+        "stream": false
+      }
+    ]
+  },
+  "ectoplasm_scaffold_place": {
+    "subtitle": "sound.mms_dungeons.ectoplasm_scaffold_place",
+    "sounds": [
+      {
+        "name": "mms_dungeons:orpiment/ghost_block_break_1",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/ghost_block_break_2",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/ghost_block_break_3",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/ghost_block_break_4",
+        "stream": false
+      }
+    ]
+  },
+  "orpiment_lignite_place": {
+    "subtitle": "sound.mms_dungeons.orpiment_lignite_place",
+    "sounds": [
+      {
+        "name": "mms_dungeons:orpiment/lignite_break_1",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/lignite_break_2",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/lignite_break_3",
+        "stream": false
+      }
+    ]
+  },
+  "tarred_sand_place": {
+    "subtitle": "sound.mms_dungeons.tarred_sand_place",
+    "sounds": [
+      {
+        "name": "mms_dungeons:orpiment/tarred_sand_break_1",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/tarred_sand_break_2",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/tarred_sand_break_3",
+        "stream": false
+      }
+    ]
+  },
+  "tarred_sand_step": {
+    "subtitle": "sound.mms_dungeons.tarred_sand_step",
+    "sounds": [
+      {
+        "name": "mms_dungeons:orpiment/tarred_sand_hit_1",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/tarred_sand_hit_2",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/tarred_sand_hit_3",
+        "stream": false
+      }
+    ]
+  },
+  "tarred_sandstone_place": {
+    "subtitle": "sound.mms_dungeons.tarred_sandstone_place",
+    "sounds": [
+      {
+        "name": "mms_dungeons:orpiment/tarred_sandstone_break_1",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/tarred_sandstone_break_2",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/tarred_sandstone_break_3",
+        "stream": false
+      }
+    ]
+  },
+  "tarred_sandstone_step": {
+    "subtitle": "sound.mms_dungeons.tarred_sandstone_step",
+    "sounds": [
+      {
+        "name": "mms_dungeons:orpiment/tarred_sandstone_hit_1",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/tarred_sandstone_hit_2",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/tarred_sandstone_hit_3",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/tarred_sandstone_hit_4",
+        "stream": false
+      }
+    ]
+  },
+  "sap_fill": {
+    "subtitle": "sound.mms_dungeons.sap_fill",
+    "sounds": [
+      {
+        "name": "mms_dungeons:orpiment/sap_scoop_1",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/sap_scoop_2",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/sap_scoop_3",
+        "stream": false
+      }
+    ]
+  },
+  "sap_empty": {
+    "subtitle": "sound.mms_dungeons.sap_empty",
+    "sounds": [
+      {
+        "name": "mms_dungeons:orpiment/empty_sap_1",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/empty_sap_2",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/empty_sap_3",
+        "stream": false
+      }
+    ]
+  },
+  "sap_insert": {
+    "subtitle": "sound.mms_dungeons.sap_insert",
+    "sounds": [
+      {
+        "name": "mms_dungeons:orpiment/sap_insert_1",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/sap_insert_2",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/sap_insert_3",
+        "stream": false
+      }
+    ]
+  },
+  "sap_jump": {
+    "subtitle": "sound.mms_dungeons.sap_jump",
+    "sounds": [
+      {
+        "name": "mms_dungeons:orpiment/sap_jump_1",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/sap_jump_2",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/sap_jump_3",
+        "stream": false
+      }
+    ]
+  },
+  "sap_hurt": {
+    "subtitle": "sound.mms_dungeons.sap_hurt",
+    "sounds": [
+      {
+        "name": "mms_dungeons:orpiment/sap_hurt_1",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/sap_hurt_2",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/sap_hurt_3",
+        "stream": false
+      }
+    ]
+  },
+  "sap_death": {
+    "subtitle": "sound.mms_dungeons.sap_death",
+    "sounds": [
+      {
+        "name": "mms_dungeons:orpiment/sap_death_1",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/sap_death_2",
+        "stream": false
+      }
+    ]
+  },
+  "burst_spawner_activate": {
+    "subtitle": "sound.mms_dungeons.burst_spawner_activate",
+    "sounds": [
+      {
+        "name": "mms_dungeons:orpiment/burst_spawner_activate_1",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/burst_spawner_activate_2",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/burst_spawner_activate_3",
+        "stream": false
+      }
+    ]
+  },
+  "relay_spawner_connect": {
+    "subtitle": "sound.mms_dungeons.relay_spawner_connect",
+    "sounds": [
+      {
+        "name": "mms_dungeons:orpiment/relay_spawner_connect_1",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/relay_spawner_connect_2",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/relay_spawner_connect_3",
+        "stream": false
+      }
+    ]
+  },
+  "craw_egg_crack": {
+    "subtitle": "sound.mms_dungeons.craw_egg_crack",
+    "sounds": [
+      {
+        "name": "mms_dungeons:orpiment/craw_egg_crack_1",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/craw_egg_crack_2",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/craw_egg_crack_3",
+        "stream": false
+      }
+    ]
+  },
+  "craw_egg_hatch": {
+    "subtitle": "sound.mms_dungeons.craw_egg_hatch",
+    "sounds": [
+      {
+        "name": "mms_dungeons:orpiment/craw_egg_hatch_1",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/craw_egg_hatch_2",
+        "stream": false
+      }
+    ]
+  },
+  "craw_hurt": {
+    "subtitle": "sound.mms_dungeons.craw_hurt",
+    "sounds": [
+      {
+        "name": "mms_dungeons:orpiment/craw_hurt_1",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/craw_hurt_2",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/craw_hurt_3",
+        "stream": false
+      }
+    ]
+  },
+  "craw_death": {
+    "subtitle": "sound.mms_dungeons.craw_death",
+    "sounds": [
+      {
+        "name": "mms_dungeons:orpiment/craw_death_1",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/craw_death_2",
+        "stream": false
+      }
+    ]
+  },
+  "craw_step": {
+    "subtitle": "sound.mms_dungeons.craw_step",
+    "sounds": [
+      {
+        "name": "mms_dungeons:orpiment/craw_egg_crack_1",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/craw_step_1",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/craw_step_2",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/craw_step_3",
+        "stream": false
+      }
+    ]
+  },
+  "craw_eat": {
+    "subtitle": "sound.mms_dungeons.craw_eat",
+    "sounds": [
+      {
+        "name": "mms_dungeons:orpiment/craw_eat_1",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/craw_eat_2",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/craw_eat_3",
+        "stream": false
+      }
+    ]
+  },
+  "craw_tired": {
+    "subtitle": "sound.mms_dungeons.craw_tired",
+    "sounds": [
+      {
+        "name": "mms_dungeons:orpiment/craw_tired_1",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/craw_tired_2",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/craw_tired_3",
+        "stream": false
+      }
+    ]
+  },
+  "craw_dash": {
+    "subtitle": "sound.mms_dungeons.craw_dash",
+    "sounds": [
+      {
+        "name": "mms_dungeons:orpiment/craw_dash_1",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/craw_dash_2",
+        "stream": false
+      },
+      {
+        "name": "mms_dungeons:orpiment/craw_dash_3",
+        "stream": false
+      }
+    ]
   }
 }

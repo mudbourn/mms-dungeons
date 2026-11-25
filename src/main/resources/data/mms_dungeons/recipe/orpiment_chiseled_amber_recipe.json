@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "a": "mms_dungeons:orpiment_amber_slab"
+  },
+  "pattern": [
+    "a",
+    "a"
+  ],
+  "result": {
+    "id": "mms_dungeons:orpiment_chiseled_amber"
+  }
+}

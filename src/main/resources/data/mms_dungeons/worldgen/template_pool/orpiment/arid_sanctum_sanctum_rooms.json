@@ -1,0 +1,59 @@
+{
+  "fallback": "mms_dungeons:orpiment/arid_sanctum_room_blocked_pool",
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "mms_dungeons:orpiment/arid_sanctum_room_hallway",
+        "projection": "rigid",
+        "processors": "mms_dungeons:orpiment/arid_sanctum_degradation"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "mms_dungeons:orpiment/arid_sanctum_room_tar_chasm",
+        "projection": "rigid",
+        "processors": "mms_dungeons:orpiment/arid_sanctum_degradation"
+      }
+    },
+    {
+      "weight": 2,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "mms_dungeons:orpiment/arid_sanctum_room_tower",
+        "projection": "rigid",
+        "processors": "mms_dungeons:orpiment/arid_sanctum_degradation"
+      }
+    },
+    {
+      "weight": 2,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "mms_dungeons:orpiment/arid_sanctum_room_spires",
+        "projection": "rigid",
+        "processors": "mms_dungeons:orpiment/arid_sanctum_degradation"
+      }
+    },
+    {
+      "weight": 2,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "mms_dungeons:orpiment/arid_sanctum_room_caged",
+        "projection": "rigid",
+        "processors": "mms_dungeons:orpiment/arid_sanctum_degradation"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "mms_dungeons:orpiment/arid_sanctum_room_complex",
+        "projection": "rigid",
+        "processors": "mms_dungeons:orpiment/arid_sanctum_degradation"
+      }
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "mms_dungeons:block/orpiment/petrified_log",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "mms_dungeons:block/orpiment/petrified_log"
+    },
+    "axis=z": {
+      "model": "mms_dungeons:block/orpiment/petrified_log",
+      "x": 90
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "#minecraft:raiders",
+    "#minecraft:skeletons",
+    "minecraft:spider",
+    "minecraft:cave_spider",
+    "minecraft:creaking",
+    "#mms_dungeons:kobold_targets"
+  ]
+}

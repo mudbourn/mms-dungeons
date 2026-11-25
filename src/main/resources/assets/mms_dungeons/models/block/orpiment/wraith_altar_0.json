@@ -1,0 +1,9 @@
+{
+  "parent": "mms_dungeons:block/orpiment/wraith_altar",
+  "textures": {
+    "all": "mms_dungeons:block/orpiment/wraith_altar",
+    "particle": "minecraft:block/deepslate_bricks",
+    "0": "mms_dungeons:block/orpiment/wraith_altar"
+  },
+  "render_type": "solid"
+}

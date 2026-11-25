@@ -1,0 +1,13 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "mms_dungeons:block/orpiment/ghost_block_transparent",
+    "up": "mms_dungeons:block/orpiment/ghost_block_transparent",
+    "north": "mms_dungeons:block/orpiment/ghost_block_transparent",
+    "east": "mms_dungeons:block/orpiment/ghost_block_transparent",
+    "south": "mms_dungeons:block/orpiment/ghost_block_transparent",
+    "west": "mms_dungeons:block/orpiment/ghost_block_transparent",
+    "particle": "mms_dungeons:block/orpiment/ghost_block_transparent"
+  },
+  "render_type": "translucent"
+}

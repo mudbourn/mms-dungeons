@@ -1,0 +1,58 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": {
+        "type": "minecraft:uniform",
+        "min": 0,
+        "max": 1
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "mms_dungeons:orpiment_amber_chunk",
+          "weight": 1,
+          "condition": {
+            "type": "minecraft:inverted",
+            "term": "minecraft:tool/can_silk_touch"
+          },
+          "modifier": [
+            {
+              "type": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            },
+            {
+              "type": "minecraft:apply_bonus",
+              "enchantment": "minecraft:fortune",
+              "formula": "minecraft:ore_drops"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "mms_dungeons:orpiment_amber",
+          "weight": 1,
+          "condition": "minecraft:tool/can_silk_touch",
+          "modifier": {
+            "type": "minecraft:set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 1,
+              "max": 1
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "random_sequence": "mms_dungeons:blocks/orpiment_amber"
+}

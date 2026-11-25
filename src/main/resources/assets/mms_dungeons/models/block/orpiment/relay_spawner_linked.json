@@ -1,0 +1,13 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "mms_dungeons:block/orpiment/activated_relay_spawner_bottom",
+    "up": "mms_dungeons:block/orpiment/activated_relay_spawner_top",
+    "north": "mms_dungeons:block/orpiment/activated_relay_spawner_side",
+    "east": "mms_dungeons:block/orpiment/activated_relay_spawner_side",
+    "south": "mms_dungeons:block/orpiment/activated_relay_spawner_side",
+    "west": "mms_dungeons:block/orpiment/activated_relay_spawner_side",
+    "particle": "mms_dungeons:block/orpiment/activated_relay_spawner_bottom"
+  },
+  "render_type": "cutout"
+}

@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:smithing_trim",
+  "addition": "#minecraft:trim_materials",
+  "base": "#minecraft:trimmable_armor",
+  "pattern": "mms_dungeons:shine",
+  "template": "mms_dungeons:shine_smithing_template"
+}

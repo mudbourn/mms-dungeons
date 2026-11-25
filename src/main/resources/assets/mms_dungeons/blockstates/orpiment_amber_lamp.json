@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "torch_lit=true,soul_torch_lit=false": {
+      "model": "mms_dungeons:block/orpiment/amber_lamp_0"
+    },
+    "torch_lit=false,soul_torch_lit=true": {
+      "model": "mms_dungeons:block/orpiment/amber_lamp_1"
+    },
+    "torch_lit=true,soul_torch_lit=true": {
+      "model": "mms_dungeons:block/orpiment/amber_lamp"
+    },
+    "torch_lit=false,soul_torch_lit=false": {
+      "model": "mms_dungeons:block/orpiment/amber_lamp"
+    }
+  }
+}

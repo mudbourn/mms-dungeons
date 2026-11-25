@@ -1,0 +1,9 @@
+{
+  "parent": "mms_dungeons:block/orpiment/amber_druse_3",
+  "textures": {
+    "all": "mms_dungeons:block/orpiment/amber_druse_3",
+    "particle": "mms_dungeons:block/orpiment/amber_druse_3",
+    "0": "mms_dungeons:block/orpiment/amber_druse_3"
+  },
+  "render_type": "minecraft:translucent"
+}

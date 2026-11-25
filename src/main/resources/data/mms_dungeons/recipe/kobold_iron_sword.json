@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": "minecraft:iron_ingot",
+  "base": "minecraft:iron_sword",
+  "result": {
+    "id": "mms_dungeons:kobold_iron_sword"
+  },
+  "template": "mms_dungeons:kobold_template"
+}

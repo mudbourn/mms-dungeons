@@ -1,0 +1,7 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "mms_dungeons:item/orpiment/petrified_roots_bottom"
+  },
+  "render_type": "translucent"
+}

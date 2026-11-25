@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "a": "mms_dungeons:tarred_sandstone_slab"
+  },
+  "pattern": [
+    "a",
+    "a"
+  ],
+  "result": {
+    "id": "mms_dungeons:chiseled_tarred_sandstone"
+  }
+}

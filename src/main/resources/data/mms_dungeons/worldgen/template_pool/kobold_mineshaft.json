@@ -1,0 +1,77 @@
+{
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "weight": 7,
+      "element": {
+        "location": "mms_dungeons:kobold/mineshaft/kobold_mineshaft_01",
+        "processors": "mms_dungeons:kobold_mineshaft",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 7,
+      "element": {
+        "location": "mms_dungeons:kobold/mineshaft/kobold_mineshaft_02",
+        "processors": "mms_dungeons:kobold_mineshaft",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 2,
+      "element": {
+        "location": "mms_dungeons:kobold/mineshaft/kobold_mineshaft_03",
+        "processors": "mms_dungeons:kobold_mineshaft",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 7,
+      "element": {
+        "location": "mms_dungeons:kobold/mineshaft/kobold_mineshaft_04",
+        "processors": "mms_dungeons:kobold_mineshaft",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 7,
+      "element": {
+        "location": "mms_dungeons:kobold/mineshaft/kobold_mineshaft_05",
+        "processors": "mms_dungeons:kobold_mineshaft",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 4,
+      "element": {
+        "location": "mms_dungeons:kobold/mineshaft/kobold_mineshaft_06",
+        "processors": "mms_dungeons:kobold_mineshaft",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 4,
+      "element": {
+        "location": "mms_dungeons:kobold/mineshaft/kobold_mineshaft_07",
+        "processors": "mms_dungeons:kobold_mineshaft",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 4,
+      "element": {
+        "location": "mms_dungeons:kobold/mineshaft/kobold_mineshaft_08",
+        "processors": "mms_dungeons:kobold_mineshaft",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}

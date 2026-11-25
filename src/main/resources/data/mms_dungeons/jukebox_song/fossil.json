@@ -1,0 +1,8 @@
+{
+  "comparator_output": 9,
+  "description": {
+    "translate": "item.mms_dungeons.music_disc_fossil.desc"
+  },
+  "length_in_seconds": 161.9,
+  "sound_event": "mms_dungeons:music_disc_fossil"
+}

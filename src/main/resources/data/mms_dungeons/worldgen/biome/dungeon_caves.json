@@ -46,6 +46,72 @@
               "type": "minecraft:witch",
               "count": 2,
               "weight": 5
+            },
+            {
+              "type": "mms_dungeons:kobold",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 1,
+                "max_inclusive": 3
+              },
+              "weight": 10
+            },
+            {
+              "type": "mms_dungeons:kobold_warrior",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 1,
+                "max_inclusive": 2
+              },
+              "weight": 6
+            },
+            {
+              "type": "mms_dungeons:kobold_enchanter",
+              "count": 1,
+              "weight": 2
+            },
+            {
+              "type": "mms_dungeons:kobold_engineer",
+              "count": 1,
+              "weight": 2
+            },
+            {
+              "type": "mms_dungeons:kobold_pirate",
+              "count": 1,
+              "weight": 2
+            },
+            {
+              "type": "mms_dungeons:kobold_captain",
+              "count": 1,
+              "weight": 1
+            },
+            {
+              "type": "mms_dungeons:kobold_rascal",
+              "count": 1,
+              "weight": 2
+            },
+            {
+              "type": "mms_dungeons:kobold_skeleton",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 1,
+                "max_inclusive": 3
+              },
+              "weight": 20
+            },
+            {
+              "type": "mms_dungeons:kobold_zombie",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 1,
+                "max_inclusive": 3
+              },
+              "weight": 20
+            },
+            {
+              "type": "mms_dungeons:witherbold",
+              "count": 1,
+              "weight": 3
             }
           ],
           "underground_water_creature": [

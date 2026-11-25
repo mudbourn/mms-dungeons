@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "mms_dungeons:orpiment_amber_bricks",
+  "result": {
+    "id": "mms_dungeons:orpiment_amber_brick_wall"
+  }
+}

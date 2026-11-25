@@ -1,0 +1,68 @@
+{
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "weight": 7,
+      "element": {
+        "location": "mms_dungeons:kobold/side/kobold_side_01",
+        "processors": "mms_dungeons:kobold_generic",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 12,
+      "element": {
+        "location": "mms_dungeons:kobold/side/kobold_side_02",
+        "processors": "mms_dungeons:kobold_generic",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 2,
+      "element": {
+        "location": "mms_dungeons:kobold/side/kobold_side_03",
+        "processors": "mms_dungeons:kobold_generic",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 12,
+      "element": {
+        "location": "mms_dungeons:kobold/side/kobold_side_04",
+        "processors": "mms_dungeons:kobold_generic",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 2,
+      "element": {
+        "location": "mms_dungeons:kobold/side/kobold_side_05",
+        "processors": "mms_dungeons:kobold_generic",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 12,
+      "element": {
+        "location": "mms_dungeons:kobold/side/kobold_side_06",
+        "processors": "mms_dungeons:kobold_generic",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 2,
+      "element": {
+        "location": "mms_dungeons:kobold/side/kobold_side_07",
+        "processors": "mms_dungeons:kobold_generic",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}

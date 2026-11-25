@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": "minecraft:iron_ingot",
+  "base": "minecraft:music_disc_stal",
+  "result": {
+    "id": "mms_dungeons:music_disc_kobblestone"
+  },
+  "template": "mms_dungeons:kobold_template"
+}

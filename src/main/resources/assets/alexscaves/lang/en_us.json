@@ -1,0 +1,13 @@
+{
+  "block.alexscaves.amber": "Primordial Amber",
+  "block.alexscaves.sulfur": "Volatile Sulfur",
+  "block.alexscaves.sulfur_cluster": "Volatile Sulfur Cluster",
+  "block.alexscaves.sulfur_bud_small": "Small Volatile Sulfur Bud",
+  "block.alexscaves.sulfur_bud_medium": "Medium Volatile Sulfur Bud",
+  "block.alexscaves.sulfur_bud_large": "Large Volatile Sulfur Bud",
+  "item.alexscaves.sulfur_dust": "Volatile Sulfur Dust",
+  "item.alexscaves.radiant_essence": "Glimmering Essence",
+  "item.alexscaves.licowitch_radiant_essence": "Glimmering Essence",
+  "advancements.alexscaves.sulfur_dust.desc": "Obtain Volatile Sulfur Dust from Volatile Sulfur Clusters",
+  "advancements.alexscaves.radiant_essence.desc": "Obtain Glimmering Essence from slaying a Licowitch"
+}

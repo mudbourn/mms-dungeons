@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "a": "mms_dungeons:orpiment_amber"
+  },
+  "pattern": [
+    "aaa"
+  ],
+  "result": {
+    "id": "mms_dungeons:orpiment_amber_slab",
+    "count": 6
+  }
+}

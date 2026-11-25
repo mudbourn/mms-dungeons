@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "mms_dungeons:orpiment_petrified_roots"
+        }
+      ],
+      "condition": "minecraft:tool/can_shear"
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "mms_dungeons:orpiment_petrified_roots"
+        }
+      ],
+      "condition": "minecraft:tool/can_silk_touch"
+    }
+  ],
+  "random_sequence": "mms_dungeons:blocks/orpiment_petrified_roots"
+}

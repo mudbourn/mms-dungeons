@@ -1,0 +1,49 @@
+{
+  "variants": {
+    "facing=north,hatch=0": {
+      "model": "mms_dungeons:block/orpiment/craw_egg_0"
+    },
+    "facing=north,hatch=1": {
+      "model": "mms_dungeons:block/orpiment/craw_egg_1"
+    },
+    "facing=north,hatch=2": {
+      "model": "mms_dungeons:block/orpiment/craw_egg_2"
+    },
+    "facing=east,hatch=0": {
+      "model": "mms_dungeons:block/orpiment/craw_egg_0",
+      "y": 90
+    },
+    "facing=east,hatch=1": {
+      "model": "mms_dungeons:block/orpiment/craw_egg_1",
+      "y": 90
+    },
+    "facing=east,hatch=2": {
+      "model": "mms_dungeons:block/orpiment/craw_egg_2",
+      "y": 90
+    },
+    "facing=south,hatch=0": {
+      "model": "mms_dungeons:block/orpiment/craw_egg_0",
+      "y": 180
+    },
+    "facing=south,hatch=1": {
+      "model": "mms_dungeons:block/orpiment/craw_egg_1",
+      "y": 180
+    },
+    "facing=south,hatch=2": {
+      "model": "mms_dungeons:block/orpiment/craw_egg_2",
+      "y": 180
+    },
+    "facing=west,hatch=0": {
+      "model": "mms_dungeons:block/orpiment/craw_egg_0",
+      "y": 270
+    },
+    "facing=west,hatch=1": {
+      "model": "mms_dungeons:block/orpiment/craw_egg_1",
+      "y": 270
+    },
+    "facing=west,hatch=2": {
+      "model": "mms_dungeons:block/orpiment/craw_egg_2",
+      "y": 270
+    }
+  }
+}

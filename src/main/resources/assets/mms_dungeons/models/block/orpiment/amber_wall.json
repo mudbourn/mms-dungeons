@@ -1,0 +1,8 @@
+{
+  "parent": "block/template_wall_side",
+  "textures": {
+    "wall": "mms_dungeons:block/orpiment/amber_new_v2_transparent",
+    "particle": "mms_dungeons:block/orpiment/amber_new_v2_transparent"
+  },
+  "render_type": "translucent"
+}

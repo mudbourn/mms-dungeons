@@ -1,0 +1,50 @@
+{
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "mms_dungeons:orpiment/arid_sanctum_enclosure_saps",
+        "projection": "rigid",
+        "processors": "mms_dungeons:orpiment/arid_sanctum_degradation"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "mms_dungeons:orpiment/arid_sanctum_enclosure_cherry_grove",
+        "projection": "rigid",
+        "processors": "mms_dungeons:orpiment/arid_sanctum_degradation"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "mms_dungeons:orpiment/arid_sanctum_enclosure_mangrove_swamp",
+        "projection": "rigid",
+        "processors": "mms_dungeons:orpiment/arid_sanctum_degradation"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "mms_dungeons:orpiment/arid_sanctum_enclosure_plains",
+        "projection": "rigid",
+        "processors": "mms_dungeons:orpiment/arid_sanctum_degradation"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "mms_dungeons:orpiment/arid_sanctum_enclosure_zombified",
+        "projection": "rigid",
+        "processors": "mms_dungeons:orpiment/arid_sanctum_degradation"
+      }
+    }
+  ]
+}

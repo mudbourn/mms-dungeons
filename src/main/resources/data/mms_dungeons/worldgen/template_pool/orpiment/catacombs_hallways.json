@@ -1,0 +1,32 @@
+{
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "weight": 2,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "mms_dungeons:orpiment/catacombs_hallway_skulls",
+        "projection": "rigid",
+        "processors": "mms_dungeons:orpiment/catacombs_degradation"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "mms_dungeons:orpiment/catacombs_hallway_right_turn",
+        "projection": "rigid",
+        "processors": "mms_dungeons:orpiment/catacombs_degradation"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "mms_dungeons:orpiment/catacombs_hallway_split",
+        "projection": "rigid",
+        "processors": "mms_dungeons:orpiment/catacombs_degradation"
+      }
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "parent": "mms_dungeons:block/orpiment/very_cracked_craw_egg",
+  "textures": {
+    "all": "mms_dungeons:block/orpiment/very_cracked_craw_egg",
+    "particle": "mms_dungeons:block/orpiment/craw_egg",
+    "0": "mms_dungeons:block/orpiment/very_cracked_craw_egg"
+  },
+  "render_type": "solid"
+}

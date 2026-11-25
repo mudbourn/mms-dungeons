@@ -1,0 +1,142 @@
+{
+  "attributes": {
+    "minecraft:audio/background_music": {
+      "default": {
+        "max_delay": 24000,
+        "min_delay": 12000,
+        "sound": "minecraft:music.overworld.lush_caves"
+      }
+    },
+    "minecraft:gameplay/natural_mob_spawns": {
+      "argument": {
+        "spawn_costs": {},
+        "spawns_by_category": {
+          "ambient": [
+            {
+              "type": "minecraft:bat",
+              "count": 8,
+              "weight": 10
+            }
+          ],
+          "monster": [
+            {
+              "type": "minecraft:spider",
+              "count": 4,
+              "weight": 100
+            },
+            {
+              "type": "minecraft:zombie",
+              "count": 4,
+              "weight": 95
+            },
+            {
+              "type": "minecraft:zombie_villager",
+              "count": 1,
+              "weight": 5
+            },
+            {
+              "type": "minecraft:skeleton",
+              "count": 4,
+              "weight": 100
+            },
+            {
+              "type": "minecraft:creeper",
+              "count": 4,
+              "weight": 100
+            },
+            {
+              "type": "minecraft:enderman",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 1,
+                "max_inclusive": 4
+              },
+              "weight": 10
+            },
+            {
+              "type": "minecraft:witch",
+              "count": 1,
+              "weight": 5
+            },
+            {
+              "type": "mms_dungeons:sap",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 2,
+                "max_inclusive": 3
+              },
+              "weight": 10
+            }
+          ]
+        }
+      },
+      "modifier": "overlay"
+    },
+    "minecraft:visual/sky_color": "#79a6ff",
+    "minecraft:visual/fog_color": "#c6a858",
+    "minecraft:visual/water_fog_color": "#376189"
+  },
+  "carvers": [
+    "minecraft:cave",
+    "minecraft:cave_extra_underground",
+    "minecraft:canyon"
+  ],
+  "downfall": 0.5,
+  "effects": {
+    "foliage_color": "#9e814d",
+    "grass_color": "#6e943f",
+    "water_color": "#52a1b0"
+  },
+  "features": [
+    [],
+    [
+      "minecraft:lake_lava_underground"
+    ],
+    [
+      "minecraft:amethyst_geode"
+    ],
+    [
+      "minecraft:fossil_upper",
+      "minecraft:fossil_lower",
+      "mms_dungeons:orpiment/amber_special",
+      "mms_dungeons:orpiment/underground_dead_bushes"
+    ],
+    [],
+    [],
+    [
+      "minecraft:ore_coal_upper",
+      "minecraft:ore_coal_lower",
+      "minecraft:ore_iron_upper",
+      "minecraft:ore_iron_middle",
+      "minecraft:ore_iron_small",
+      "minecraft:ore_gold",
+      "minecraft:ore_gold_lower",
+      "minecraft:ore_redstone",
+      "minecraft:ore_redstone_lower",
+      "minecraft:ore_diamond",
+      "minecraft:ore_diamond_large",
+      "minecraft:ore_diamond_buried",
+      "minecraft:ore_lapis",
+      "minecraft:ore_lapis_buried",
+      "minecraft:ore_copper",
+      "minecraft:underwater_magma",
+      "mms_dungeons:orpiment/calcite_patches",
+      "mms_dungeons:orpiment/extra_iron_ore",
+      "mms_dungeons:orpiment/lignite_patches",
+      "mms_dungeons:orpiment/sandstone_patches"
+    ],
+    [
+      "mms_dungeons:orpiment/amber_druse_patch",
+      "mms_dungeons:orpiment/amber_nodule",
+      "mms_dungeons:orpiment/bone_block_pile",
+      "mms_dungeons:orpiment/petrified_roots_patch"
+    ],
+    [],
+    [],
+    [
+      "minecraft:freeze_top_layer"
+    ]
+  ],
+  "has_precipitation": true,
+  "temperature": 1.0
+}

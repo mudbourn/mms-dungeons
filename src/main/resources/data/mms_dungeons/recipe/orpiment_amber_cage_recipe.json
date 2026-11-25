@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "a": "mms_dungeons:orpiment_amber_chunk",
+    "b": "mms_dungeons:wraith_ectoplasm"
+  },
+  "pattern": [
+    "aaa",
+    "aba",
+    "aaa"
+  ],
+  "result": {
+    "id": "mms_dungeons:amber_cage"
+  }
+}

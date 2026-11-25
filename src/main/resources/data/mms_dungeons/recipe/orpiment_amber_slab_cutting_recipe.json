@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "mms_dungeons:orpiment_amber",
+  "result": {
+    "id": "mms_dungeons:orpiment_amber_slab",
+    "count": 2
+  }
+}

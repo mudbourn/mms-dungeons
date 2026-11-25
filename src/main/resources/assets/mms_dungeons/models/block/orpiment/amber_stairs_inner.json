@@ -1,0 +1,10 @@
+{
+  "parent": "block/inner_stairs",
+  "textures": {
+    "particle": "mms_dungeons:block/orpiment/amber_new_v2_transparent",
+    "bottom": "mms_dungeons:block/orpiment/amber_new_v2_transparent",
+    "top": "mms_dungeons:block/orpiment/amber_new_v2_transparent",
+    "side": "mms_dungeons:block/orpiment/amber_new_v2_transparent"
+  },
+  "render_type": "translucent"
+}

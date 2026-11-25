@@ -1,0 +1,64 @@
+{
+  "variants": {
+    "facing=north,powered=false,summoned=false": {
+      "model": "mms_dungeons:block/orpiment/wraith_altar_0"
+    },
+    "facing=north,powered=true,summoned=false": {
+      "model": "mms_dungeons:block/orpiment/wraith_altar_1"
+    },
+    "facing=north,powered=false,summoned=true": {
+      "model": "mms_dungeons:block/orpiment/wraith_altar_2"
+    },
+    "facing=north,powered=true,summoned=true": {
+      "model": "mms_dungeons:block/orpiment/wraith_altar"
+    },
+    "facing=east,powered=false,summoned=false": {
+      "model": "mms_dungeons:block/orpiment/wraith_altar_0",
+      "y": 90
+    },
+    "facing=east,powered=true,summoned=false": {
+      "model": "mms_dungeons:block/orpiment/wraith_altar_1",
+      "y": 90
+    },
+    "facing=east,powered=false,summoned=true": {
+      "model": "mms_dungeons:block/orpiment/wraith_altar_2",
+      "y": 90
+    },
+    "facing=east,powered=true,summoned=true": {
+      "model": "mms_dungeons:block/orpiment/wraith_altar",
+      "y": 90
+    },
+    "facing=south,powered=false,summoned=false": {
+      "model": "mms_dungeons:block/orpiment/wraith_altar_0",
+      "y": 180
+    },
+    "facing=south,powered=true,summoned=false": {
+      "model": "mms_dungeons:block/orpiment/wraith_altar_1",
+      "y": 180
+    },
+    "facing=south,powered=false,summoned=true": {
+      "model": "mms_dungeons:block/orpiment/wraith_altar_2",
+      "y": 180
+    },
+    "facing=south,powered=true,summoned=true": {
+      "model": "mms_dungeons:block/orpiment/wraith_altar",
+      "y": 180
+    },
+    "facing=west,powered=false,summoned=false": {
+      "model": "mms_dungeons:block/orpiment/wraith_altar_0",
+      "y": 270
+    },
+    "facing=west,powered=true,summoned=false": {
+      "model": "mms_dungeons:block/orpiment/wraith_altar_1",
+      "y": 270
+    },
+    "facing=west,powered=false,summoned=true": {
+      "model": "mms_dungeons:block/orpiment/wraith_altar_2",
+      "y": 270
+    },
+    "facing=west,powered=true,summoned=true": {
+      "model": "mms_dungeons:block/orpiment/wraith_altar",
+      "y": 270
+    }
+  }
+}

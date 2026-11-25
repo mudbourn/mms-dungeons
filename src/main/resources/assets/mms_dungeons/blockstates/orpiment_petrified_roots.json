@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "thickness=tip": {
+      "model": "mms_dungeons:block/orpiment/petrified_roots_bottom"
+    },
+    "thickness=middle": {
+      "model": "mms_dungeons:block/orpiment/petrified_roots"
+    }
+  }
+}

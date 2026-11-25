@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "mms_dungeons:smooth_tarred_sandstone",
+  "result": {
+    "id": "mms_dungeons:smooth_tarred_sandstone_slab",
+    "count": 2
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "mms_dungeons:block/orpiment/amber_pillar_top_v2",
+    "up": "mms_dungeons:block/orpiment/amber_pillar_top_v2",
+    "north": "mms_dungeons:block/orpiment/amber_pillar_side_v1.1",
+    "east": "mms_dungeons:block/orpiment/amber_pillar_side_v1.1",
+    "south": "mms_dungeons:block/orpiment/amber_pillar_side_v1.1",
+    "west": "mms_dungeons:block/orpiment/amber_pillar_side_v1.1",
+    "particle": "mms_dungeons:block/orpiment/amber_pillar_top_v2"
+  },
+  "render_type": "solid"
+}

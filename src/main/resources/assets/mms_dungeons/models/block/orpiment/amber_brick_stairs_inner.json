@@ -1,0 +1,10 @@
+{
+  "parent": "block/inner_stairs",
+  "textures": {
+    "particle": "mms_dungeons:block/orpiment/amber_bricks_v1",
+    "bottom": "mms_dungeons:block/orpiment/amber_bricks_v1",
+    "top": "mms_dungeons:block/orpiment/amber_bricks_v1",
+    "side": "mms_dungeons:block/orpiment/amber_bricks_v1"
+  },
+  "render_type": "solid"
+}

@@ -1,0 +1,13 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "mms_dungeons:block/orpiment/petrified_log_top",
+    "up": "mms_dungeons:block/orpiment/petrified_log_top",
+    "north": "mms_dungeons:block/orpiment/petrified_log_side",
+    "east": "mms_dungeons:block/orpiment/petrified_log_side",
+    "south": "mms_dungeons:block/orpiment/petrified_log_side",
+    "west": "mms_dungeons:block/orpiment/petrified_log_side",
+    "particle": "mms_dungeons:block/orpiment/petrified_log_top"
+  },
+  "render_type": "solid"
+}

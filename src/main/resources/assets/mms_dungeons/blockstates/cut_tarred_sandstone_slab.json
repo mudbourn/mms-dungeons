@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "mms_dungeons:block/orpiment/cut_tarred_sandstone_slab"
+    },
+    "type=top": {
+      "model": "mms_dungeons:block/orpiment/cut_tarred_sandstone_slab_top"
+    },
+    "type=double": {
+      "model": "mms_dungeons:block/orpiment/cut_tarred_sandstone_slab_full"
+    }
+  }
+}

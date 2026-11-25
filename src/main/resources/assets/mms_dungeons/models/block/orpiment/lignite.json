@@ -1,0 +1,13 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "mms_dungeons:block/orpiment/lignite_v3",
+    "up": "mms_dungeons:block/orpiment/lignite_v3",
+    "north": "mms_dungeons:block/orpiment/lignite_v3",
+    "east": "mms_dungeons:block/orpiment/lignite_v3",
+    "south": "mms_dungeons:block/orpiment/lignite_v3",
+    "west": "mms_dungeons:block/orpiment/lignite_v3",
+    "particle": "mms_dungeons:block/orpiment/lignite_v3"
+  },
+  "render_type": "solid"
+}

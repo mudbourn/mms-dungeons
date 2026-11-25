@@ -1,0 +1,7 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "mms_dungeons:item/orpiment/amber_druse_item"
+  },
+  "render_type": "translucent"
+}

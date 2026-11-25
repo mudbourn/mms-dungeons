@@ -1,0 +1,13 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "mms_dungeons:block/orpiment/amber_bricks_v1",
+    "up": "mms_dungeons:block/orpiment/amber_bricks_v1",
+    "north": "mms_dungeons:block/orpiment/amber_bricks_v1",
+    "east": "mms_dungeons:block/orpiment/amber_bricks_v1",
+    "south": "mms_dungeons:block/orpiment/amber_bricks_v1",
+    "west": "mms_dungeons:block/orpiment/amber_bricks_v1",
+    "particle": "mms_dungeons:block/orpiment/amber_bricks_v1"
+  },
+  "render_type": "solid"
+}

@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "a": "mms_dungeons:tarred_sand"
+  },
+  "pattern": [
+    "aa",
+    "aa"
+  ],
+  "result": {
+    "id": "mms_dungeons:tarred_sandstone"
+  }
+}

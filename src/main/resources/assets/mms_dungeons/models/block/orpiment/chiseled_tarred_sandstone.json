@@ -1,0 +1,13 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "mms_dungeons:block/orpiment/tarred_sandstone_top",
+    "up": "mms_dungeons:block/orpiment/tarred_sandstone_top",
+    "north": "mms_dungeons:block/orpiment/chiseled_tarred_sandstone",
+    "east": "mms_dungeons:block/orpiment/chiseled_tarred_sandstone",
+    "south": "mms_dungeons:block/orpiment/chiseled_tarred_sandstone",
+    "west": "mms_dungeons:block/orpiment/chiseled_tarred_sandstone",
+    "particle": "mms_dungeons:block/orpiment/tarred_sandstone_top"
+  },
+  "render_type": "solid"
+}

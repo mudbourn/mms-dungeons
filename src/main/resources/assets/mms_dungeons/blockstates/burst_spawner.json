@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "fired=false": {
+      "model": "mms_dungeons:block/orpiment/burst_spawner"
+    },
+    "fired=true": {
+      "model": "mms_dungeons:block/orpiment/deactivated_burst_spawner"
+    }
+  }
+}

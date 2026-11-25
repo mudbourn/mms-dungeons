@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "linked=false": {
+      "model": "mms_dungeons:block/orpiment/relay_spawner"
+    },
+    "linked=true": {
+      "model": "mms_dungeons:block/orpiment/relay_spawner_linked"
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "a": "minecraft:phantom_membrane",
+    "b": "mms_dungeons:wraith_ectoplasm"
+  },
+  "pattern": [
+    " a ",
+    "aba",
+    " a "
+  ],
+  "result": {
+    "id": "mms_dungeons:ectoplasm_scaffold",
+    "count": 16
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "a": "mms_dungeons:orpiment_amber"
+  },
+  "pattern": [
+    " a ",
+    "a a",
+    " a "
+  ],
+  "result": {
+    "id": "mms_dungeons:orpiment_amber_lamp"
+  }
+}

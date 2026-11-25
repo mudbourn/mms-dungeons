@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "a": "mms_dungeons:smooth_tarred_sandstone"
+  },
+  "pattern": [
+    "a  ",
+    "aa ",
+    "aaa"
+  ],
+  "result": {
+    "id": "mms_dungeons:smooth_tarred_sandstone_stairs",
+    "count": 4
+  }
+}

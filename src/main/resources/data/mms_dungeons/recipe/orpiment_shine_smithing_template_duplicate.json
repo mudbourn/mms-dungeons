@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "a": "minecraft:diamond",
+    "b": "mms_dungeons:shine_smithing_template",
+    "c": "mms_dungeons:orpiment_amber_bricks"
+  },
+  "pattern": [
+    "aba",
+    "aca",
+    "aaa"
+  ],
+  "result": {
+    "id": "mms_dungeons:shine_smithing_template",
+    "count": 2
+  }
+}

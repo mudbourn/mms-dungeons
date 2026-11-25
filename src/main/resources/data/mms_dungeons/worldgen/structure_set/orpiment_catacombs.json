@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "mms_dungeons:orpiment_catacombs",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 75,
+    "separation": 56,
+    "salt": 379202080
+  }
+}

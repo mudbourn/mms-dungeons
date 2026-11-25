@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:smelting",
+  "category": "blocks",
+  "cookingtime": 200,
+  "experience": 0.1,
+  "ingredient": "mms_dungeons:tarred_sandstone",
+  "result": {
+    "id": "mms_dungeons:smooth_tarred_sandstone"
+  }
+}

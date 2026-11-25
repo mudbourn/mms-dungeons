@@ -1,0 +1,7 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "mms_dungeons:item/orpiment/craw_egg_v1"
+  },
+  "render_type": "translucent"
+}

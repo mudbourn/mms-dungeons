@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "mms_dungeons:block/orpiment/amber_pillar",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "mms_dungeons:block/orpiment/amber_pillar"
+    },
+    "axis=z": {
+      "model": "mms_dungeons:block/orpiment/amber_pillar",
+      "x": 90
+    }
+  }
+}

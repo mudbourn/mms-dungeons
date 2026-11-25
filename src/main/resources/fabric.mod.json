@@ -5,6 +5,12 @@
   "name": "MMS Dungeons",
   "description": "A dungeon dimension that leads to Aerial Hell, plus guilds and parties, for MMSLive01.",
   "license": "MIT",
+  "contributors": [
+    "Jusey1 (Kobolds)",
+    "Giodude1580 (Kobolds)",
+    "Burack (Kobolds)",
+    "Lorian Ross (Kobblestone music)"
+  ],
   "environment": "*",
   "entrypoints": {
     "main": [

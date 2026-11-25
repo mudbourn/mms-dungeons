@@ -1,0 +1,10 @@
+{
+  "parent": "block/slab",
+  "textures": {
+    "particle": "mms_dungeons:block/orpiment/tarred_sandstone_top",
+    "bottom": "mms_dungeons:block/orpiment/tarred_sandstone_top",
+    "top": "mms_dungeons:block/orpiment/tarred_sandstone_top",
+    "side": "mms_dungeons:block/orpiment/tarred_sandstone_top"
+  },
+  "render_type": "solid"
+}

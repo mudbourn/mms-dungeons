@@ -1,0 +1,145 @@
+{
+  "type": "minecraft:block",
+  "random_sequence": "mms_dungeons:blocks/orpiment_amber_druse",
+  "pools": [
+    {
+      "rolls": 1,
+      "condition": {
+        "type": "minecraft:inverted",
+        "term": "minecraft:tool/can_silk_touch"
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "mms_dungeons:orpiment_amber_chunk",
+          "modifier": [
+            {
+              "type": "minecraft:set_count",
+              "condition": {
+                "type": "minecraft:block_state_property",
+                "block": "mms_dungeons:orpiment_amber_druse",
+                "properties": {
+                  "flower_amount": "1"
+                }
+              },
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            },
+            {
+              "type": "minecraft:set_count",
+              "condition": {
+                "type": "minecraft:block_state_property",
+                "block": "mms_dungeons:orpiment_amber_druse",
+                "properties": {
+                  "flower_amount": "2"
+                }
+              },
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 2,
+                "max": 3
+              }
+            },
+            {
+              "type": "minecraft:set_count",
+              "condition": {
+                "type": "minecraft:block_state_property",
+                "block": "mms_dungeons:orpiment_amber_druse",
+                "properties": {
+                  "flower_amount": "3"
+                }
+              },
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 3,
+                "max": 4
+              }
+            },
+            {
+              "type": "minecraft:set_count",
+              "condition": {
+                "type": "minecraft:block_state_property",
+                "block": "mms_dungeons:orpiment_amber_druse",
+                "properties": {
+                  "flower_amount": "4"
+                }
+              },
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 4,
+                "max": 5
+              }
+            },
+            {
+              "type": "minecraft:apply_bonus",
+              "enchantment": "minecraft:fortune",
+              "formula": "minecraft:ore_drops"
+            },
+            {
+              "type": "minecraft:explosion_decay"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "condition": "minecraft:tool/can_silk_touch",
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "mms_dungeons:orpiment_amber_druse",
+          "modifier": [
+            {
+              "type": "minecraft:set_count",
+              "condition": {
+                "type": "minecraft:block_state_property",
+                "block": "mms_dungeons:orpiment_amber_druse",
+                "properties": {
+                  "flower_amount": "1"
+                }
+              },
+              "count": 1
+            },
+            {
+              "type": "minecraft:set_count",
+              "condition": {
+                "type": "minecraft:block_state_property",
+                "block": "mms_dungeons:orpiment_amber_druse",
+                "properties": {
+                  "flower_amount": "2"
+                }
+              },
+              "count": 2
+            },
+            {
+              "type": "minecraft:set_count",
+              "condition": {
+                "type": "minecraft:block_state_property",
+                "block": "mms_dungeons:orpiment_amber_druse",
+                "properties": {
+                  "flower_amount": "3"
+                }
+              },
+              "count": 3
+            },
+            {
+              "type": "minecraft:set_count",
+              "condition": {
+                "type": "minecraft:block_state_property",
+                "block": "mms_dungeons:orpiment_amber_druse",
+                "properties": {
+                  "flower_amount": "4"
+                }
+              },
+              "count": 4
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

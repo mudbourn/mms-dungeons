@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:paper",
+    "mms_dungeons:kobold_skull"
+  ],
+  "result": {
+    "id": "mms_dungeons:banner_pattern_kobold"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "mms_dungeons:block/orpiment/tarred_sand",
+    "up": "mms_dungeons:block/orpiment/tarred_sand",
+    "north": "mms_dungeons:block/orpiment/tarred_sand",
+    "east": "mms_dungeons:block/orpiment/tarred_sand",
+    "south": "mms_dungeons:block/orpiment/tarred_sand",
+    "west": "mms_dungeons:block/orpiment/tarred_sand",
+    "particle": "mms_dungeons:block/orpiment/tarred_sand"
+  },
+  "render_type": "solid"
+}

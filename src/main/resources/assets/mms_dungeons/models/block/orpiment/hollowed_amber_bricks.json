@@ -1,0 +1,13 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "mms_dungeons:block/orpiment/hollowed_amber_bricks",
+    "up": "mms_dungeons:block/orpiment/hollowed_amber_bricks",
+    "north": "mms_dungeons:block/orpiment/hollowed_amber_bricks",
+    "east": "mms_dungeons:block/orpiment/hollowed_amber_bricks",
+    "south": "mms_dungeons:block/orpiment/hollowed_amber_bricks",
+    "west": "mms_dungeons:block/orpiment/hollowed_amber_bricks",
+    "particle": "mms_dungeons:block/orpiment/hollowed_amber_bricks"
+  },
+  "render_type": "solid"
+}
