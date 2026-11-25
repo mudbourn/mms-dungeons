@@ -26,10 +26,10 @@ public class WraithModel extends EntityModel<WraithRenderState> {
         this.body = this.whole.getChild("body");
         this.leftArm = this.whole.getChild("left_arm");
         this.rightArm = this.whole.getChild("right_arm");
-        this.summon = WraithAnimations.summon.bake(this.whole);
-        this.idle = WraithAnimations.hover.bake(this.whole);
-        this.fire = WraithAnimations.throw_attack.bake(this.whole);
-        this.move = WraithAnimations.movement.bake(this.whole);
+        this.summon = WraithAnimations.summon.bake(root);
+        this.idle = WraithAnimations.hover.bake(root);
+        this.fire = WraithAnimations.throw_attack.bake(root);
+        this.move = WraithAnimations.movement.bake(root);
     }
 
     @Override
