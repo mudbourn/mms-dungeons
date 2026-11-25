@@ -3,6 +3,8 @@
   "item.mms_dungeons.recovery_cross": "Recovery Cross",
   "sound.mms_dungeons.chained_god_roar": "The Chained God roars",
   "death.attack.mms_dungeons.chained_god": "%1$s succumbed to a curse",
+  "death.attack.mms_dungeons.soul": "%1$s had their soul torn out",
+  "death.attack.mms_dungeons.soul.player": "%1$s had their soul torn out by %2$s",
   "biome.mms_dungeons.dungeon_caves": "Caves",
   "biome.mms_dungeons.aerial_hell_cavern": "Aerial Hell Cavern",
   "block.mms_dungeons.banner.kobold.black": "Black Kobold",
@@ -220,5 +222,11 @@
   "gui.mms_dungeons.field_reward": "Reward (C)",
   "gui.mms_dungeons.proof_item": "Proof item",
   "gui.mms_dungeons.type": "Type: %s",
-  "gui.mms_dungeons.form_incomplete": "Choose a proof item, a count and a reward."
+  "gui.mms_dungeons.form_incomplete": "Choose a proof item, a count and a reward.",
+  "subtitles.mms_dungeons.skelebold.idle": "Skelebold rattles",
+  "subtitles.mms_dungeons.skelebold.hurt": "Skelebold hurts",
+  "subtitles.mms_dungeons.skelebold.death": "Skelebold dies",
+  "subtitles.mms_dungeons.zombold.idle": "Zombold groans",
+  "subtitles.mms_dungeons.zombold.hurt": "Zombold hurts",
+  "subtitles.mms_dungeons.zombold.death": "Zombold dies"
 }

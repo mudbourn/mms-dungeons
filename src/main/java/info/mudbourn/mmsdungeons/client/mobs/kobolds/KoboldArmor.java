@@ -13,7 +13,8 @@ import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.client.renderer.entity.ArmorModelSet;
 import net.minecraft.resources.Identifier;
 
-// Armor shaped for the kobold body, whose head and limbs are smaller than a player's.
+// Armor shaped for the kobold body, whose head and limbs are smaller than a player's. The pieces pivot where the
+// kobold's own parts do, and the helmet is sized up to sit over the snout and the back of the skull.
 final class KoboldArmor {
 
     static final ArmorModelSet<ModelLayerLocation> LAYERS = layers();
@@ -52,12 +53,12 @@ final class KoboldArmor {
         CubeListBuilder body = CubeListBuilder.create()
             .texOffs(16, 16)
             .addBox(-4.0f, 0.0f, -2.0f, 8.0f, 11.0f, 4.0f, new CubeDeformation(0.05f));
-        return mesh(-0.3f, -0.25f, -0.35f, body);
+        return mesh(0.5f, 0.75f, -0.35f, body);
     }
 
     private static MeshDefinition inner() {
         CubeListBuilder body = CubeListBuilder.create().texOffs(0, 0).addBox(-4.0f, 0.0f, -2.0f, 1.0f, 1.0f, 1.0f);
-        return mesh(-0.4f, -0.35f, -0.45f, body);
+        return mesh(0.4f, 0.6f, -0.45f, body);
     }
 
     private static MeshDefinition mesh(float head, float hat, float limb, CubeListBuilder body) {
@@ -66,12 +67,12 @@ final class KoboldArmor {
         root.addOrReplaceChild(
             "head",
             CubeListBuilder.create().texOffs(0, 0).addBox(-4.0f, -7.5f, -4.0f, 8.0f, 8.0f, 8.0f, new CubeDeformation(head)),
-            PartPose.offset(0.0f, 4.0f, 0.0f)
+            PartPose.offset(0.0f, 4.0f, -0.5f)
         );
         root.getChild("head").addOrReplaceChild(
             "hat",
             CubeListBuilder.create().texOffs(32, 0).addBox(-4.0f, -7.5f, -4.0f, 8.0f, 8.0f, 8.0f, new CubeDeformation(hat)),
-            PartPose.offset(0.0f, 4.0f, 0.0f)
+            PartPose.ZERO
         );
         root.addOrReplaceChild("body", body, PartPose.offset(0.0f, 4.0f, 0.0f));
         CubeDeformation limbs = new CubeDeformation(limb);
@@ -87,13 +88,13 @@ final class KoboldArmor {
         );
         root.addOrReplaceChild(
             "left_arm",
-            CubeListBuilder.create().texOffs(40, 16).mirror().addBox(0.0f, -1.55f, -2.0f, 4.0f, 12.0f, 4.0f, limbs),
-            PartPose.offset(4.5f, 5.0f, 0.0f)
+            CubeListBuilder.create().texOffs(40, 16).mirror().addBox(-0.5f, -1.55f, -2.0f, 4.0f, 12.0f, 4.0f, limbs),
+            PartPose.offset(3.0f, 5.0f, 0.0f)
         );
         root.addOrReplaceChild(
             "right_arm",
-            CubeListBuilder.create().texOffs(40, 16).addBox(-4.0f, -1.55f, -2.0f, 4.0f, 12.0f, 4.0f, limbs),
-            PartPose.offset(-4.5f, 5.0f, 0.0f)
+            CubeListBuilder.create().texOffs(40, 16).addBox(-3.5f, -1.55f, -2.0f, 4.0f, 12.0f, 4.0f, limbs),
+            PartPose.offset(-3.0f, 5.0f, 0.0f)
         );
         return mesh;
     }

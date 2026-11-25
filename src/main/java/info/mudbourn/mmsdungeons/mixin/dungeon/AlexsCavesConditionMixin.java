@@ -5,6 +5,7 @@ import com.github.alexmodguy.alexscaves.server.misc.VoronoiGenerator.VoronoiInfo
 import com.github.alexmodguy.alexscaves.server.level.biome.ACBiomeRarity;
 import info.mudbourn.mmsdungeons.dungeon.AlexsCavesRotation;
 import info.mudbourn.mmsdungeons.dungeon.DungeonDimension;
+import info.mudbourn.mmsdungeons.dungeon.PericulumBiomes;
 import net.minecraft.core.QuartPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
@@ -40,6 +41,9 @@ public abstract class AlexsCavesConditionMixin {
         }
         Vec3 center = ACBiomeRarity.getRareBiomeCenter(info);
         double distance = AlexsCavesRotation.distanceFor(getRarityOffset());
+        if (QuartPos.toBlock(y) <= DungeonDimension.PERICULUM_TOP) {
+            distance *= PericulumBiomes.LENIENCY;
+        }
         cir.setReturnValue(center != null
             && QuartPos.toBlock((int) center.x) * (double) QuartPos.toBlock((int) center.x)
             + QuartPos.toBlock((int) center.z) * (double) QuartPos.toBlock((int) center.z) >= distance * distance);

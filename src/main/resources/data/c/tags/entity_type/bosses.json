@@ -52,6 +52,7 @@
     {
       "id": "#aerialhell:boss",
       "required": false
-    }
+    },
+    "mms_dungeons:wraith"
   ]
 }

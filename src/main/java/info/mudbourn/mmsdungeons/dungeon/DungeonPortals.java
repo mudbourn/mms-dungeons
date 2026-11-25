@@ -36,7 +36,26 @@ public final class DungeonPortals {
     // How far around a portal to look for somewhere to stand.
     private static final int STAND_RADIUS = 4;
 
+    // True while a portal is moving a player, so ForcedArrivals leaves that move alone.
+    private static boolean portalMove;
+
     private DungeonPortals() {
+    }
+
+    static boolean portalMove() {
+        return portalMove;
+    }
+
+    // Where a player forced into the dungeon at this column lands: the open Sanctuary floor an exit portal would
+    // use, or a carved chamber with an exit portal when the column has no room.
+    static Vec3 arrivalSpot(ServerLevel dungeon, int x, int z) {
+        dungeon.getChunk(x >> 4, z >> 4);
+        int floor = highestOpenFloor(dungeon, x, z);
+        BlockPos feet = new BlockPos(x, floor, z);
+        if (hasHeadroom(dungeon, feet) && dungeon.getBlockState(feet.below()).isFaceSturdy(dungeon, feet.below(), Direction.UP)) {
+            return Vec3.atBottomCenterOf(feet);
+        }
+        return Vec3.atBottomCenterOf(buildExit(dungeon, x, z).offset(1, 0, 1));
     }
 
     public static void onEnter(ServerPlayer player, ServerLevel level, BlockPos pos) {
@@ -78,21 +97,31 @@ public final class DungeonPortals {
         GlobalPos surface = PortalLinks.get(player.level().getServer()).surfaceFor(anchor);
         ServerLevel target = surface == null ? null : player.level().getServer().getLevel(surface.dimension());
         if (target == null) {
-            player.teleport(TeleportTransition.createDefault(player, TeleportTransition.PLAY_PORTAL_SOUND));
+            portalMove = true;
+            try {
+                player.teleport(TeleportTransition.createDefault(player, TeleportTransition.PLAY_PORTAL_SOUND));
+            } finally {
+                portalMove = false;
+            }
             return;
         }
         teleport(player, target, Vec3.atBottomCenterOf(standingSpotNear(target, surface.pos())));
     }
 
     private static void teleport(ServerPlayer player, ServerLevel level, Vec3 position) {
-        player.teleport(new TeleportTransition(
-            level,
-            position,
-            Vec3.ZERO,
-            player.getYRot(),
-            player.getXRot(),
-            TeleportTransition.PLAY_PORTAL_SOUND
-        ));
+        portalMove = true;
+        try {
+            player.teleport(new TeleportTransition(
+                level,
+                position,
+                Vec3.ZERO,
+                player.getYRot(),
+                player.getXRot(),
+                TeleportTransition.PLAY_PORTAL_SOUND
+            ));
+        } finally {
+            portalMove = false;
+        }
     }
 
     // The lowest, then most north-west portal block connected to this one, which names the whole portal.

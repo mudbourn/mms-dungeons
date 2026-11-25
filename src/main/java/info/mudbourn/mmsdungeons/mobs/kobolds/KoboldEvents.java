@@ -6,6 +6,15 @@ import info.mudbourn.mmsdungeons.mobs.kobolds.entity.AbstractKobold;
 import info.mudbourn.mmsdungeons.mobs.kobolds.entity.KoboldRascal;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
+import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
+import net.fabricmc.fabric.api.event.player.UseBlockCallback;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.Container;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.levelgen.structure.Structure;
+import java.util.List;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
@@ -30,6 +39,12 @@ public final class KoboldEvents {
     private static final ResourceKey<Enchantment> PROSPECTOR = ResourceKey.create(Registries.ENCHANTMENT, MmsDungeons.id("prospector"));
     private static final double EMERALD_CHANCE = 0.05;
     private static final double EMERALD_CHANCE_LUCKY = 0.25;
+    private static final List<ResourceKey<Structure>> DENS = List.of(
+        ResourceKey.create(Registries.STRUCTURE, MmsDungeons.id("kobold_den")),
+        ResourceKey.create(Registries.STRUCTURE, MmsDungeons.id("kobold_den_pirate"))
+    );
+    // How far the alarm carries through a den when a player loots it.
+    private static final double DEFEND_RADIUS = 48.0;
 
     private KoboldEvents() {
     }
@@ -37,6 +52,32 @@ public final class KoboldEvents {
     public static void register() {
         ServerEntityEvents.ENTITY_LOAD.register(KoboldEvents::onLoad);
         ServerLivingEntityEvents.AFTER_DEATH.register(KoboldEvents::onDeath);
+        UseBlockCallback.EVENT.register((player, level, hand, hit) -> {
+            if (level instanceof ServerLevel server) {
+                defendLoot(server, player, hit.getBlockPos(), level.getBlockEntity(hit.getBlockPos()));
+            }
+            return InteractionResult.PASS;
+        });
+        PlayerBlockBreakEvents.AFTER.register((level, player, pos, state, blockEntity) -> {
+            if (level instanceof ServerLevel server) {
+                defendLoot(server, player, pos, blockEntity);
+            }
+        });
+    }
+
+    // Opening or breaking a container inside a kobold den sets every kobold nearby on the looter.
+    private static void defendLoot(ServerLevel level, Player player, BlockPos pos, BlockEntity blockEntity) {
+        if (!(blockEntity instanceof Container) || player.isCreative() || player.isSpectator() || !inDen(level, pos)) {
+            return;
+        }
+        for (AbstractKobold kobold : level.getEntitiesOfClass(AbstractKobold.class, player.getBoundingBox().inflate(DEFEND_RADIUS))) {
+            kobold.setLastHurtByMob(player);
+            kobold.setTarget(player);
+        }
+    }
+
+    private static boolean inDen(ServerLevel level, BlockPos pos) {
+        return level.structureManager().getStructureWithPieceAt(pos, holder -> DENS.stream().anyMatch(holder::is)).isValid();
     }
 
     // Raiders and zombies go after kobolds, though zombies leave a Rascal alone until it hurts them.

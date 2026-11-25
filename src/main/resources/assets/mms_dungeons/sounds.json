@@ -971,5 +971,70 @@
         "stream": false
       }
     ]
+  },
+  "entity.stellar_stone_automaton.hurt": {
+    "subtitle": "subtitles.aerialhell.entity.stellar_stone_automaton.hurt",
+    "sounds": [
+      "mms_dungeons:entity/stellar_stone_automaton/hurt",
+      "mms_dungeons:entity/stellar_stone_automaton/hurt_scream"
+    ]
+  },
+  "entity.stellar_stone_automaton.death": {
+    "subtitle": "subtitles.aerialhell.entity.stellar_stone_automaton.death",
+    "sounds": [
+      "mms_dungeons:entity/stellar_stone_automaton/death"
+    ]
+  },
+  "skelebold_idle": {
+    "subtitle": "subtitles.mms_dungeons.skelebold.idle",
+    "sounds": [
+      "mms_dungeons:entity/skelebold/idle1",
+      "mms_dungeons:entity/skelebold/idle2",
+      "mms_dungeons:entity/skelebold/idle3",
+      "mms_dungeons:entity/skelebold/idle4",
+      "mms_dungeons:entity/skelebold/idle5",
+      "mms_dungeons:entity/skelebold/idle6"
+    ]
+  },
+  "skelebold_hurt": {
+    "subtitle": "subtitles.mms_dungeons.skelebold.hurt",
+    "sounds": [
+      "mms_dungeons:entity/skelebold/hurt1",
+      "mms_dungeons:entity/skelebold/hurt2",
+      "mms_dungeons:entity/skelebold/hurt3",
+      "mms_dungeons:entity/skelebold/hurt4"
+    ]
+  },
+  "skelebold_death": {
+    "subtitle": "subtitles.mms_dungeons.skelebold.death",
+    "sounds": [
+      "mms_dungeons:entity/skelebold/death1",
+      "mms_dungeons:entity/skelebold/death2"
+    ]
+  },
+  "zombold_idle": {
+    "subtitle": "subtitles.mms_dungeons.zombold.idle",
+    "sounds": [
+      "mms_dungeons:entity/zombold/idle1",
+      "mms_dungeons:entity/zombold/idle2",
+      "mms_dungeons:entity/zombold/idle3",
+      "mms_dungeons:entity/zombold/idle4"
+    ]
+  },
+  "zombold_hurt": {
+    "subtitle": "subtitles.mms_dungeons.zombold.hurt",
+    "sounds": [
+      "mms_dungeons:entity/zombold/hurt1",
+      "mms_dungeons:entity/zombold/hurt2",
+      "mms_dungeons:entity/zombold/hurt3",
+      "mms_dungeons:entity/zombold/hurt4"
+    ]
+  },
+  "zombold_death": {
+    "subtitle": "subtitles.mms_dungeons.zombold.death",
+    "sounds": [
+      "mms_dungeons:entity/zombold/death1",
+      "mms_dungeons:entity/zombold/death2"
+    ]
   }
 }

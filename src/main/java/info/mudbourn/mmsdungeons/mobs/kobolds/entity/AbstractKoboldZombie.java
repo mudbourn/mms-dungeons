@@ -75,6 +75,12 @@ public abstract class AbstractKoboldZombie extends Zombie {
         return false;
     }
 
+    // Undead kobolds have no baby form, so a spawn egg or natural baby roll still makes an adult.
+    @Override
+    public void setBaby(boolean baby) {
+        super.setBaby(false);
+    }
+
     @Override
     public boolean canPickUpLoot() {
         return false;

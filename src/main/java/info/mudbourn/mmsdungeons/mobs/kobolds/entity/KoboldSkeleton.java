@@ -1,5 +1,6 @@
 package info.mudbourn.mmsdungeons.mobs.kobolds.entity;
 
+import info.mudbourn.mmsdungeons.mobs.kobolds.KoboldSounds;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
@@ -21,17 +22,17 @@ public class KoboldSkeleton extends AbstractKoboldSkeleton {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.SKELETON_AMBIENT;
+        return KoboldSounds.SKELEBOLD_IDLE;
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.SKELETON_HURT;
+        return KoboldSounds.SKELEBOLD_HURT;
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.SKELETON_DEATH;
+        return KoboldSounds.SKELEBOLD_DEATH;
     }
 
     @Override

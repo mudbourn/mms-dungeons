@@ -8,6 +8,7 @@
     "CarryOnCorpseMixin",
     "MannequinAccessor",
     "MobAccessor",
+    "MobShriekerMixin",
     "StellarLighterMixin",
     "StellarStoneAutomatonMixin"
   ],

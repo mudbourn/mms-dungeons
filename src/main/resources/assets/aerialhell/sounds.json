@@ -1,0 +1,1096 @@
+{
+  "entity.lunatic_priest.ambient": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/lunatic_priest/ambient",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.lunatic_priest.ambient"
+  },
+  "entity.lunatic_priest.hurt": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/lunatic_priest/hurt",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.lunatic_priest.hurt"
+  },
+  "entity.lunatic_priest.death": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/lunatic_priest/death1",
+        "attenuation_distance": 48
+      },
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/lunatic_priest/death2",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.lunatic_priest.death"
+  },
+  "entity.evil_cow.ambient": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "aerialhell:mob/evil_cow/say1",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "aerialhell:mob/evil_cow/say2",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "aerialhell:mob/evil_cow/say3",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "aerialhell:mob/evil_cow/say4",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.evil_cow.ambient"
+  },
+  "entity.evil_cow.hurt": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "aerialhell:mob/evil_cow/hurt1",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "aerialhell:mob/evil_cow/hurt2",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "aerialhell:mob/evil_cow/hurt3",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.evil_cow.hurt"
+  },
+  "entity.evil_cow.death": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "aerialhell:mob/evil_cow/hurt1",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "aerialhell:mob/evil_cow/hurt2",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "aerialhell:mob/evil_cow/hurt3",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.evil_cow.death"
+  },
+  "entity.snake.ambient": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/snake/ambient1",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/snake/ambient2",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.snake.ambient"
+  },
+  "entity.snake.hurt": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/snake/hurt",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.snake.hurt"
+  },
+  "entity.snake.death": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/snake/death",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.snake.death"
+  },
+  "entity.worm.ambient": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/worm/ambient1",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/worm/ambient2",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.worm.ambient"
+  },
+  "entity.worm.hurt": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/worm/hurt1",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/worm/hurt2",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.worm.hurt"
+  },
+  "entity.worm.death": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/worm/death",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.worm.death"
+  },
+  "entity.slime_pirate.ambient": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/slime_pirate/ambient1",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/slime_pirate/ambient2",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/slime_pirate/ambient3",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/slime_pirate/ambient4",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/slime_pirate/ambient5",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/slime_pirate/ambient6",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.slime_pirate.ambient"
+  },
+  "entity.slime_pirate.hurt": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/slime_pirate/hurt1",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/slime_pirate/hurt2",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/slime_pirate/hurt3",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.slime_pirate.hurt"
+  },
+  "entity.slime_pirate.death": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/slime_pirate/death1",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/slime_pirate/death2",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.slime_pirate.death"
+  },
+  "entity.slime_pirate.step": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/slime_pirate/step1",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/slime_pirate/step2",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/slime_pirate/step3",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.slime_pirate.step"
+  },
+  "entity.stellar_stone_automaton.activation": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/stellar_stone_automaton/activation",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.stellar_stone_automaton.activation"
+  },
+  "entity.stellar_stone_automaton.hurt": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/stellar_stone_automaton/hurt",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/stellar_stone_automaton/hurt_scream",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.stellar_stone_automaton.hurt"
+  },
+  "entity.stellar_stone_automaton.death": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/stellar_stone_automaton/death",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.stellar_stone_automaton.death"
+  },
+  "entity.warden_volucite_golem.death": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/warden_volucite_golem/death",
+        "attenuation_distance": 24
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.warden_volucite_golem.death"
+  },
+  "entity.warden_volucite_golem.activation": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/warden_volucite_golem/activation",
+        "attenuation_distance": 24
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.warden_volucite_golem.activation"
+  },
+  "entity.warden_volucite_golem.hurt": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/warden_volucite_golem/hurt",
+        "attenuation_distance": 24
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.warden_volucite_golem.hurt"
+  },
+  "entity.warden_volucite_golem.ambient": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/warden_volucite_golem/ambient",
+        "attenuation_distance": 24
+      },
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/warden_volucite_golem/ambient_2",
+        "attenuation_distance": 24
+      },
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/warden_volucite_golem/ambient_loud",
+        "attenuation_distance": 24
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.warden_volucite_golem.ambient"
+  },
+  "entity.volucite_golem.ambient_alert": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/volucite_golem/ambient_alert",
+        "attenuation_distance": 24
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.volucite_golem.ambient_alert"
+  },
+  "entity.volucite_golem.hurt": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/volucite_golem/hurt",
+        "attenuation_distance": 24
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.volucite_golem.hurt"
+  },
+  "entity.volucite_golem.ambient": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/volucite_golem/ambient_normal",
+        "attenuation_distance": 24
+      },
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/volucite_golem/ambient_speak",
+        "attenuation_distance": 24
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.volucite_golem.ambient"
+  },
+  "entity.volucite_golem.ambient_angry": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/volucite_golem/ambient_angry",
+        "attenuation_distance": 24
+      },
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/volucite_golem/ambient_mad",
+        "attenuation_distance": 24
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.volucite_golem.ambient_angry"
+  },
+  "entity.volucite_golem.beam_start": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/volucite_golem/beam_start",
+        "attenuation_distance": 24
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.volucite_golem.beam"
+  },
+  "entity.volucite_golem.beam_loop": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/volucite_golem/beam_loop",
+        "attenuation_distance": 24
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.volucite_golem.beam"
+  },
+  "entity.keeper_of_volucite_keys.ambient": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/keeper_of_volucite_keys/speak",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/keeper_of_volucite_keys/speak_loud",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.keeper_of_volucite_keys.ambient"
+  },
+  "entity.keeper_of_volucite_keys.hurt": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/keeper_of_volucite_keys/hurt",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.keeper_of_volucite_keys.hurt"
+  },
+  "entity.keeper_of_volucite_keys.death": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/keeper_of_volucite_keys/death",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.keeper_of_volucite_keys.death"
+  },
+  "entity.sandy_sheep.ambient": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "aerialhell:mob/sandy_sheep/say1",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "aerialhell:mob/sandy_sheep/say2",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "aerialhell:mob/sandy_sheep/say3",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.sandy_sheep.ambient"
+  },
+  "entity.sandy_sheep.hurt": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "aerialhell:mob/sandy_sheep/say1",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "aerialhell:mob/sandy_sheep/say2",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "aerialhell:mob/sandy_sheep/say3",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.sandy_sheep.hurt"
+  },
+  "entity.sandy_sheep.death": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "aerialhell:mob/sandy_sheep/say1",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "aerialhell:mob/sandy_sheep/say2",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "aerialhell:mob/sandy_sheep/say3",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.sandy_sheep.death"
+  },
+  "entity.sandy_sheep.shear": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "minecraft:mob/sheep/shear",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.item.shears.shear"
+  },
+  "entity.gliding_turtle.ambient": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/gliding_turtle/say_1",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/gliding_turtle/say_2",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/gliding_turtle/say_3",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.gliding_turtle.ambient"
+  },
+  "entity.gliding_turtle.hurt": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/gliding_turtle/hurt_1",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/gliding_turtle/hurt_2",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.gliding_turtle.hurt"
+  },
+  "entity.gliding_turtle.death": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/gliding_turtle/death",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.gliding_turtle.death"
+  },
+  "entity.kodama.rattle": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/kodama/rattle",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.kodama.rattle"
+  },
+  "entity.kodama.ambient": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/kodama/ambient",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.kodama.ambient"
+  },
+  "entity.kodama.hurt": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/kodama/hurt_1",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/kodama/hurt_2",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.kodama.hurt"
+  },
+  "entity.kodama.death": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/kodama/death",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.kodama.death"
+  },
+  "entity.torn_spirit.ambient": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "aerialhell:mob/torn_spirit/ambient",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.torn_spirit.ambient"
+  },
+  "entity.torn_spirit.hurt": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "aerialhell:mob/torn_spirit/hurt1",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "aerialhell:mob/torn_spirit/hurt2",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "aerialhell:mob/torn_spirit/hurt3",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.torn_spirit.hurt"
+  },
+  "entity.torn_spirit.death": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "aerialhell:mob/torn_spirit/death",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.torn_spirit.death"
+  },
+  "entity.chained_god.ambient": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/chained_god/ambient",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.chained_god.ambient"
+  },
+  "entity.chained_god.hurt": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/chained_god/hurt1",
+        "attenuation_distance": 48
+      },
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/chained_god/hurt2",
+        "attenuation_distance": 48
+      },
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/chained_god/hurt3",
+        "attenuation_distance": 48
+      },
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/chained_god/hurt4",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.chained_god.hurt"
+  },
+  "entity.chained_god.death": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/chained_god/death",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.chained_god.death"
+  },
+  "entity.chained_god.fast_death": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/chained_god/fast_death",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.chained_god.fast_death"
+  },
+  "entity.chained_god.step": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/chained_god/step1",
+        "attenuation_distance": 48
+      },
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/chained_god/step2",
+        "attenuation_distance": 48
+      },
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/chained_god/step3",
+        "attenuation_distance": 48
+      },
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/chained_god/step4",
+        "attenuation_distance": 48
+      },
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/chained_god/step5",
+        "attenuation_distance": 48
+      },
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/chained_god/step6",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.chained_god.step"
+  },
+  "entity.chained_god.roar": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/chained_god/roar",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.chained_god.roar"
+  },
+  "entity.chained_god.unchain": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/chained_god/unchain",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.chained_god.unchain"
+  },
+  "entity.chained_god.transition": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/chained_god/transition",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.chained_god.transition"
+  },
+  "entity.ice_spirit.ambient": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "aerialhell:mob/ice_spirit/say1",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "aerialhell:mob/ice_spirit/say2",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.ice_spirit.ambient"
+  },
+  "entity.ice_spirit.hurt": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "aerialhell:mob/ice_spirit/hurt1",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "aerialhell:mob/ice_spirit/hurt2",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.ice_spirit.hurt"
+  },
+  "entity.ice_spirit.death": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "aerialhell:mob/ice_spirit/death",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.ice_spirit.death"
+  },
+  "entity.fire_spirit.hurt": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "aerialhell:mob/fire_spirit/hurt",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.fire_spirit.hurt"
+  },
+  "entity.electro_spirit.ambient": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "aerialhell:mob/electro_spirit/say",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.electro_spirit.ambient"
+  },
+  "entity.electro_spirit.hurt": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/electro_spirit/hurt",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.electro_spirit.hurt"
+  },
+  "entity.electro_spirit.death": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/electro_spirit/death",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.electro_spirit.death"
+  },
+  "entity.lilith.hurt": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/lilith/hurt",
+        "attenuation_distance": 48
+      },
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/lilith/hurt_loud",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.lilith.hurt"
+  },
+  "entity.lilith.death": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/lilith/death",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.lilith.death"
+  },
+  "entity.lilith.transformation": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/lilith/transformation",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.lilith.transformation"
+  },
+  "entity.shadow_automaton.hurt": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/shadow_automaton/hurt",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.shadow_automaton.hurt"
+  },
+  "entity.shadow_automaton.death": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/shadow_automaton/death",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.shadow_automaton.death"
+  },
+  "entity.shadow_automaton.ambient": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/shadow_automaton/ambient",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.shadow_automaton.ambient"
+  },
+  "entity.shadow_troll.ambient": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/shadow_troll/ambient",
+        "attenuation_distance": 24
+      },
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/shadow_troll/ambient1",
+        "attenuation_distance": 24
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.shadow_troll.ambient"
+  },
+  "entity.shadow_troll.hurt": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/shadow_troll/hurt",
+        "attenuation_distance": 24
+      },
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/shadow_troll/hurt1",
+        "attenuation_distance": 24
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.shadow_troll.hurt"
+  },
+  "entity.shadow_troll.death": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/shadow_troll/death",
+        "attenuation_distance": 24
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.shadow_troll.death"
+  },
+  "entity.forest_caterpillar.ambient": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/forest_caterpillar/ambient",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.forest_caterpillar.ambient"
+  },
+  "entity.flying_jellyfish.ambient": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/flying_jellyfish/ambient",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.flying_jellyfish.ambient"
+  },
+  "entity.flying_jellyfish.hurt": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/flying_jellyfish/hurt1",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "mms_dungeons:aerialhell_mono/mob/flying_jellyfish/hurt2",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.flying_jellyfish.hurt"
+  },
+  "entity.resonator.shoot": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/projectile/resonator/shoot",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.resonator.shoot"
+  },
+  "entity.shuriken.throw": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "aerialhell:projectile/shuriken/shoot",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.shuriken.throw"
+  },
+  "entity.lunatic_projectile.shoot": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/projectile/lunatic_projectile/shoot",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.lunatic_projectile.shoot"
+  },
+  "entity.lunatic_projectile.disappear": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/projectile/lunatic_projectile/disappear",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.lunatic_projectile.disappear"
+  },
+  "entity.shadow_projectile.shoot": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/projectile/shadow_projectile/shoot",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.entity.shadow_projectile.shoot"
+  },
+  "block.glyph_block.interact": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/block/glyph_block/interact1",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "mms_dungeons:aerialhell_mono/block/glyph_block/interact2",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "mms_dungeons:aerialhell_mono/block/glyph_block/interact3",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.block.glyph_block.interact"
+  },
+  "block.trapped_block.step": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "aerialhell:block/trapped_block/step",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.block.trapped_block.step"
+  },
+  "block.bone_pile_block.step_break": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/block/bone_pile_block/step_break_1",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "mms_dungeons:aerialhell_mono/block/bone_pile_block/step_break_2",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "mms_dungeons:aerialhell_mono/block/bone_pile_block/step_break_3",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.block.bone_pile_block.step_break"
+  },
+  "block.reactor.ambient": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/block/reactor/reactor_ambient",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.block.reactor.ambient"
+  },
+  "block.reactor.ambient_short": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/block/reactor/reactor_ambient_short",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.block.reactor.ambient"
+  },
+  "item.forgotten_battle_trident.use": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/item/forgotten_battle_trident",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.item.forgotten_battle_trident.use"
+  },
+  "block.aerial_hell_portal.ambient": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "mms_dungeons:aerialhell_mono/portal/portal1",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "mms_dungeons:aerialhell_mono/portal/portal2",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "mms_dungeons:aerialhell_mono/portal/portal3",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "mms_dungeons:aerialhell_mono/portal/portal4",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "mms_dungeons:aerialhell_mono/portal/portal5",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.aerialhell.block.aerial_hell_portal.ambient"
+  }
+}

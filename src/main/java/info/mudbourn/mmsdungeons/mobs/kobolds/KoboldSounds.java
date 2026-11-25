@@ -15,6 +15,12 @@ public final class KoboldSounds {
     public static SoundEvent IDLE;
     public static SoundEvent YIP;
     public static SoundEvent MUSIC_KOBBLESTONE;
+    public static SoundEvent SKELEBOLD_IDLE;
+    public static SoundEvent SKELEBOLD_HURT;
+    public static SoundEvent SKELEBOLD_DEATH;
+    public static SoundEvent ZOMBOLD_IDLE;
+    public static SoundEvent ZOMBOLD_HURT;
+    public static SoundEvent ZOMBOLD_DEATH;
 
     private KoboldSounds() {
     }
@@ -27,6 +33,12 @@ public final class KoboldSounds {
         IDLE = register("kobold_idle");
         YIP = register("kobold_yip");
         MUSIC_KOBBLESTONE = register("music_kobblestone");
+        SKELEBOLD_IDLE = register("skelebold_idle");
+        SKELEBOLD_HURT = register("skelebold_hurt");
+        SKELEBOLD_DEATH = register("skelebold_death");
+        ZOMBOLD_IDLE = register("zombold_idle");
+        ZOMBOLD_HURT = register("zombold_hurt");
+        ZOMBOLD_DEATH = register("zombold_death");
     }
 
     private static SoundEvent register(String name) {

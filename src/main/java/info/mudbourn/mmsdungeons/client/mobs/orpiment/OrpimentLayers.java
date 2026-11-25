@@ -45,7 +45,7 @@ public final class OrpimentLayers {
         );
         PartDefinition head = whole.addOrReplaceChild(
             "head",
-            CubeListBuilder.create().texOffs(0, 24).addBox(-4.0f, -8.0f, -4.0f, 8.0f, 8.0f, 8.0f),
+            CubeListBuilder.create().texOffs(0, 24).addBox(-4.0f, -8.0f, -4.0f, 8.0f, 8.0f, 8.0f, new CubeDeformation(0.02f)),
             PartPose.offset(0.0f, -12.0f, 0.0f)
         );
         head.addOrReplaceChild(
@@ -64,9 +64,9 @@ public final class OrpimentLayers {
             "outer_r1",
             CubeListBuilder.create()
                 .texOffs(0, 0)
-                .addBox(-4.0f, -8.0f, -4.0f, 8.0f, 8.0f, 8.0f)
+                .addBox(-4.0f, -8.0f, -4.0f, 8.0f, 8.0f, 8.0f, new CubeDeformation(0.02f))
                 .texOffs(0, 16)
-                .addBox(-3.0f, -7.0f, -3.0f, 6.0f, 6.0f, 6.0f),
+                .addBox(-3.0f, -7.0f, -3.0f, 6.0f, 6.0f, 6.0f, new CubeDeformation(0.02f)),
             PartPose.offsetAndRotation(0.0f, -3.0f, 0.0f, 0.0f, 3.1416f, 0.0f)
         );
         return LayerDefinition.create(mesh, 32, 32);

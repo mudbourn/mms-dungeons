@@ -1,5 +1,10 @@
 package info.mudbourn.mmsdungeons.mobs.orpiment;
 
+import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.entity.LivingEntity;
 import info.mudbourn.mmsdungeons.MmsDungeons;
 import info.mudbourn.mmsdungeons.dungeon.DungeonDimension;
 import info.mudbourn.mmsdungeons.mobs.orpiment.entity.Craw;
@@ -40,7 +45,10 @@ public final class OrpimentMobs {
     private OrpimentMobs() {
     }
 
+    private static final ResourceKey<DamageType> SOUL = ResourceKey.create(Registries.DAMAGE_TYPE, MmsDungeons.id("soul"));
+
     public static void register() {
+        ServerLivingEntityEvents.ALLOW_DAMAGE.register(OrpimentMobs::soulDamage);
         OrpimentDataSerializers.register();
         TAR_CUBE = register("tar_cube", EntityType.Builder.of(TarCube::new, MobCategory.MONSTER).sized(0.52f, 0.52f).clientTrackingRange(8));
         SAP = register("sap", EntityType.Builder.of(Sap::new, MobCategory.MONSTER).sized(0.52f, 0.52f).clientTrackingRange(8));
@@ -61,6 +69,10 @@ public final class OrpimentMobs {
         FabricDefaultAttributeRegistry.register(WISP, Wisp.createAttributes());
         FabricDefaultAttributeRegistry.register(CRAW, Craw.createAttributes());
         SpawnPlacements.register(SAP, SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, OrpimentMobs::checkSapSpawn);
+        SpawnPlacements.register(TAR_CUBE, SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, OrpimentMobs::checkPericulumSpawn);
+        SpawnPlacements.register(WRAITH, SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, OrpimentMobs::checkPericulumSpawn);
+        SpawnPlacements.register(WISP, SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, OrpimentMobs::checkPericulumSpawn);
+        SpawnPlacements.register(CRAW, SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, OrpimentMobs::checkPericulumSpawn);
     }
 
     private static <T extends Entity> EntityType<T> register(String name, EntityType.Builder<T> builder) {
@@ -81,5 +93,36 @@ public final class OrpimentMobs {
         }
         boolean worldSpawn = reason == EntitySpawnReason.NATURAL || reason == EntitySpawnReason.CHUNK_GENERATION;
         return !worldSpawn || DungeonDimension.isDungeon(level.getLevel()) && pos.getY() < DungeonDimension.SANCTUARY_BOTTOM;
+    }
+
+    // Tar Cubes, Wraiths, Wisps and Craws rise from the world only in the Periculum Region; spawners, eggs and commands work anywhere.
+    // Wraiths, wisps and their skulls tear at the soul: their hits are re-dealt as soul damage, which ignores armor.
+    private static boolean soulDamage(LivingEntity victim, DamageSource source, float amount) {
+        boolean spectral = source.getEntity() instanceof Wraith || source.getEntity() instanceof Wisp
+            || source.getDirectEntity() instanceof WispSkullProjectile;
+        if (!spectral || source.is(SOUL) || !(victim.level() instanceof ServerLevel level)) {
+            return true;
+        }
+        DamageSource soul = new DamageSource(
+            level.registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(SOUL),
+            source.getDirectEntity(),
+            source.getEntity()
+        );
+        victim.hurtServer(level, soul, amount);
+        return false;
+    }
+
+    private static boolean checkPericulumSpawn(
+        EntityType<? extends Mob> type,
+        ServerLevelAccessor level,
+        EntitySpawnReason reason,
+        BlockPos pos,
+        RandomSource random
+    ) {
+        if (!Mob.checkMobSpawnRules(type, level, reason, pos, random)) {
+            return false;
+        }
+        boolean worldSpawn = reason == EntitySpawnReason.NATURAL || reason == EntitySpawnReason.CHUNK_GENERATION;
+        return !worldSpawn || DungeonDimension.isDungeon(level.getLevel()) && pos.getY() <= DungeonDimension.PERICULUM_TOP;
     }
 }

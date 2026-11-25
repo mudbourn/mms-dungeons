@@ -20,6 +20,7 @@ public final class DungeonDimension {
         PericulumRules.register();
         RegionNotices.register();
         DepthGear.register();
+        ForcedArrivals.register();
         NearSpawns.register();
         DungeonGeneration.register();
         StrayFish.register();

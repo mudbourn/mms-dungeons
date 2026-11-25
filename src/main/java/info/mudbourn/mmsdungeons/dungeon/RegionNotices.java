@@ -12,7 +12,8 @@ import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 
-// Tells players on screen when they go down into a deeper region of the dungeon.
+// Tells players on screen when they move into another region of the dungeon, up or down. A move soon after a
+// notice is held back until the player settles in one region, so hopping along a border shows one notice.
 public final class RegionNotices {
 
     private enum Region {
@@ -32,10 +33,14 @@ public final class RegionNotices {
     }
 
     private static final int CHECK_INTERVAL = 10;
-    // Thirty seconds between notices.
-    private static final int COOLDOWN_TICKS = 600;
+    // A move within five seconds of a notice is held back...
+    private static final int BURST_TICKS = 100;
+    // ...until the player has stayed in one region for ten seconds.
+    private static final int SETTLE_TICKS = 200;
     private static final Map<UUID, Region> CURRENT = new HashMap<>();
+    private static final Map<UUID, Region> SHOWN = new HashMap<>();
     private static final Map<UUID, Integer> SHOWN_AT = new HashMap<>();
+    private static final Map<UUID, Integer> HELD_SINCE = new HashMap<>();
 
     private RegionNotices() {
     }
@@ -58,18 +63,34 @@ public final class RegionNotices {
                 continue;
             }
             Region last = CURRENT.put(id, region);
-            boolean deeper = last == null || region.ordinal() > last.ordinal();
-            boolean cooling = SHOWN_AT.containsKey(id) && now - SHOWN_AT.get(id) < COOLDOWN_TICKS;
-            if (deeper && !cooling) {
-                SHOWN_AT.put(id, now);
-                announce(player, region);
+            if (region != last) {
+                Integer shownAt = SHOWN_AT.get(id);
+                boolean burst = HELD_SINCE.containsKey(id) || shownAt != null && now - shownAt < BURST_TICKS;
+                if (burst) {
+                    HELD_SINCE.put(id, now);
+                } else {
+                    show(player, id, region, now);
+                }
+            } else if (HELD_SINCE.containsKey(id) && now - HELD_SINCE.get(id) >= SETTLE_TICKS) {
+                HELD_SINCE.remove(id);
+                if (region != SHOWN.get(id)) {
+                    show(player, id, region, now);
+                }
             }
         }
     }
 
+    private static void show(ServerPlayer player, UUID id, Region region, int now) {
+        SHOWN.put(id, region);
+        SHOWN_AT.put(id, now);
+        announce(player, region);
+    }
+
     private static void forget(UUID id) {
         CURRENT.remove(id);
+        SHOWN.remove(id);
         SHOWN_AT.remove(id);
+        HELD_SINCE.remove(id);
     }
 
     private static Region regionOf(ServerPlayer player) {

@@ -100,7 +100,7 @@ public final class PericulumRules extends SavedData {
         long until = player.level().getServer().overworld().getGameTime() + BAN_TICKS;
         rules.bans.put(player.getUUID(), until);
         rules.setDirty();
-        sendHome(player, "You left the Periculum Region mid-fight. It is closed to you for two days.");
+        sendHome(player, "You left the game without exiting the Periculum Region properly. You are now forbidden to enter it for two days.");
     }
 
     // Sends banned players back out if they cross below Y 0.

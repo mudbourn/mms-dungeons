@@ -421,6 +421,12 @@ public abstract class AbstractKobold extends AgeableMob implements CrossbowAttac
         this.setDropChance(EquipmentSlot.OFFHAND, 0.0f);
     }
 
+    // Replaces the main-hand weapon with depth gear, keeping the remembered primary weapon in step.
+    public void setDepthWeapon(ItemStack weapon) {
+        this.setItemSlot(EquipmentSlot.MAINHAND, weapon);
+        this.primary = weapon;
+    }
+
     @Override
     public ItemStack getProjectile(ItemStack weapon) {
         if (weapon.getItem() instanceof ProjectileWeaponItem projectileWeapon) {
@@ -593,9 +599,8 @@ public abstract class AbstractKobold extends AgeableMob implements CrossbowAttac
 
     public static List<ItemStack> tradeItems(AbstractKobold kobold, String table) {
         ServerLevel level = (ServerLevel) kobold.level();
-        LootParams params = new LootParams.Builder(level)
-            .withParameter(LootContextParams.THIS_ENTITY, kobold)
-            .create(LootContextParamSets.EMPTY);
+        // The trade tables use no context, and 26.3 rejects parameters the EMPTY set does not list.
+        LootParams params = new LootParams.Builder(level).create(LootContextParamSets.EMPTY);
         return Objects.requireNonNull(level.getServer())
             .reloadableRegistries()
             .getLootTable(ResourceKey.create(Registries.LOOT_TABLE, MmsDungeons.id("kobold/gameplay/" + table)))

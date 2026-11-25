@@ -14,6 +14,16 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.resources.Identifier;
+import info.mudbourn.mmsdungeons.MmsDungeons;
+import info.mudbourn.mmsdungeons.mobs.kobolds.KoboldItems;
+import info.mudbourn.mmsdungeons.mobs.kobolds.entity.AbstractKobold;
+import info.mudbourn.mmsdungeons.mobs.kobolds.entity.AbstractKoboldSkeleton;
+import info.mudbourn.mmsdungeons.mobs.kobolds.entity.AbstractKoboldZombie;
+import info.mudbourn.mmsdungeons.mobs.kobolds.entity.KoboldChild;
 import net.minecraft.world.entity.monster.skeleton.AbstractSkeleton;
 import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.item.Item;
@@ -22,20 +32,23 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 
-// Arms zombies and skeletons that spawn in the dungeon with better gear the deeper they are.
+// Arms zombies, skeletons and kobolds that spawn in the dungeon with better gear the deeper they are,
+// and toughens kobolds to match, since their dens are what end-game players come down to raid.
 public final class DepthGear {
 
     private enum Material {
-        IRON(Items.IRON_HELMET, Items.IRON_CHESTPLATE, Items.IRON_LEGGINGS, Items.IRON_BOOTS, Items.IRON_SWORD),
-        DIAMOND(Items.DIAMOND_HELMET, Items.DIAMOND_CHESTPLATE, Items.DIAMOND_LEGGINGS, Items.DIAMOND_BOOTS, Items.DIAMOND_SWORD),
-        NETHERITE(Items.NETHERITE_HELMET, Items.NETHERITE_CHESTPLATE, Items.NETHERITE_LEGGINGS, Items.NETHERITE_BOOTS, Items.NETHERITE_SWORD);
+        IRON(Items.IRON_HELMET, Items.IRON_CHESTPLATE, Items.IRON_LEGGINGS, Items.IRON_BOOTS, Items.IRON_SWORD, Items.IRON_AXE),
+        DIAMOND(Items.DIAMOND_HELMET, Items.DIAMOND_CHESTPLATE, Items.DIAMOND_LEGGINGS, Items.DIAMOND_BOOTS, Items.DIAMOND_SWORD, Items.DIAMOND_AXE),
+        NETHERITE(Items.NETHERITE_HELMET, Items.NETHERITE_CHESTPLATE, Items.NETHERITE_LEGGINGS, Items.NETHERITE_BOOTS, Items.NETHERITE_SWORD, Items.NETHERITE_AXE);
 
         final Item[] armor;
         final Item sword;
+        final Item axe;
 
-        Material(Item head, Item chest, Item legs, Item feet, Item sword) {
+        Material(Item head, Item chest, Item legs, Item feet, Item sword, Item axe) {
             this.armor = new Item[] {head, chest, legs, feet};
             this.sword = sword;
+            this.axe = axe;
         }
     }
 
@@ -65,6 +78,11 @@ public final class DepthGear {
     private static final int SPAN = 256;
     private static final float DROP_CHANCE = 0.02f;
     private static final int ENCHANT_LEVEL = 30;
+    // Per tier: kobold max health gains 20% of base (2.6x at the bottom), and attack damage 0.5.
+    private static final double KOBOLD_HEALTH_PER_TIER = 0.2;
+    private static final double KOBOLD_DAMAGE_PER_TIER = 0.5;
+    private static final Identifier HEALTH_ID = MmsDungeons.id("depth_health");
+    private static final Identifier DAMAGE_ID = MmsDungeons.id("depth_damage");
 
     private DepthGear() {
     }
@@ -74,13 +92,63 @@ public final class DepthGear {
     }
 
     private static void onLoad(Entity entity, ServerLevel level) {
-        boolean armable = entity instanceof Zombie || entity instanceof AbstractSkeleton;
+        boolean kobold = entity instanceof AbstractKobold && !(entity instanceof KoboldChild);
+        boolean armable = kobold || entity instanceof Zombie || entity instanceof AbstractSkeleton;
         if (!armable || !DungeonDimension.isDungeon(level) || !entity.addTag(GEARED_TAG)) {
             return;
         }
         Mob mob = (Mob) entity;
-        int index = Math.clamp((long) (TOP - mob.getBlockY()) * TIERS.size() / SPAN, 0, TIERS.size() - 1);
+        int index = tier(mob.getBlockY());
         equip(mob, level, TIERS.get(index), index);
+        if (kobold) {
+            armKobold((AbstractKobold) mob, level, TIERS.get(index));
+        }
+        if (kobold || mob instanceof AbstractKoboldZombie || mob instanceof AbstractKoboldSkeleton) {
+            toughen(mob, index);
+        }
+    }
+
+    // The depth band for a height, 0 at the top of the dungeon to TIERS.size() - 1 at the bottom.
+    public static int tier(int y) {
+        return Math.clamp((long) (TOP - y) * TIERS.size() / SPAN, 0, TIERS.size() - 1);
+    }
+
+    // Swaps a kobold's melee weapon up to the band's material, and enchants whatever it holds in enchanted bands.
+    private static void armKobold(AbstractKobold kobold, ServerLevel level, Tier tier) {
+        ItemStack held = kobold.getMainHandItem();
+        ItemStack weapon = held;
+        if (tier.main() != Material.IRON) {
+            if (held.is(KoboldItems.KOBOLD_IRON_SWORD) || held.is(Items.IRON_SWORD)) {
+                weapon = new ItemStack(tier.main().sword);
+            } else if (held.is(KoboldItems.KOBOLD_IRON_AXE) || held.is(Items.IRON_AXE)) {
+                weapon = new ItemStack(tier.main().axe);
+            }
+        }
+        if (weapon != held || tier.enchanted()) {
+            if (tier.enchanted() && !weapon.isEmpty()) {
+                weapon = enchant(level, kobold.getRandom(), weapon.copy());
+            }
+            kobold.setDepthWeapon(weapon);
+        }
+    }
+
+    private static void toughen(Mob mob, int index) {
+        if (index == 0) {
+            return;
+        }
+        AttributeInstance health = mob.getAttribute(Attributes.MAX_HEALTH);
+        if (health != null) {
+            health.addOrReplacePermanentModifier(
+                new AttributeModifier(HEALTH_ID, KOBOLD_HEALTH_PER_TIER * index, AttributeModifier.Operation.ADD_MULTIPLIED_BASE)
+            );
+            mob.setHealth(mob.getMaxHealth());
+        }
+        AttributeInstance damage = mob.getAttribute(Attributes.ATTACK_DAMAGE);
+        if (damage != null) {
+            damage.addOrReplacePermanentModifier(
+                new AttributeModifier(DAMAGE_ID, KOBOLD_DAMAGE_PER_TIER * index, AttributeModifier.Operation.ADD_VALUE)
+            );
+        }
     }
 
     private static void equip(Mob mob, ServerLevel level, Tier tier, int index) {
@@ -98,7 +166,7 @@ public final class DepthGear {
             boolean enchanted = isMain ? tier.enchanted() : tier.fillerEnchanted();
             give(mob, level, ARMOR_SLOTS[slot], new ItemStack(material.armor[slot]), enchanted);
         }
-        if (index == 0) {
+        if (index == 0 || mob instanceof AbstractKobold) {
             return;
         }
         if (mob instanceof AbstractSkeleton) {
@@ -113,12 +181,16 @@ public final class DepthGear {
 
     private static void give(Mob mob, ServerLevel level, EquipmentSlot slot, ItemStack stack, boolean enchanted) {
         if (enchanted) {
-            Optional<HolderSet.Named<Enchantment>> pool = level.registryAccess()
-                .lookupOrThrow(Registries.ENCHANTMENT)
-                .get(EnchantmentTags.IN_ENCHANTING_TABLE);
-            stack = EnchantmentHelper.enchantItem(mob.getRandom(), stack, ENCHANT_LEVEL, level.registryAccess(), pool);
+            stack = enchant(level, mob.getRandom(), stack);
         }
         mob.setItemSlot(slot, stack);
         mob.setDropChance(slot, DROP_CHANCE);
+    }
+
+    private static ItemStack enchant(ServerLevel level, RandomSource random, ItemStack stack) {
+        Optional<HolderSet.Named<Enchantment>> pool = level.registryAccess()
+            .lookupOrThrow(Registries.ENCHANTMENT)
+            .get(EnchantmentTags.IN_ENCHANTING_TABLE);
+        return EnchantmentHelper.enchantItem(random, stack, ENCHANT_LEVEL, level.registryAccess(), pool);
     }
 }

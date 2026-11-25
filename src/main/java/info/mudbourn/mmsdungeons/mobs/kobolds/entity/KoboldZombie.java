@@ -1,5 +1,6 @@
 package info.mudbourn.mmsdungeons.mobs.kobolds.entity;
 
+import info.mudbourn.mmsdungeons.mobs.kobolds.KoboldSounds;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
@@ -14,16 +15,16 @@ public class KoboldZombie extends AbstractKoboldZombie {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.ZOMBIE_VILLAGER_AMBIENT;
+        return KoboldSounds.ZOMBOLD_IDLE;
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.ZOMBIE_VILLAGER_HURT;
+        return KoboldSounds.ZOMBOLD_HURT;
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.ZOMBIE_VILLAGER_DEATH;
+        return KoboldSounds.ZOMBOLD_DEATH;
     }
 }

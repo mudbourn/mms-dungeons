@@ -5,7 +5,8 @@ import com.github.alexmodguy.alexscaves.server.config.BiomeGenerationConfig;
 import com.github.alexmodguy.alexscaves.server.misc.VoronoiGenerator.VoronoiInfo;
 import info.mudbourn.mmsdungeons.mixin.dungeon.VoronoiGeneratorAccessor;
 
-// Keeps two copies of the same Alex's Caves biome at least 1.75 times that biome's spawn distance apart.
+// Keeps two copies of the same Alex's Caves biome at least 1.75 times that biome's spawn distance apart,
+// or the Periculum's looser share of that in the Periculum layer.
 public final class AlexsCavesSpacing {
 
     private static final int PRIME_X = 501125321;
@@ -18,15 +19,16 @@ public final class AlexsCavesSpacing {
     }
 
     // Whether a nearby cell of the same biome outranks this one, so this one stays empty.
-    public static boolean yields(long worldSeed, VoronoiInfo info) {
+    public static boolean yields(long worldSeed, VoronoiInfo info, boolean periculum) {
         double cellBlocks = AlexsCaves.COMMON_CONFIG.caveBiomeMeanWidth.get() + AlexsCaves.COMMON_CONFIG.caveBiomeMeanSeparation.get();
         double jitter = JITTER * AlexsCaves.COMMON_CONFIG.caveBiomeSpacingRandomness.get();
         int cellX = (int) Math.round(info.cellPos().x);
         int cellZ = (int) Math.round(info.cellPos().z);
         int hash = hash(worldSeed, cellX, cellZ);
-        int biome = biomeOf(hash);
-        double spawnDistance = AlexsCavesRotation.distanceFor(biome);
-        double spacing = AlexsCavesRotation.spacingFor(biome);
+        int biome = biomeOf(hash, cellX, cellZ, periculum);
+        double scale = periculum ? PericulumBiomes.LENIENCY : 1.0;
+        double spawnDistance = AlexsCavesRotation.distanceFor(biome) * scale;
+        double spacing = AlexsCavesRotation.spacingFor(biome) * scale;
         double[] center = center(cellX, cellZ, hash, jitter, cellBlocks);
         int reach = (int) Math.ceil(spacing / cellBlocks) + 1;
         for (int dx = -reach; dx <= reach; dx++) {
@@ -35,7 +37,7 @@ public final class AlexsCavesSpacing {
                     continue;
                 }
                 int otherHash = hash(worldSeed, cellX + dx, cellZ + dz);
-                if (biomeOf(otherHash) != biome || !outranks(otherHash, dx, dz, hash)) {
+                if (biomeOf(otherHash, cellX + dx, cellZ + dz, periculum) != biome || !outranks(otherHash, dx, dz, hash)) {
                     continue;
                 }
                 double[] other = center(cellX + dx, cellZ + dz, otherHash, jitter, cellBlocks);
@@ -61,8 +63,9 @@ public final class AlexsCavesSpacing {
         return ((int) worldSeed ^ cellX * PRIME_X ^ cellZ * PRIME_Z) * HASH_MULTIPLIER;
     }
 
-    private static int biomeOf(int hash) {
-        return (int) ((hash * HASH_SCALE + 1.0) * 0.5 * BiomeGenerationConfig.getBiomeCount());
+    private static int biomeOf(int hash, int cellX, int cellZ, boolean periculum) {
+        int biome = (int) ((hash * HASH_SCALE + 1.0) * 0.5 * BiomeGenerationConfig.getBiomeCount());
+        return periculum ? PericulumBiomes.shift(biome, cellX, cellZ) : biome;
     }
 
     // The cell's jittered center in blocks.

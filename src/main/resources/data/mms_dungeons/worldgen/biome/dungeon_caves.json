@@ -112,6 +112,43 @@
               "type": "mms_dungeons:witherbold",
               "count": 1,
               "weight": 3
+            },
+            {
+              "type": "mms_dungeons:tar_cube",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 1,
+                "max_inclusive": 3
+              },
+              "weight": 12
+            },
+            {
+              "type": "mms_dungeons:wraith",
+              "count": 1,
+              "weight": 6
+            },
+            {
+              "type": "mms_dungeons:wisp",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 1,
+                "max_inclusive": 2
+              },
+              "weight": 8
+            },
+            {
+              "type": "mms_dungeons:craw",
+              "count": 1,
+              "weight": 4
+            },
+            {
+              "type": "mms_dungeons:sap",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 2,
+                "max_inclusive": 3
+              },
+              "weight": 8
             }
           ],
           "underground_water_creature": [

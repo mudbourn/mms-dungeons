@@ -77,4 +77,15 @@ public abstract class AbstractKoboldSkeleton extends AbstractSkeleton implements
         this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.CROSSBOW));
         this.setDropChance(EquipmentSlot.MAINHAND, 0.15f);
     }
+
+    // Undead kobolds have no baby form, so a spawn egg still makes an adult.
+    @Override
+    public void setBaby(boolean baby) {
+        super.setBaby(false);
+    }
+
+    @Override
+    public boolean isBaby() {
+        return false;
+    }
 }
