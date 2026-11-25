@@ -12,9 +12,9 @@
               "type": "minecraft:set_count",
               "count": 2,
               "condition": {
-                "type": "minecraft:block_state_property",
-                "block": "mms_dungeons:smooth_tarred_sandstone_slab",
-                "properties": {
+                "type": "minecraft:match_block",
+                "blocks": "mms_dungeons:smooth_tarred_sandstone_slab",
+                "state": {
                   "type": "double"
                 }
               }

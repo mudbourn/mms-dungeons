@@ -37,24 +37,18 @@
         ]
       },
       "provider": {
-        "type": "minecraft:simple_state_provider",
-        "state": {
-          "Name": "mms_dungeons:orpiment_petrified_roots",
-          "Properties": {
-            "thickness": "middle"
-          }
+        "id": "mms_dungeons:orpiment_petrified_roots",
+        "properties": {
+          "thickness": "middle"
         }
       }
     },
     {
       "height": 1,
       "provider": {
-        "type": "minecraft:simple_state_provider",
-        "state": {
-          "Name": "mms_dungeons:orpiment_petrified_roots",
-          "Properties": {
-            "thickness": "tip"
-          }
+        "id": "mms_dungeons:orpiment_petrified_roots",
+        "properties": {
+          "thickness": "tip"
         }
       }
     }

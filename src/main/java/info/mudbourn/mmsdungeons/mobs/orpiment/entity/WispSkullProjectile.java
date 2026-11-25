@@ -9,6 +9,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.ItemSupplier;
 import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -17,7 +18,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 
 // A skull of ghostly fire that weakens what it strikes and vanishes on impact.
-public class WispSkullProjectile extends AbstractArrow {
+public class WispSkullProjectile extends AbstractArrow implements ItemSupplier {
 
     public WispSkullProjectile(EntityType<? extends WispSkullProjectile> type, Level level) {
         super(type, level);
@@ -25,6 +26,11 @@ public class WispSkullProjectile extends AbstractArrow {
 
     public WispSkullProjectile(EntityType<? extends WispSkullProjectile> type, LivingEntity owner, Level level) {
         super(type, owner, level, new ItemStack(OrpimentItems.WISP_SKULL), null);
+    }
+
+    @Override
+    public ItemStack getItem() {
+        return new ItemStack(OrpimentItems.WISP_SKULL);
     }
 
     @Override

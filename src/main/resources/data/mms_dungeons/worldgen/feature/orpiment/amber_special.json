@@ -13,10 +13,7 @@
         "max_inclusive": 9
       },
       "provider": {
-        "type": "minecraft:simple_state_provider",
-        "state": {
-          "Name": "mms_dungeons:orpiment_petrified_log"
-        }
+        "id": "mms_dungeons:orpiment_petrified_log"
       }
     }
   ],

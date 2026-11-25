@@ -4,10 +4,10 @@
       "processor_type": "minecraft:block_ignore",
       "blocks": [
         {
-          "Name": "minecraft:structure_block"
+          "id": "minecraft:structure_block"
         },
         {
-          "Name": "minecraft:air"
+          "id": "minecraft:air"
         }
       ]
     },
@@ -24,7 +24,7 @@
             "predicate_type": "minecraft:always_true"
           },
           "output_state": {
-            "Name": "mms_dungeons:orpiment_hollowed_amber_bricks"
+            "id": "mms_dungeons:orpiment_hollowed_amber_bricks"
           }
         }
       ]
@@ -42,7 +42,7 @@
             "predicate_type": "minecraft:always_true"
           },
           "output_state": {
-            "Name": "mms_dungeons:smooth_tarred_sandstone"
+            "id": "mms_dungeons:smooth_tarred_sandstone"
           }
         }
       ]

@@ -12,10 +12,12 @@
     "StellarStoneAutomatonMixin"
   ],
   "client": [
+    "ClientInputAccessor",
     "CorpseLimbsMixin",
     "CorpseRotationsMixin",
     "CorpseStateMixin",
     "EntityOutlineMixin",
+    "PossessedInputMixin",
     "SkullBlockRendererMixin"
   ],
   "injectors": {
