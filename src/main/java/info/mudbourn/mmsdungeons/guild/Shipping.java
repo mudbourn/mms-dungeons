@@ -1,5 +1,6 @@
 package info.mudbourn.mmsdungeons.guild;
 
+import info.mudbourn.mmseconomy.deal.Spot;
 import info.mudbourn.mmseconomy.market.Depot;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,23 +23,38 @@ final class Shipping {
         List<Container> barrels = Depots.barrels(server, guild.depot);
         int taken = Depot.take(barrels, bounty.proof.stack(), bounty.proof.count());
         if (taken > 0) {
-            data.shipments.add(new Shipment(bounty.poster, bounty.posterDepot, bounty.proof.stack(), taken, bounty.finishedDay + 1));
+            data.shipments.add(new Shipment(
+                bounty.poster,
+                bounty.posterDepot,
+                bounty.proof.stack(),
+                taken,
+                bounty.finishedDay + 1
+            ));
         }
     }
 
-    // Inserts every due shipment into its depot and keeps whatever does not fit for the next day.
+    // Inserts every due shipment into its depot or another depot of the recipient, and keeps the rest for the next day.
     static void deliver(MinecraftServer server, GuildData data, long today) {
         for (Shipment shipment : new ArrayList<>(data.shipments)) {
             if (shipment.arrivalDay > today) {
                 continue;
             }
+            ServerPlayer owner = server.getPlayerList().getPlayer(shipment.recipient);
             List<Container> barrels = Depots.barrels(server, shipment.depot);
             if (barrels.isEmpty()) {
-                continue;
+                Spot found = Depots.ownedAny(server, shipment.recipient);
+                if (found == null) {
+                    if (owner != null) {
+                        owner.sendSystemMessage(Component.literal(
+                            shipment.count + " x " + shipment.stack.getHoverName().getString() + " waits for a depot you own."));
+                    }
+                    continue;
+                }
+                shipment.depot = found;
+                barrels = Depots.barrels(server, found);
             }
             int inserted = Depot.insert(barrels, shipment.stack, shipment.count);
             shipment.count -= inserted;
-            ServerPlayer owner = server.getPlayerList().getPlayer(shipment.recipient);
             if (owner != null && inserted > 0) {
                 owner.sendSystemMessage(Component.literal(
                     inserted + " x " + shipment.stack.getHoverName().getString() + " arrived at your depot."));

@@ -43,10 +43,16 @@ public final class MyBountiesScreen extends Screen implements BountySync.Listene
         list = addRenderableWidget(new BountyList(minecraft, width, height - 68, 28));
         int left = width / 2 - 156;
         int y = height - 26;
-        abandon = addRenderableWidget(Button.builder(Component.translatable("gui.mms_dungeons.abandon"), button -> act(BountyActionPayload.Action.ABANDON))
+        abandon = addRenderableWidget(Button.builder(
+                Component.translatable("gui.mms_dungeons.abandon"),
+                button -> act(BountyActionPayload.Action.ABANDON)
+            )
             .bounds(left, y, 100, 20)
             .build());
-        delete = addRenderableWidget(Button.builder(Component.translatable("gui.mms_dungeons.delete"), button -> act(BountyActionPayload.Action.DELETE))
+        delete = addRenderableWidget(Button.builder(
+                Component.translatable("gui.mms_dungeons.delete"),
+                button -> act(BountyActionPayload.Action.DELETE)
+            )
             .bounds(left + 106, y, 100, 20)
             .build());
         addRenderableWidget(Button.builder(Component.translatable("gui.mms_dungeons.close"), button -> onClose())

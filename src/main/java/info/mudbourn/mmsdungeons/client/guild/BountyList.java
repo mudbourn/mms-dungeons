@@ -85,7 +85,8 @@ final class BountyList extends ObjectSelectionList<BountyList.Row> {
             int color = GRAY;
             String state = bounty.status.label();
             if (bounty.status == BountyStatus.IN_PROGRESS) {
-                state = Component.translatable(view.holding() ? "gui.mms_dungeons.held_by_you" : "gui.mms_dungeons.held_by", view.takerName()).getString();
+                String key = view.holding() ? "gui.mms_dungeons.held_by_you" : "gui.mms_dungeons.held_by";
+                state = Component.translatable(key, view.takerName()).getString();
                 color = view.holding() ? GREEN : RED;
             } else if (bounty.status == BountyStatus.AVAILABLE) {
                 color = GREEN;

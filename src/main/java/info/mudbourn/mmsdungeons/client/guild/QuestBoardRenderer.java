@@ -46,7 +46,13 @@ public class QuestBoardRenderer implements BlockEntityRenderer<QuestBoardBlockEn
     }
 
     @Override
-    public void extractRenderState(QuestBoardBlockEntity entity, State state, float partialTick, Vec3 cameraPos, ModelFeatureRenderer.CrumblingOverlay crumblingOverlay) {
+    public void extractRenderState(
+        QuestBoardBlockEntity entity,
+        State state,
+        float partialTick,
+        Vec3 cameraPos,
+        ModelFeatureRenderer.CrumblingOverlay crumblingOverlay
+    ) {
         BlockEntityRenderer.super.extractRenderState(entity, state, partialTick, cameraPos, crumblingOverlay);
         state.facing = entity.getBlockState().getValue(QuestBoardBlock.FACING);
     }

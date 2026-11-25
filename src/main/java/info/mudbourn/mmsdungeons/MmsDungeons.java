@@ -5,6 +5,7 @@ import info.mudbourn.mmsdungeons.corpse.Corpses;
 import info.mudbourn.mmsdungeons.dungeon.DungeonDimension;
 import info.mudbourn.mmsdungeons.guild.Guilds;
 import info.mudbourn.mmsdungeons.mobs.kobolds.Kobolds;
+import info.mudbourn.mmsdungeons.mobs.orpiment.Orpiment;
 import info.mudbourn.mmsdungeons.party.Parties;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.resources.Identifier;
@@ -25,5 +26,6 @@ public final class MmsDungeons implements ModInitializer {
         Corpses.register();
         AerialHellPortals.register();
         Kobolds.register();
+        Orpiment.register();
     }
 }

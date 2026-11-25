@@ -5,6 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import info.mudbourn.mmseconomy.deal.Spot;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Function;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.world.item.ItemStack;
 
@@ -38,6 +39,9 @@ public final class Bounty {
         Spot.CODEC.optionalFieldOf("posterDepot").forGetter(bounty -> Optional.ofNullable(bounty.posterDepot))
     ).apply(instance, Bounty::new));
 
+    // The codec for clients: it leaves out the poster depot.
+    public static final Codec<Bounty> VIEW_CODEC = CODEC.xmap(Function.identity(), Bounty::withoutDepot);
+
     public final UUID id;
     public final BountyKind kind;
     public final UUID guild;
@@ -54,8 +58,19 @@ public final class Bounty {
     public long finishedDay;
     public final Spot posterDepot;
 
-    public Bounty(UUID guild, BountyKind kind, UUID poster, String title, String description, Proof proof,
-                  long reward, BountyType type, long createdDay, long expiryDay, Spot posterDepot) {
+    public Bounty(
+        UUID guild,
+        BountyKind kind,
+        UUID poster,
+        String title,
+        String description,
+        Proof proof,
+        long reward,
+        BountyType type,
+        long createdDay,
+        long expiryDay,
+        Spot posterDepot
+    ) {
         this.id = UUID.randomUUID();
         this.kind = kind;
         this.guild = guild;
@@ -71,9 +86,23 @@ public final class Bounty {
         this.posterDepot = posterDepot;
     }
 
-    private Bounty(UUID id, BountyKind kind, UUID guild, UUID poster, String title, String description, Proof proof,
-                   long reward, BountyType type, BountyStatus status, Optional<UUID> taker, long createdDay,
-                   long expiryDay, long finishedDay, Optional<Spot> posterDepot) {
+    private Bounty(
+        UUID id,
+        BountyKind kind,
+        UUID guild,
+        UUID poster,
+        String title,
+        String description,
+        Proof proof,
+        long reward,
+        BountyType type,
+        BountyStatus status,
+        Optional<UUID> taker,
+        long createdDay,
+        long expiryDay,
+        long finishedDay,
+        Optional<Spot> posterDepot
+    ) {
         this.id = id;
         this.kind = kind;
         this.guild = guild;
@@ -89,6 +118,26 @@ public final class Bounty {
         this.expiryDay = expiryDay;
         this.finishedDay = finishedDay;
         this.posterDepot = posterDepot.orElse(null);
+    }
+
+    private Bounty withoutDepot() {
+        return new Bounty(
+            id,
+            kind,
+            guild,
+            poster,
+            title,
+            description,
+            proof,
+            reward,
+            type,
+            status,
+            Optional.ofNullable(taker),
+            createdDay,
+            expiryDay,
+            finishedDay,
+            Optional.empty()
+        );
     }
 
     public boolean open() {

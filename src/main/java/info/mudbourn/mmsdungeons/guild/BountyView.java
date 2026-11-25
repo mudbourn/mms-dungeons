@@ -4,11 +4,21 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 // A quest or contract as one player sees it: names, hold state, the share preview and the days left.
-public record BountyView(Bounty bounty, String guildName, String posterName, String takerName, boolean holding,
-                         int partySize, long yourShare, long commission, int have, long daysLeft) {
+public record BountyView(
+    Bounty bounty,
+    String guildName,
+    String posterName,
+    String takerName,
+    boolean holding,
+    int partySize,
+    long yourShare,
+    long commission,
+    int have,
+    long daysLeft
+) {
 
     public static final Codec<BountyView> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-        Bounty.CODEC.fieldOf("bounty").forGetter(BountyView::bounty),
+        Bounty.VIEW_CODEC.fieldOf("bounty").forGetter(BountyView::bounty),
         Codec.STRING.fieldOf("guildName").forGetter(BountyView::guildName),
         Codec.STRING.fieldOf("posterName").forGetter(BountyView::posterName),
         Codec.STRING.fieldOf("takerName").forGetter(BountyView::takerName),

@@ -99,9 +99,22 @@ final class ItemSelectionScreen extends Screen {
             }
 
             @Override
-            public void extractContent(GuiGraphicsExtractor graphics, int mouseX, int mouseY, boolean hovered, float partialTick) {
+            public void extractContent(
+                GuiGraphicsExtractor graphics,
+                int mouseX,
+                int mouseY,
+                boolean hovered,
+                float partialTick
+            ) {
                 graphics.item(stack, getContentX() + 4, getContentY() + 2);
-                graphics.text(font, stack.getHoverName(), getContentX() + 28, getContentY() + 6, 0xFFFFFFFF, true);
+                graphics.text(
+                    font,
+                    stack.getHoverName(),
+                    getContentX() + 28,
+                    getContentY() + 6,
+                    0xFFFFFFFF,
+                    true
+                );
             }
         }
     }

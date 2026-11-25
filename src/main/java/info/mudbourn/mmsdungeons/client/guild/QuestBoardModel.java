@@ -38,7 +38,11 @@ public class QuestBoardModel extends Model<EntityRenderState> {
                 .addBox(-20.0F, 1.0F, -10.0F, 38.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)),
             PartPose.offset(1.0F, -6.0F, -1.0F)
         );
-        PartDefinition poutresSupport = root.addOrReplaceChild("Poutres support", CubeListBuilder.create(), PartPose.offset(-15.0F, 3.0F, -3.0F));
+        PartDefinition poutresSupport = root.addOrReplaceChild(
+            "Poutres support",
+            CubeListBuilder.create(),
+            PartPose.offset(-15.0F, 3.0F, -3.0F)
+        );
         poutresSupport.addOrReplaceChild(
             "Poutrenorddroite_r1",
             CubeListBuilder.create()

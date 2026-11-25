@@ -3,10 +3,8 @@ package info.mudbourn.mmsdungeons.guild;
 import info.mudbourn.mmsdungeons.config.GuildsConfig;
 import info.mudbourn.mmsdungeons.net.PostBountyPayload;
 import info.mudbourn.mmseconomy.deal.Spot;
-import info.mudbourn.mmseconomy.deal.WholesaleManager;
 import info.mudbourn.mmseconomy.economy.Billing;
 import info.mudbourn.mmseconomy.economy.Currency;
-import info.mudbourn.mmseconomy.economy.PendingPayouts;
 import info.mudbourn.mmseconomy.economy.Wallet;
 import info.mudbourn.mmseconomy.history.History;
 import info.mudbourn.mmseconomy.history.HistoryCategory;
@@ -15,16 +13,18 @@ import info.mudbourn.mmseconomy.market.Depot;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 // The rules for posting, taking, handing in, abandoning, deleting and expiring quests and contracts.
 final class BountyService {
 
+    private static final Logger LOG = LoggerFactory.getLogger("mms_dungeons");
     private static final int MAX_TITLE = 40;
     private static final int MAX_DESCRIPTION = 200;
 
@@ -72,20 +72,50 @@ final class BountyService {
                 return "The guild treasury holds only " + Currency.format(guild.treasury) + ".";
             }
             guild.treasury -= request.reward();
-            bounty = new Bounty(guild.id, BountyKind.QUEST, id, title, description, proof, request.reward(),
-                request.type(), today, today + config.questExpiryDays, null);
+            bounty = new Bounty(
+                guild.id,
+                BountyKind.QUEST,
+                id,
+                title,
+                description,
+                proof,
+                request.reward(),
+                request.tag(),
+                today,
+                today + config.questExpiryDays,
+                null
+            );
         } else {
-            Spot depot = WholesaleManager.ownDepot(player);
+            Spot depot = Depots.ownedNearby(player);
             if (depot == null) {
-                return "Stand at a depot you own so the proof items can be shipped to you.";
+                return "Stand at a depot you own, or look at it, so the proof items can be shipped to you.";
             }
             if (!Wallet.withdraw(player, request.reward())) {
                 return "You cannot afford " + Currency.format(request.reward()) + ".";
             }
-            History.log(player, new HistoryEntry(today, HistoryCategory.PAYMENT, "", 0, request.reward(), 0L,
-                -request.reward(), guild.name + ": " + title));
-            bounty = new Bounty(guild.id, BountyKind.CONTRACT, id, title, description, proof, request.reward(),
-                request.type(), today, today + config.contractExpiryDays, depot);
+            History.log(player, new HistoryEntry(
+                today,
+                HistoryCategory.PAYMENT,
+                "",
+                0,
+                request.reward(),
+                0L,
+                -request.reward(),
+                guild.name + ": " + title
+            ));
+            bounty = new Bounty(
+                guild.id,
+                BountyKind.CONTRACT,
+                id,
+                title,
+                description,
+                proof,
+                request.reward(),
+                request.tag(),
+                today,
+                today + config.contractExpiryDays,
+                depot
+            );
         }
         data.bounties.add(bounty);
         data.setDirty();
@@ -100,7 +130,7 @@ final class BountyService {
             return "That posting is no longer available.";
         }
         List<UUID> party = Guilds.partyMembers(player.getUUID());
-        if (party.contains(bounty.poster)) {
+        if (bounty.kind == BountyKind.CONTRACT && party.contains(bounty.poster)) {
             return "Your party cannot take its own member's posting.";
         }
         long held = data.bounties.stream()
@@ -143,7 +173,7 @@ final class BountyService {
         boolean poster = player.getUUID().equals(bounty.poster);
         boolean guildStaff = bounty.kind == BountyKind.QUEST
             && guild != null
-            && (player.getUUID().equals(guild.master) || Guilds.isAdmin(player));
+            && (player.getUUID().equals(guild.master) || guild.isPublic && Guilds.isAdmin(player));
         if (!poster && !guildStaff) {
             return "Only the poster can delete this.";
         }
@@ -186,7 +216,9 @@ final class BountyService {
             return guild.name + "'s depot is full.";
         }
 
-        if (Depot.insert(barrels, template, need) < need) {
+        int inserted = Depot.insert(barrels, template, need);
+        if (inserted < need) {
+            Depot.take(barrels, template, inserted);
             return guild.name + "'s depot is full.";
         }
         remove(player, template, need);
@@ -251,23 +283,28 @@ final class BountyService {
     private static void refund(MinecraftServer server, GuildData data, Bounty bounty, String reason) {
         Guild guild = data.byId(bounty.guild);
         if (bounty.kind == BountyKind.QUEST) {
-            if (guild != null) {
-                guild.treasury += bounty.reward;
+            if (guild == null) {
+                LOG.warn("Quest {} lost guild {}; its {} Pice reward was not refunded.", bounty.id, bounty.guild, bounty.reward);
+                return;
             }
-        } else {
-            long day = Billing.today(server);
-            String label = (guild == null ? "" : guild.name + ": ") + bounty.title + " (" + reason + ")";
-            HistoryEntry entry = new HistoryEntry(day, HistoryCategory.PAYMENT, "", 0, bounty.reward, 0L, bounty.reward, label);
-            ServerPlayer poster = server.getPlayerList().getPlayer(bounty.poster);
-            if (poster != null) {
-                Wallet.deposit(poster, bounty.reward);
-                History.log(poster, entry);
-                poster.sendSystemMessage(Component.literal(
-                    bounty.title + " " + reason.toLowerCase() + ". " + Currency.format(bounty.reward) + " returned to your wallet."));
-            } else {
-                PendingPayouts.get(server).record(bounty.poster, bounty.reward, entry);
-            }
+            guild.treasury += bounty.reward;
+            return;
         }
+        long day = Billing.today(server);
+        String label = (guild == null ? "" : guild.name + ": ") + bounty.title + " (" + reason + ")";
+        HistoryEntry entry = new HistoryEntry(
+            day,
+            HistoryCategory.PAYMENT,
+            "",
+            0,
+            bounty.reward,
+            0L,
+            bounty.reward,
+            label
+        );
+        String returned = Currency.format(bounty.reward);
+        String message = bounty.title + " " + reason.toLowerCase() + ". " + returned + " returned to your wallet.";
+        Payout.credit(server, bounty.poster, bounty.reward, entry, message);
     }
 
     static int count(ServerPlayer player, ItemStack template) {

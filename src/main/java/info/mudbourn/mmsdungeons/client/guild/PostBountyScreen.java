@@ -110,8 +110,13 @@ final class PostBountyScreen extends Screen {
         super.extractRenderState(graphics, mouseX, mouseY, partialTick);
         int left = width / 2 - 120;
         graphics.centeredText(font, title, width / 2, 12, 0xFFFFFFFF);
-        graphics.centeredText(font, Component.translatable(quest ? "gui.mms_dungeons.quest_note" : "gui.mms_dungeons.contract_note"),
-            width / 2, 24, 0xFFAAAAAA);
+        graphics.centeredText(
+            font,
+            Component.translatable(quest ? "gui.mms_dungeons.quest_note" : "gui.mms_dungeons.contract_note"),
+            width / 2,
+            24,
+            0xFFAAAAAA
+        );
         graphics.text(font, Component.translatable("gui.mms_dungeons.field_title"), left, 30, 0xFFAAAAAA, false);
         graphics.text(font, Component.translatable("gui.mms_dungeons.field_description"), left, 62, 0xFFAAAAAA, false);
         graphics.text(font, Component.translatable("gui.mms_dungeons.proof_item"), left, 94, 0xFFAAAAAA, false);

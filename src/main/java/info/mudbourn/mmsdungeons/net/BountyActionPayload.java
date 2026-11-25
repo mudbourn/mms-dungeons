@@ -7,6 +7,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.util.ByIdMap;
 
 // Client to server: take, hand in, abandon or delete one posting.
 public record BountyActionPayload(Action action, UUID bounty) implements CustomPacketPayload {
@@ -21,7 +22,10 @@ public record BountyActionPayload(Action action, UUID bounty) implements CustomP
     public static final Type<BountyActionPayload> TYPE = new Type<>(MmsDungeons.id("bounty_action"));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, BountyActionPayload> CODEC = StreamCodec.composite(
-        ByteBufCodecs.idMapper(index -> Action.values()[index], Action::ordinal),
+        ByteBufCodecs.idMapper(
+            ByIdMap.continuous(Action::ordinal, Action.values(), ByIdMap.OutOfBoundsStrategy.ZERO),
+            Action::ordinal
+        ),
         BountyActionPayload::action,
         UUIDUtil.STREAM_CODEC,
         BountyActionPayload::bounty,

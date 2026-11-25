@@ -1,6 +1,5 @@
 package info.mudbourn.mmsdungeons.guild;
 
-import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -24,16 +23,9 @@ import org.jetbrains.annotations.Nullable;
 // The quest board: bound to a guild when its guildmaster places it, opens that guild's quests and contracts.
 public class QuestBoardBlock extends HorizontalDirectionalBlock implements EntityBlock {
 
-    public static final MapCodec<QuestBoardBlock> CODEC = simpleCodec(QuestBoardBlock::new);
-
     public QuestBoardBlock(Properties properties) {
         super(properties);
         registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH));
-    }
-
-    @Override
-    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
-        return CODEC;
     }
 
     @Nullable
@@ -59,20 +51,30 @@ public class QuestBoardBlock extends HorizontalDirectionalBlock implements Entit
 
     @Override
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-        if (level.isClientSide() || !(placer instanceof ServerPlayer player) || !(level.getBlockEntity(pos) instanceof QuestBoardBlockEntity board)) {
+        if (level.isClientSide()
+            || !(placer instanceof ServerPlayer player)
+            || !(level.getBlockEntity(pos) instanceof QuestBoardBlockEntity board)) {
             return;
         }
         Guild guild = Guilds.data().guildOf(player.getUUID());
         if (guild != null && player.getUUID().equals(guild.master)) {
             board.bind(guild.id);
-            player.sendSystemMessage(Component.literal("This quest board now lists the quests and contracts of " + guild.name + "."));
+            player.sendSystemMessage(Component.literal(
+                "This quest board now lists the quests and contracts of " + guild.name + "."));
         } else {
-            player.sendSystemMessage(Component.literal("This quest board is not bound to a guild. A guildmaster or an admin can bind it with /guild bind."));
+            player.sendSystemMessage(Component.literal(
+                "This quest board is not bound to a guild. A guildmaster or an admin can bind it with /guild bind."));
         }
     }
 
     @Override
-    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
+    protected InteractionResult useWithoutItem(
+        BlockState state,
+        Level level,
+        BlockPos pos,
+        Player player,
+        BlockHitResult hit
+    ) {
         if (level.isClientSide()) {
             return InteractionResult.SUCCESS;
         }

@@ -19,7 +19,7 @@ public final class Shipment {
     ).apply(instance, Shipment::new));
 
     public final UUID recipient;
-    public final Spot depot;
+    public Spot depot;
     public final ItemStack stack;
     public int count;
     public final long arrivalDay;

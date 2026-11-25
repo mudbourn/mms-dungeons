@@ -16,6 +16,7 @@ import info.mudbourn.mmseconomy.economy.Wallet;
 import info.mudbourn.mmseconomy.history.History;
 import info.mudbourn.mmseconomy.history.HistoryCategory;
 import info.mudbourn.mmseconomy.history.HistoryEntry;
+import java.util.List;
 import java.util.UUID;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -37,29 +38,35 @@ final class GuildCommands {
     static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("guild")
             .then(Commands.literal("found")
-                .then(Commands.argument("name", StringArgumentType.string()).executes(ctx -> found(ctx, StringArgumentType.getString(ctx, "name")))))
+                .then(Commands.argument("name", StringArgumentType.string())
+                    .executes(ctx -> found(ctx, StringArgumentType.getString(ctx, "name")))))
             .then(Commands.literal("join")
                 .then(Commands.argument("name", StringArgumentType.string())
                     .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(guildNames(), builder))
                     .executes(ctx -> join(ctx, StringArgumentType.getString(ctx, "name"), false))
-                    .then(Commands.literal("confirm").executes(ctx -> join(ctx, StringArgumentType.getString(ctx, "name"), true)))))
+                    .then(Commands.literal("confirm")
+                        .executes(ctx -> join(ctx, StringArgumentType.getString(ctx, "name"), true)))))
             .then(Commands.literal("leave").executes(GuildCommands::leave))
             .then(Commands.literal("kick")
                 .then(Commands.argument("player", StringArgumentType.word())
                     .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(memberNames(ctx), builder))
                     .executes(ctx -> kick(ctx, StringArgumentType.getString(ctx, "player")))))
             .then(Commands.literal("charter")
-                .then(Commands.argument("text", StringArgumentType.greedyString()).executes(ctx -> charter(ctx, StringArgumentType.getString(ctx, "text")))))
+                .then(Commands.argument("text", StringArgumentType.greedyString())
+                    .executes(ctx -> charter(ctx, StringArgumentType.getString(ctx, "text")))))
             .then(Commands.literal("fee")
-                .then(Commands.argument("amount", StringArgumentType.word()).executes(ctx -> fee(ctx, StringArgumentType.getString(ctx, "amount")))))
+                .then(Commands.argument("amount", StringArgumentType.word())
+                    .executes(ctx -> fee(ctx, StringArgumentType.getString(ctx, "amount")))))
             .then(Commands.literal("commission")
-                .then(Commands.argument("percent", IntegerArgumentType.integer(0, 50)).executes(ctx -> commission(ctx, IntegerArgumentType.getInteger(ctx, "percent")))))
+                .then(Commands.argument("percent", IntegerArgumentType.integer(0, 50))
+                    .executes(ctx -> commission(ctx, IntegerArgumentType.getInteger(ctx, "percent")))))
             .then(Commands.literal("transfer")
                 .then(Commands.argument("player", StringArgumentType.word())
                     .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(memberNames(ctx), builder))
                     .executes(ctx -> transfer(ctx, StringArgumentType.getString(ctx, "player")))))
             .then(Commands.literal("withdraw")
-                .then(Commands.argument("amount", StringArgumentType.word()).executes(ctx -> withdraw(ctx, StringArgumentType.getString(ctx, "amount")))))
+                .then(Commands.argument("amount", StringArgumentType.word())
+                    .executes(ctx -> withdraw(ctx, StringArgumentType.getString(ctx, "amount")))))
             .then(Commands.literal("depot").executes(ctx -> depot(ctx, null)))
             .then(Commands.literal("bind").executes(ctx -> bind(ctx, null)))
             .then(Commands.literal("info")
@@ -71,12 +78,17 @@ final class GuildCommands {
             .then(Commands.literal("admin")
                 .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                 .then(Commands.literal("create")
-                    .then(Commands.argument("name", StringArgumentType.string()).executes(ctx -> adminCreate(ctx, StringArgumentType.getString(ctx, "name")))))
+                    .then(Commands.argument("name", StringArgumentType.string())
+                        .executes(ctx -> adminCreate(ctx, StringArgumentType.getString(ctx, "name")))))
                 .then(Commands.literal("portal")
                     .then(Commands.argument("guild", StringArgumentType.string())
                         .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(guildNames(), builder))
                         .then(Commands.argument("installed", BoolArgumentType.bool())
-                            .executes(ctx -> portal(ctx, StringArgumentType.getString(ctx, "guild"), BoolArgumentType.getBool(ctx, "installed"))))))
+                            .executes(ctx -> portal(
+                                ctx,
+                                StringArgumentType.getString(ctx, "guild"),
+                                BoolArgumentType.getBool(ctx, "installed")
+                            )))))
                 .then(Commands.literal("bind")
                     .then(Commands.argument("guild", StringArgumentType.string())
                         .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(guildNames(), builder))
@@ -94,7 +106,7 @@ final class GuildCommands {
     private static Iterable<String> memberNames(CommandContext<CommandSourceStack> ctx) {
         ServerPlayer player = ctx.getSource().getPlayer();
         Guild guild = player == null ? null : Guilds.data().guildOf(player.getUUID());
-        return guild == null ? java.util.List.of() : guild.members.stream().map(Guilds::nameOf).toList();
+        return guild == null ? List.of() : guild.members.stream().map(Guilds::nameOf).toList();
     }
 
     private static int found(CommandContext<CommandSourceStack> ctx, String name) throws CommandSyntaxException {
@@ -134,8 +146,16 @@ final class GuildCommands {
         if (cost > 0) {
             Tax.Settlement settlement = Tax.settleTaxedOffline(player, cost, TaxKind.PAY);
             guild.treasury += settlement.net();
-            History.log(player, new HistoryEntry(Billing.today(server), HistoryCategory.PAYMENT, "", 0,
-                settlement.gross(), settlement.tax(), -settlement.gross(), "Founding " + name));
+            History.log(player, new HistoryEntry(
+                Billing.today(server),
+                HistoryCategory.PAYMENT,
+                "",
+                0,
+                settlement.gross(),
+                settlement.tax(),
+                -settlement.gross(),
+                "Founding " + name
+            ));
         }
         data.guilds.add(guild);
         data.setDirty();
@@ -169,8 +189,16 @@ final class GuildCommands {
             }
             Tax.Settlement settlement = Tax.settleTaxedOffline(player, guild.joinFee, TaxKind.PAY);
             guild.treasury += settlement.net();
-            History.log(player, new HistoryEntry(Billing.today(server), HistoryCategory.PAYMENT, "", 0,
-                settlement.gross(), settlement.tax(), -settlement.gross(), "Joining " + guild.name));
+            History.log(player, new HistoryEntry(
+                Billing.today(server),
+                HistoryCategory.PAYMENT,
+                "",
+                0,
+                settlement.gross(),
+                settlement.tax(),
+                -settlement.gross(),
+                "Joining " + guild.name
+            ));
         }
         guild.members.add(player.getUUID());
         GuildOpac.add(server, guild, player.getUUID(), player.getGameProfile().name());
@@ -268,7 +296,8 @@ final class GuildCommands {
         }
         UUID party = GuildOpac.transfer(server, guild, next);
         if (party == null) {
-            return fail(ctx, "The Open Parties and Claims party could not pass to " + name + ".");
+            Guilds.data().setDirty();
+            return fail(ctx, "The Open Parties and Claims party could not pass to " + name + ". The guild has no party now.");
         }
         guild.opacParty = party;
         guild.master = target;
@@ -286,10 +315,23 @@ final class GuildCommands {
         if (pice <= 0 || pice > guild.treasury) {
             return fail(ctx, "The treasury holds " + Currency.format(guild.treasury) + ".");
         }
+        long room = Payout.headroom(player);
+        if (room <= 0) {
+            return fail(ctx, "Your wallet is full.");
+        }
+        pice = Math.min(pice, room);
         guild.treasury -= pice;
         Wallet.deposit(player, pice);
-        History.log(player, new HistoryEntry(Billing.today(ctx.getSource().getServer()), HistoryCategory.PAYMENT, "", 0,
-            pice, 0L, pice, guild.name + " treasury"));
+        History.log(player, new HistoryEntry(
+            Billing.today(ctx.getSource().getServer()),
+            HistoryCategory.PAYMENT,
+            "",
+            0,
+            pice,
+            0L,
+            pice,
+            guild.name + " treasury"
+        ));
         Guilds.data().setDirty();
         return ok(ctx, "Withdrew " + Currency.format(pice) + ". The treasury holds " + Currency.format(guild.treasury) + ".");
     }

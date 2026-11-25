@@ -39,12 +39,21 @@ final class GuildNetworking {
         PayloadTypeRegistry.serverboundPlay().register(PostBountyPayload.TYPE, PostBountyPayload.CODEC);
         PayloadTypeRegistry.serverboundPlay().register(BountyActionPayload.TYPE, BountyActionPayload.CODEC);
 
-        ServerPlayNetworking.registerGlobalReceiver(RequestBountiesPayload.TYPE, (payload, context) ->
-            sendList(context.player(), payload.guildId()));
+        ServerPlayNetworking.registerGlobalReceiver(RequestBountiesPayload.TYPE, (payload, context) -> {
+            ServerPlayer player = context.player();
+            if (payload.guildId().isPresent()) {
+                Guild guild = boardGuild(player);
+                if (guild == null || !guild.id.equals(payload.guildId().get())) {
+                    return;
+                }
+            }
+            sendList(player, payload.guildId());
+        });
         ServerPlayNetworking.registerGlobalReceiver(PostBountyPayload.TYPE, (payload, context) -> {
             ServerPlayer player = context.player();
             Guild guild = boardGuild(player);
-            finish(player, guild, guild == null ? "Stand at a quest board." : BountyService.post(player, guild, payload), "Posted.");
+            String error = guild == null ? "Stand at a quest board." : BountyService.post(player, guild, payload);
+            finish(player, guild, error, "Posted.");
         });
         ServerPlayNetworking.registerGlobalReceiver(BountyActionPayload.TYPE, (payload, context) ->
             act(context.player(), payload));
@@ -58,8 +67,9 @@ final class GuildNetworking {
     // Opens the board screen and starts tracking which board the player stands at.
     static void open(ServerPlayer player, Guild guild, BlockPos pos) {
         OPEN.put(player.getUUID(), new Board(guild.id, player.level().dimension().identifier().toString(), pos));
-        ServerPlayNetworking.send(player, new OpenBoardPayload(guild.id, guild.name, guild.master != null && guild.master.equals(player.getUUID())
-            || guild.isPublic && Guilds.isAdmin(player)));
+        boolean manager = guild.master != null && guild.master.equals(player.getUUID())
+            || guild.isPublic && Guilds.isAdmin(player);
+        ServerPlayNetworking.send(player, new OpenBoardPayload(guild.id, guild.name, manager));
         sendList(player, Optional.of(guild.id));
     }
 
@@ -67,6 +77,8 @@ final class GuildNetworking {
         boolean atBoard = payload.action() == BountyActionPayload.Action.TAKE
             || payload.action() == BountyActionPayload.Action.HAND_IN;
         Guild guild = boardGuild(player);
+        Bounty target = Guilds.data().bounty(payload.bounty());
+        Guild scope = target == null ? guild : Guilds.data().byId(target.guild);
         String error;
         String done;
         if (atBoard && guild == null) {
@@ -98,7 +110,7 @@ final class GuildNetworking {
                 }
             }
         }
-        finish(player, guild, error, done);
+        finish(player, scope, error, done);
     }
 
     // Tells the player the outcome and refreshes everyone looking at the same guild's board.
@@ -123,7 +135,12 @@ final class GuildNetworking {
             return null;
         }
         double reach = GuildsConfig.get().boardReach;
-        if (player.distanceToSqr(board.pos().getX() + 0.5, board.pos().getY() + 0.5, board.pos().getZ() + 0.5) > reach * reach) {
+        BlockPos pos = board.pos();
+        if (player.distanceToSqr(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) > reach * reach) {
+            return null;
+        }
+        if (!(player.level().getBlockEntity(pos) instanceof QuestBoardBlockEntity entity)
+            || !board.guild().equals(entity.guild())) {
             return null;
         }
         return Guilds.data().byId(board.guild());
@@ -141,7 +158,8 @@ final class GuildNetworking {
         } else {
             for (Bounty bounty : data.bounties) {
                 boolean posted = bounty.poster.equals(player.getUUID());
-                boolean held = bounty.status == BountyStatus.IN_PROGRESS && Guilds.partyMembers(bounty.taker).contains(player.getUUID());
+                boolean held = bounty.status == BountyStatus.IN_PROGRESS
+                    && Guilds.partyMembers(bounty.taker).contains(player.getUUID());
                 if (posted || held) {
                     chosen.add(bounty);
                 }

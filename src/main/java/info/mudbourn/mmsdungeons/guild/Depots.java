@@ -4,7 +4,9 @@ import info.mudbourn.mmseconomy.deal.Spot;
 import info.mudbourn.mmseconomy.deal.WholesaleManager;
 import info.mudbourn.mmseconomy.market.Depot;
 import info.mudbourn.mmseconomy.market.Market;
+import info.mudbourn.mmseconomy.market.ShopListing;
 import java.util.List;
+import java.util.UUID;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
@@ -31,6 +33,17 @@ final class Depots {
             return new Spot(looked, world.dimension().identifier().toString());
         }
         return WholesaleManager.ownDepot(player);
+    }
+
+    // Any complete depot the player has a shop listing at, or null.
+    static Spot ownedAny(MinecraftServer server, UUID owner) {
+        for (ShopListing listing : Market.get(server).all()) {
+            Spot spot = new Spot(listing.depot(), listing.dimension());
+            if (listing.owner().equals(owner) && !barrels(server, spot).isEmpty()) {
+                return spot;
+            }
+        }
+        return null;
     }
 
     // The four barrels of a depot, or an empty list when the depot is missing or incomplete.

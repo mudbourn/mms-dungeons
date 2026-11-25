@@ -25,12 +25,14 @@ public final class Guilds {
     public static void register() {
         GuildBlocks.register();
         GuildNetworking.register();
-        ServerLifecycleEvents.SERVER_STARTED.register(server -> data = server.overworld().getDataStorage().computeIfAbsent(GuildData.TYPE));
+        ServerLifecycleEvents.SERVER_STARTED.register(server ->
+            data = server.overworld().getDataStorage().computeIfAbsent(GuildData.TYPE));
         ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
             data = null;
             GuildNetworking.forgetAll();
         });
-        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> GuildCommands.register(dispatcher));
+        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
+            GuildCommands.register(dispatcher));
         ServerTickEvents.END_SERVER_TICK.register(server -> {
             if (data != null && server.getTickCount() % DAY_CHECK_TICKS == 0 && data.lastDay != Billing.today(server)) {
                 BountyService.dayChange(server, data);

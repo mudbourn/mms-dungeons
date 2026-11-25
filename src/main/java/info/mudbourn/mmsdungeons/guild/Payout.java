@@ -1,6 +1,7 @@
 package info.mudbourn.mmsdungeons.guild;
 
 import info.mudbourn.mmsdungeons.config.GuildsConfig;
+import info.mudbourn.mmseconomy.MmsEconomy;
 import info.mudbourn.mmseconomy.economy.Billing;
 import info.mudbourn.mmseconomy.economy.Currency;
 import info.mudbourn.mmseconomy.economy.PendingPayouts;
@@ -22,7 +23,15 @@ import net.minecraft.server.level.ServerPlayer;
 final class Payout {
 
     // One member's cut: the even share, the guild taxes, the server tax and what reaches the wallet.
-    record Share(UUID member, Guild ownGuild, long base, long toPosting, long toOwnGuild, long serverTax, long paid) {
+    record Share(
+        UUID member,
+        Guild ownGuild,
+        long base,
+        long toPosting,
+        long toOwnGuild,
+        long serverTax,
+        long paid
+    ) {
     }
 
     // The guild commission, the leftover Pice and every member's cut.
@@ -70,18 +79,47 @@ final class Payout {
             }
             Treasury.get(server).credit(share.serverTax());
             long deducted = share.base() - share.paid();
-            HistoryEntry entry = new HistoryEntry(day, HistoryCategory.PAYMENT, "", 0, share.base(), deducted, share.paid(), label);
-            ServerPlayer online = server.getPlayerList().getPlayer(share.member());
-            if (online != null) {
-                Wallet.deposit(online, share.paid());
-                History.log(online, entry);
-                online.sendSystemMessage(Component.literal(
-                    bounty.title + " paid " + Currency.format(share.paid()) + " (share " + Currency.format(share.base()) + ")."));
-            } else {
-                PendingPayouts.get(server).record(share.member(), share.paid(), entry);
-            }
+            HistoryEntry entry = new HistoryEntry(
+                day,
+                HistoryCategory.PAYMENT,
+                "",
+                0,
+                share.base(),
+                deducted,
+                share.paid(),
+                label
+            );
+            String paid = Currency.format(share.paid());
+            String message = bounty.title + " paid " + paid + " (share " + Currency.format(share.base()) + ").";
+            credit(server, share.member(), share.paid(), entry, message);
         }
         data.setDirty();
+    }
+
+    // Pays a player up to the wallet cap and holds the excess, or everything when offline, for the next join.
+    static void credit(MinecraftServer server, UUID owner, long pice, HistoryEntry entry, String message) {
+        ServerPlayer online = server.getPlayerList().getPlayer(owner);
+        if (online == null) {
+            PendingPayouts.get(server).record(owner, pice, entry);
+            return;
+        }
+        long paid = Math.min(pice, headroom(online));
+        long held = pice - paid;
+        Wallet.deposit(online, paid);
+        if (held > 0) {
+            PendingPayouts.get(server).record(owner, held, entry);
+            online.sendSystemMessage(Component.literal(
+                message + " " + Currency.format(held) + " is held until you rejoin with room in your wallet."));
+            return;
+        }
+        History.log(online, entry);
+        online.sendSystemMessage(Component.literal(message));
+    }
+
+    // How much more the player's wallet can hold before it reaches the cap.
+    static long headroom(ServerPlayer player) {
+        long max = MmsEconomy.config().maxBalance;
+        return max > 0 ? Math.max(0L, max - Wallet.balance(player)) : Long.MAX_VALUE;
     }
 
     // A floored percentage of an amount.

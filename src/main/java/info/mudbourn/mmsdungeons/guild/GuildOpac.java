@@ -52,10 +52,12 @@ final class GuildOpac {
         }
         IServerPartyAPI created = parties(server).createPartyForOwner(newOwner);
         if (created == null) {
+            guild.opacParty = null;
             return null;
         }
         for (UUID member : guild.members) {
-            if (!member.equals(newOwner.getUUID())) {
+            IServerPartyAPI current = parties(server).getPartyByMember(member);
+            if (!member.equals(newOwner.getUUID()) && (current == null || current.getId().equals(created.getId()))) {
                 created.addMember(member, PartyMemberRank.MEMBER, Guilds.nameOf(member));
             }
         }

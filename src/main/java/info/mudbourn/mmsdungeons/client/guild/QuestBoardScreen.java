@@ -51,16 +51,28 @@ public final class QuestBoardScreen extends Screen implements BountySync.Listene
         list = addRenderableWidget(new BountyList(minecraft, width, height - 104, 28));
         int left = width / 2 - (BUTTON_WIDTH * 5 + 16) / 2;
         int y = height - 26;
-        take = addRenderableWidget(Button.builder(Component.translatable("gui.mms_dungeons.take"), button -> act(BountyActionPayload.Action.TAKE))
+        take = addRenderableWidget(Button.builder(
+                Component.translatable("gui.mms_dungeons.take"),
+                button -> act(BountyActionPayload.Action.TAKE)
+            )
             .bounds(left, y, BUTTON_WIDTH, 20)
             .build());
-        handIn = addRenderableWidget(Button.builder(Component.translatable("gui.mms_dungeons.hand_in"), button -> act(BountyActionPayload.Action.HAND_IN))
+        handIn = addRenderableWidget(Button.builder(
+                Component.translatable("gui.mms_dungeons.hand_in"),
+                button -> act(BountyActionPayload.Action.HAND_IN)
+            )
             .bounds(left + (BUTTON_WIDTH + 4), y, BUTTON_WIDTH, 20)
             .build());
-        addRenderableWidget(Button.builder(Component.translatable("gui.mms_dungeons.post"), button -> minecraft.setScreenAndShow(new PostBountyScreen(this, postsQuests)))
+        addRenderableWidget(Button.builder(
+                Component.translatable("gui.mms_dungeons.post"),
+                button -> minecraft.setScreenAndShow(new PostBountyScreen(this, postsQuests))
+            )
             .bounds(left + (BUTTON_WIDTH + 4) * 2, y, BUTTON_WIDTH, 20)
             .build());
-        addRenderableWidget(Button.builder(Component.translatable("gui.mms_dungeons.mine"), button -> minecraft.setScreenAndShow(new MyBountiesScreen(this)))
+        addRenderableWidget(Button.builder(
+                Component.translatable("gui.mms_dungeons.mine"),
+                button -> minecraft.setScreenAndShow(new MyBountiesScreen(this))
+            )
             .bounds(left + (BUTTON_WIDTH + 4) * 3, y, BUTTON_WIDTH, 20)
             .build());
         addRenderableWidget(Button.builder(Component.translatable("gui.mms_dungeons.close"), button -> onClose())
@@ -101,7 +113,8 @@ public final class QuestBoardScreen extends Screen implements BountySync.Listene
         if (view != null) {
             extractDetails(graphics, view);
         } else {
-            graphics.centeredText(font, Component.translatable("gui.mms_dungeons.select_hint"), width / 2, height - 70, 0xFFAAAAAA);
+            Component hint = Component.translatable("gui.mms_dungeons.select_hint");
+            graphics.centeredText(font, hint, width / 2, height - 70, 0xFFAAAAAA);
         }
     }
 
@@ -110,12 +123,22 @@ public final class QuestBoardScreen extends Screen implements BountySync.Listene
         int x = width / 2 - 190;
         int y = height - 74;
         Component split = bounty.kind == BountyKind.CONTRACT
-            ? Component.translatable("gui.mms_dungeons.split_contract", Currency.format(bounty.reward),
-                Currency.format(view.commission()), view.partySize())
+            ? Component.translatable(
+                "gui.mms_dungeons.split_contract",
+                Currency.format(bounty.reward),
+                Currency.format(view.commission()),
+                view.partySize()
+            )
             : Component.translatable("gui.mms_dungeons.split_quest", Currency.format(bounty.reward), view.partySize());
         graphics.text(font, split, x, y, 0xFFFFFFFF, false);
-        graphics.text(font, Component.translatable("gui.mms_dungeons.your_share", Currency.format(view.yourShare())), x, y + 11, 0xFF55FF55, false);
-        graphics.text(font, Component.translatable("gui.mms_dungeons.proof_have", bounty.proof.count(),
-            bounty.proof.stack().getHoverName(), view.have()), x, y + 22, 0xFFAAAAAA, false);
+        Component share = Component.translatable("gui.mms_dungeons.your_share", Currency.format(view.yourShare()));
+        graphics.text(font, share, x, y + 11, 0xFF55FF55, false);
+        Component proof = Component.translatable(
+            "gui.mms_dungeons.proof_have",
+            bounty.proof.count(),
+            bounty.proof.stack().getHoverName(),
+            view.have()
+        );
+        graphics.text(font, proof, x, y + 22, 0xFFAAAAAA, false);
     }
 }
