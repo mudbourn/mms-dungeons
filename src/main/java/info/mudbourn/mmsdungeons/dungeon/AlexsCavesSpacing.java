@@ -5,8 +5,7 @@ import com.github.alexmodguy.alexscaves.server.config.BiomeGenerationConfig;
 import com.github.alexmodguy.alexscaves.server.misc.VoronoiGenerator.VoronoiInfo;
 import info.mudbourn.mmsdungeons.mixin.dungeon.VoronoiGeneratorAccessor;
 
-// Keeps two copies of the same Alex's Caves biome at least 1.75 times that biome's spawn distance apart,
-// or the Periculum's looser share of that in the Periculum layer.
+// Keeps two copies of the same Alex's Caves biome apart by a multiple of that biome's spawn distance.
 public final class AlexsCavesSpacing {
 
     private static final int PRIME_X = 501125321;

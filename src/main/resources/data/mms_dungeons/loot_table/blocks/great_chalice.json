@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1.0,
+      "conditions": [{"condition": "minecraft:survives_explosion"}],
+      "entries": [
+        {"type": "minecraft:item", "name": "mms_dungeons:great_chalice"}
+      ]
+    }
+  ],
+  "random_sequence": "mms_dungeons:blocks/great_chalice"
+}

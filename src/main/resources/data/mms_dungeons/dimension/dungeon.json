@@ -37,36 +37,6 @@
           }
         },
         {
-          "biome": "mms_dungeons:dungeon_caves",
-          "parameters": {
-            "temperature": [
-              -1.0,
-              1.0
-            ],
-            "humidity": [
-              -1.0,
-              1.0
-            ],
-            "continentalness": [
-              -1.0,
-              1.0
-            ],
-            "erosion": [
-              -1.0,
-              1.0
-            ],
-            "depth": [
-              1.0,
-              1.0
-            ],
-            "weirdness": [
-              -1.0,
-              1.0
-            ],
-            "offset": 0.0
-          }
-        },
-        {
           "biome": "minecraft:dripstone_caves",
           "parameters": {
             "temperature": [
@@ -139,10 +109,10 @@
             ],
             "continentalness": [
               -0.19,
-              0.55
+              0.2
             ],
             "erosion": [
-              0.45,
+              0.7,
               1.0
             ],
             "depth": [
@@ -150,8 +120,278 @@
               0.9
             ],
             "weirdness": [
-              -1.1,
-              -0.85
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "minecraft:dripstone_caves",
+          "parameters": {
+            "temperature": [
+              -1.0,
+              1.0
+            ],
+            "humidity": [
+              -1.0,
+              1.0
+            ],
+            "continentalness": [
+              -0.19,
+              0.55
+            ],
+            "erosion": [
+              0.45,
+              0.7
+            ],
+            "depth": [
+              0.2,
+              0.9
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "minecraft:dripstone_caves",
+          "parameters": {
+            "temperature": [
+              -1.0,
+              1.0
+            ],
+            "humidity": [
+              -1.0,
+              1.0
+            ],
+            "continentalness": [
+              0.2,
+              0.55
+            ],
+            "erosion": [
+              0.7,
+              1.0
+            ],
+            "depth": [
+              0.2,
+              0.9
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "undergroundworlds:underground_jungle",
+          "parameters": {
+            "temperature": [
+              0.4,
+              1.0
+            ],
+            "humidity": [
+              0.4,
+              1.0
+            ],
+            "continentalness": [
+              0.5,
+              1.0
+            ],
+            "erosion": [
+              -1.0,
+              1.0
+            ],
+            "depth": [
+              0.2,
+              0.9
+            ],
+            "weirdness": [
+              0.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "undergroundworlds:spider_cave",
+          "parameters": {
+            "temperature": [
+              -0.4,
+              0.2
+            ],
+            "humidity": [
+              -1.0,
+              -0.4
+            ],
+            "continentalness": [
+              0.5,
+              1.0
+            ],
+            "erosion": [
+              -1.0,
+              1.0
+            ],
+            "depth": [
+              0.2,
+              0.9
+            ],
+            "weirdness": [
+              0.7,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "undergroundworlds:underground_tundra",
+          "parameters": {
+            "temperature": [
+              -1.0,
+              -0.5
+            ],
+            "humidity": [
+              0.0,
+              1.0
+            ],
+            "continentalness": [
+              0.5,
+              1.0
+            ],
+            "erosion": [
+              0.0,
+              1.0
+            ],
+            "depth": [
+              0.2,
+              0.9
+            ],
+            "weirdness": [
+              0.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "undergroundworlds:underground_desert",
+          "parameters": {
+            "temperature": [
+              0.6,
+              1.0
+            ],
+            "humidity": [
+              -1.0,
+              -0.4
+            ],
+            "continentalness": [
+              0.5,
+              1.0
+            ],
+            "erosion": [
+              -1.0,
+              1.0
+            ],
+            "depth": [
+              0.2,
+              0.9
+            ],
+            "weirdness": [
+              0.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "undergroundworlds:glowshroom_cave",
+          "parameters": {
+            "temperature": [
+              0.0,
+              1.0
+            ],
+            "humidity": [
+              0.4,
+              1.0
+            ],
+            "continentalness": [
+              0.5,
+              1.0
+            ],
+            "erosion": [
+              -1.0,
+              1.0
+            ],
+            "depth": [
+              0.5,
+              1.0
+            ],
+            "weirdness": [
+              0.9,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "undergroundworlds:mushroom_cave",
+          "parameters": {
+            "temperature": [
+              -1.0,
+              1.0
+            ],
+            "humidity": [
+              -1.0,
+              1.0
+            ],
+            "continentalness": [
+              -1.2,
+              -1.05
+            ],
+            "erosion": [
+              -1.0,
+              1.0
+            ],
+            "depth": [
+              0.2,
+              0.9
+            ],
+            "weirdness": [
+              0.5,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "mms_dungeons:amber_caves",
+          "parameters": {
+            "temperature": [
+              0.65,
+              1.0
+            ],
+            "humidity": [
+              -1.0,
+              0.5
+            ],
+            "continentalness": [
+              0.1,
+              0.5
+            ],
+            "erosion": [
+              0.1,
+              0.45
+            ],
+            "depth": [
+              0.3,
+              0.9
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
             ],
             "offset": 0.0
           }
@@ -173,164 +413,14 @@
             ],
             "erosion": [
               -1.0,
-              -0.375
+              -0.85
             ],
             "depth": [
-              1.1,
-              1.1
-            ],
-            "weirdness": [
-              -1.0,
-              1.0
-            ],
-            "offset": 0.0
-          }
-        },
-        {
-          "biome": "undergroundworlds:underground_jungle",
-          "parameters": {
-            "temperature": [
-              0.4,
-              1.0
-            ],
-            "humidity": [
-              0.4,
-              1.0
-            ],
-            "continentalness": [
-              0.5,
-              1.0
-            ],
-            "erosion": [
-              -1.0,
-              1.0
-            ],
-            "depth": [
-              0.2,
-              0.9
-            ],
-            "weirdness": [
-              0.0,
-              1.0
-            ],
-            "offset": 0.0
-          }
-        },
-        {
-          "biome": "undergroundworlds:spider_cave",
-          "parameters": {
-            "temperature": [
-              -0.4,
-              0.2
-            ],
-            "humidity": [
-              -1.0,
-              -0.4
-            ],
-            "continentalness": [
-              0.5,
-              1.0
-            ],
-            "erosion": [
-              -1.0,
-              1.0
-            ],
-            "depth": [
-              0.2,
-              0.9
-            ],
-            "weirdness": [
-              0.7,
-              1.0
-            ],
-            "offset": 0.0
-          }
-        },
-        {
-          "biome": "undergroundworlds:underground_tundra",
-          "parameters": {
-            "temperature": [
-              -1.0,
-              -0.5
-            ],
-            "humidity": [
-              0.0,
-              1.0
-            ],
-            "continentalness": [
-              0.5,
-              1.0
-            ],
-            "erosion": [
-              0.0,
-              1.0
-            ],
-            "depth": [
-              0.2,
-              0.9
-            ],
-            "weirdness": [
-              0.0,
-              1.0
-            ],
-            "offset": 0.0
-          }
-        },
-        {
-          "biome": "undergroundworlds:underground_desert",
-          "parameters": {
-            "temperature": [
-              0.6,
-              1.0
-            ],
-            "humidity": [
-              -1.0,
-              -0.4
-            ],
-            "continentalness": [
-              0.5,
-              1.0
-            ],
-            "erosion": [
-              -1.0,
-              1.0
-            ],
-            "depth": [
-              0.2,
-              0.9
-            ],
-            "weirdness": [
-              0.0,
-              1.0
-            ],
-            "offset": 0.0
-          }
-        },
-        {
-          "biome": "undergroundworlds:glowshroom_cave",
-          "parameters": {
-            "temperature": [
-              0.0,
-              1.0
-            ],
-            "humidity": [
-              0.4,
-              1.0
-            ],
-            "continentalness": [
-              0.5,
-              1.0
-            ],
-            "erosion": [
-              -1.0,
-              1.0
-            ],
-            "depth": [
-              0.5,
-              1.0
-            ],
-            "weirdness": [
               0.9,
+              1.5
+            ],
+            "weirdness": [
+              -1.0,
               1.0
             ],
             "offset": 0.0
@@ -349,70 +439,10 @@
             ],
             "continentalness": [
               -1.2,
-              -1.05
+              -1.0
             ],
             "erosion": [
-              -1.0,
-              1.0
-            ],
-            "depth": [
-              0.2,
-              0.9
-            ],
-            "weirdness": [
-              0.5,
-              1.0
-            ],
-            "offset": 0.0
-          }
-        },
-        {
-          "biome": "mms_dungeons:amber_caves",
-          "parameters": {
-            "temperature": [
-              0.55,
-              1.0
-            ],
-            "humidity": [
-              -1.0,
-              0.6
-            ],
-            "continentalness": [
-              0.06,
-              0.6
-            ],
-            "erosion": [
-              0.05,
-              0.5
-            ],
-            "depth": [
-              0.3,
-              0.9
-            ],
-            "weirdness": [
-              -1.0,
-              1.0
-            ],
-            "offset": 0.0
-          }
-        },
-        {
-          "biome": "minecraft:dripstone_caves",
-          "parameters": {
-            "temperature": [
-              -1.0,
-              1.0
-            ],
-            "humidity": [
-              -1.0,
-              1.0
-            ],
-            "continentalness": [
-              0.8,
-              1.0
-            ],
-            "erosion": [
-              -1.0,
+              -0.85,
               1.0
             ],
             "depth": [
@@ -434,7 +464,367 @@
               1.0
             ],
             "humidity": [
-              0.7,
+              0.0,
+              1.0
+            ],
+            "continentalness": [
+              -1.0,
+              -0.455
+            ],
+            "erosion": [
+              -0.85,
+              -0.3
+            ],
+            "depth": [
+              0.9,
+              1.5
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "minecraft:dripstone_caves",
+          "parameters": {
+            "temperature": [
+              -1.0,
+              1.0
+            ],
+            "humidity": [
+              -1.0,
+              0.0
+            ],
+            "continentalness": [
+              -1.0,
+              -0.455
+            ],
+            "erosion": [
+              -0.85,
+              -0.3
+            ],
+            "depth": [
+              0.9,
+              1.5
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "minecraft:soul_sand_valley",
+          "parameters": {
+            "temperature": [
+              -1.0,
+              -0.25
+            ],
+            "humidity": [
+              -1.0,
+              0.0
+            ],
+            "continentalness": [
+              -0.455,
+              1.0
+            ],
+            "erosion": [
+              -0.85,
+              -0.3
+            ],
+            "depth": [
+              0.9,
+              1.5
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "minecraft:warped_forest",
+          "parameters": {
+            "temperature": [
+              -1.0,
+              -0.25
+            ],
+            "humidity": [
+              0.0,
+              1.0
+            ],
+            "continentalness": [
+              -0.455,
+              1.0
+            ],
+            "erosion": [
+              -0.85,
+              -0.3
+            ],
+            "depth": [
+              0.9,
+              1.5
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "minecraft:basalt_deltas",
+          "parameters": {
+            "temperature": [
+              -0.25,
+              0.2
+            ],
+            "humidity": [
+              -1.0,
+              -0.1
+            ],
+            "continentalness": [
+              -0.455,
+              1.0
+            ],
+            "erosion": [
+              -0.85,
+              -0.3
+            ],
+            "depth": [
+              0.9,
+              1.5
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "minecraft:nether_wastes",
+          "parameters": {
+            "temperature": [
+              -0.25,
+              0.2
+            ],
+            "humidity": [
+              -0.1,
+              1.0
+            ],
+            "continentalness": [
+              -0.455,
+              1.0
+            ],
+            "erosion": [
+              -0.85,
+              -0.3
+            ],
+            "depth": [
+              0.9,
+              1.5
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "minecraft:crimson_forest",
+          "parameters": {
+            "temperature": [
+              0.2,
+              1.0
+            ],
+            "humidity": [
+              -1.0,
+              1.0
+            ],
+            "continentalness": [
+              -0.455,
+              1.0
+            ],
+            "erosion": [
+              -0.85,
+              -0.3
+            ],
+            "depth": [
+              0.9,
+              1.5
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "mms_dungeons:amber_caves",
+          "parameters": {
+            "temperature": [
+              0.2,
+              1.0
+            ],
+            "humidity": [
+              -1.0,
+              0.6
+            ],
+            "continentalness": [
+              -0.19,
+              1.0
+            ],
+            "erosion": [
+              -0.3,
+              0.55
+            ],
+            "depth": [
+              0.9,
+              1.5
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "undergroundworlds:underground_jungle",
+          "parameters": {
+            "temperature": [
+              0.2,
+              1.0
+            ],
+            "humidity": [
+              0.6,
+              1.0
+            ],
+            "continentalness": [
+              -0.19,
+              1.0
+            ],
+            "erosion": [
+              -0.3,
+              0.55
+            ],
+            "depth": [
+              0.9,
+              1.5
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "undergroundworlds:underground_desert",
+          "parameters": {
+            "temperature": [
+              0.2,
+              1.0
+            ],
+            "humidity": [
+              -1.0,
+              0.0
+            ],
+            "continentalness": [
+              -1.0,
+              -0.19
+            ],
+            "erosion": [
+              -0.3,
+              0.55
+            ],
+            "depth": [
+              0.9,
+              1.5
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "undergroundworlds:glowshroom_cave",
+          "parameters": {
+            "temperature": [
+              0.2,
+              1.0
+            ],
+            "humidity": [
+              0.0,
+              1.0
+            ],
+            "continentalness": [
+              -1.0,
+              -0.19
+            ],
+            "erosion": [
+              -0.3,
+              0.55
+            ],
+            "depth": [
+              0.9,
+              1.5
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "undergroundworlds:spider_cave",
+          "parameters": {
+            "temperature": [
+              -0.6,
+              0.2
+            ],
+            "humidity": [
+              -1.0,
+              -0.3
+            ],
+            "continentalness": [
+              -1.0,
+              1.0
+            ],
+            "erosion": [
+              -0.3,
+              0.55
+            ],
+            "depth": [
+              0.9,
+              1.5
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "undergroundworlds:underground_tundra",
+          "parameters": {
+            "temperature": [
+              -1.0,
+              -0.6
+            ],
+            "humidity": [
+              -1.0,
               1.0
             ],
             "continentalness": [
@@ -442,7 +832,37 @@
               1.0
             ],
             "erosion": [
+              -0.3,
+              0.55
+            ],
+            "depth": [
+              0.9,
+              1.5
+            ],
+            "weirdness": [
               -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "minecraft:lush_caves",
+          "parameters": {
+            "temperature": [
+              -1.0,
+              1.0
+            ],
+            "humidity": [
+              -1.0,
+              1.0
+            ],
+            "continentalness": [
+              -1.0,
+              -0.19
+            ],
+            "erosion": [
+              0.55,
               1.0
             ],
             "depth": [
@@ -469,70 +889,10 @@
             ],
             "continentalness": [
               -0.19,
-              0.55
-            ],
-            "erosion": [
-              0.45,
-              1.0
-            ],
-            "depth": [
-              0.9,
-              1.5
-            ],
-            "weirdness": [
-              -1.1,
-              -0.85
-            ],
-            "offset": 0.0
-          }
-        },
-        {
-          "biome": "undergroundworlds:underground_jungle",
-          "parameters": {
-            "temperature": [
-              0.4,
-              1.0
-            ],
-            "humidity": [
-              0.4,
-              1.0
-            ],
-            "continentalness": [
-              0.5,
-              1.0
-            ],
-            "erosion": [
-              -1.0,
-              1.0
-            ],
-            "depth": [
-              0.9,
-              1.5
-            ],
-            "weirdness": [
-              0.0,
-              1.0
-            ],
-            "offset": 0.0
-          }
-        },
-        {
-          "biome": "undergroundworlds:spider_cave",
-          "parameters": {
-            "temperature": [
-              -0.4,
               0.2
             ],
-            "humidity": [
-              -1.0,
-              -0.4
-            ],
-            "continentalness": [
-              0.5,
-              1.0
-            ],
             "erosion": [
-              -1.0,
+              0.55,
               1.0
             ],
             "depth": [
@@ -540,104 +900,14 @@
               1.5
             ],
             "weirdness": [
-              0.7,
+              -1.0,
               1.0
             ],
             "offset": 0.0
           }
         },
         {
-          "biome": "undergroundworlds:underground_tundra",
-          "parameters": {
-            "temperature": [
-              -1.0,
-              -0.5
-            ],
-            "humidity": [
-              0.0,
-              1.0
-            ],
-            "continentalness": [
-              0.5,
-              1.0
-            ],
-            "erosion": [
-              0.0,
-              1.0
-            ],
-            "depth": [
-              0.9,
-              1.5
-            ],
-            "weirdness": [
-              0.0,
-              1.0
-            ],
-            "offset": 0.0
-          }
-        },
-        {
-          "biome": "undergroundworlds:underground_desert",
-          "parameters": {
-            "temperature": [
-              0.6,
-              1.0
-            ],
-            "humidity": [
-              -1.0,
-              -0.4
-            ],
-            "continentalness": [
-              0.5,
-              1.0
-            ],
-            "erosion": [
-              -1.0,
-              1.0
-            ],
-            "depth": [
-              0.9,
-              1.5
-            ],
-            "weirdness": [
-              0.0,
-              1.0
-            ],
-            "offset": 0.0
-          }
-        },
-        {
-          "biome": "undergroundworlds:glowshroom_cave",
-          "parameters": {
-            "temperature": [
-              0.0,
-              1.0
-            ],
-            "humidity": [
-              0.4,
-              1.0
-            ],
-            "continentalness": [
-              0.5,
-              1.0
-            ],
-            "erosion": [
-              -1.0,
-              1.0
-            ],
-            "depth": [
-              1.0,
-              1.5
-            ],
-            "weirdness": [
-              0.9,
-              1.0
-            ],
-            "offset": 0.0
-          }
-        },
-        {
-          "biome": "undergroundworlds:mushroom_cave",
+          "biome": "minecraft:dripstone_caves",
           "parameters": {
             "temperature": [
               -1.0,
@@ -648,42 +918,12 @@
               1.0
             ],
             "continentalness": [
-              -1.2,
-              -1.05
+              0.2,
+              1.0
             ],
             "erosion": [
-              -1.0,
+              0.55,
               1.0
-            ],
-            "depth": [
-              0.9,
-              1.5
-            ],
-            "weirdness": [
-              0.5,
-              1.0
-            ],
-            "offset": 0.0
-          }
-        },
-        {
-          "biome": "mms_dungeons:amber_caves",
-          "parameters": {
-            "temperature": [
-              0.45,
-              1.0
-            ],
-            "humidity": [
-              -1.0,
-              0.6
-            ],
-            "continentalness": [
-              0.06,
-              0.6
-            ],
-            "erosion": [
-              0.05,
-              0.5
             ],
             "depth": [
               0.9,
@@ -788,66 +1028,6 @@
         },
         {
           "biome": "alexscaves:candy_cavity",
-          "parameters": {
-            "temperature": 2.0,
-            "humidity": 2.0,
-            "continentalness": 2.0,
-            "erosion": 2.0,
-            "depth": 2.0,
-            "weirdness": 2.0,
-            "offset": 1.0
-          }
-        },
-        {
-          "biome": "minecraft:nether_wastes",
-          "parameters": {
-            "temperature": 2.0,
-            "humidity": 2.0,
-            "continentalness": 2.0,
-            "erosion": 2.0,
-            "depth": 2.0,
-            "weirdness": 2.0,
-            "offset": 1.0
-          }
-        },
-        {
-          "biome": "minecraft:crimson_forest",
-          "parameters": {
-            "temperature": 2.0,
-            "humidity": 2.0,
-            "continentalness": 2.0,
-            "erosion": 2.0,
-            "depth": 2.0,
-            "weirdness": 2.0,
-            "offset": 1.0
-          }
-        },
-        {
-          "biome": "minecraft:warped_forest",
-          "parameters": {
-            "temperature": 2.0,
-            "humidity": 2.0,
-            "continentalness": 2.0,
-            "erosion": 2.0,
-            "depth": 2.0,
-            "weirdness": 2.0,
-            "offset": 1.0
-          }
-        },
-        {
-          "biome": "minecraft:soul_sand_valley",
-          "parameters": {
-            "temperature": 2.0,
-            "humidity": 2.0,
-            "continentalness": 2.0,
-            "erosion": 2.0,
-            "depth": 2.0,
-            "weirdness": 2.0,
-            "offset": 1.0
-          }
-        },
-        {
-          "biome": "minecraft:basalt_deltas",
           "parameters": {
             "temperature": 2.0,
             "humidity": 2.0,

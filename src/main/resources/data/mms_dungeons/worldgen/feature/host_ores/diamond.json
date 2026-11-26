@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:ore",
+  "discard_chance_on_air_exposure": 0.5,
+  "size": 4,
+  "targets": [
+    {
+      "state": "minecraft:diamond_ore",
+      "target": {
+        "predicate_type": "minecraft:tag_match",
+        "tag": "mms_dungeons:ore_hosts"
+      }
+    },
+    {
+      "state": "minecraft:deepslate_diamond_ore",
+      "target": {
+        "predicate_type": "minecraft:tag_match",
+        "tag": "mms_dungeons:ore_hosts_deep"
+      }
+    }
+  ]
+}

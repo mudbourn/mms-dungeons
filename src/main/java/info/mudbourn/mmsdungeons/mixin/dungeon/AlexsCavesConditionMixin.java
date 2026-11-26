@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-// Keeps Alex's Caves biomes in the Deep Region and places them by the rotating distance from spawn alone.
+// Places Alex's Caves biomes below the Sanctuary by the rotating distance from spawn alone.
 @Mixin(BiomeGenerationNoiseCondition.class)
 public abstract class AlexsCavesConditionMixin {
 
@@ -29,7 +29,7 @@ public abstract class AlexsCavesConditionMixin {
     @Shadow(remap = false)
     public abstract int getRarityOffset();
 
-    // In the dungeon only the region and spawn distance decide; its climate noise rarely fits Alex's Caves ranges.
+    // Decides by region and spawn distance in the dungeon.
     @Inject(method = TEST, at = @At("HEAD"), cancellable = true, remap = false)
     private void mmsDungeons$deepOnly(int x, int y, int z, float depth, Climate.Sampler sampler, ResourceKey<Level> dimension, VoronoiInfo info, CallbackInfoReturnable<Boolean> cir) {
         if (dimension != DungeonDimension.LEVEL) {

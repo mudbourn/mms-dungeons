@@ -1,0 +1,42 @@
+{
+  "geo": "knightquest:geo/samhain.geo.json",
+  "texture": "knightquest:textures/entity/samhain.png",
+  "emissive_texture": "knightquest:textures/entity/samhain_glowmask.png",
+  "scale": 0.7,
+  "shadow_radius": 0.4,
+  "head_bone": "bipedHead",
+  "animations": "knightquest:animations/samhain.animation.json",
+  "idle": "idle",
+  "walk": "walk",
+  "attack": "attack",
+  "driver": "mms_dungeons:samhain",
+  "transition_ticks": 0,
+  "held_items": {
+    "bipedHandRight": {
+      "slot": "mainhand",
+      "rotation": [
+        -180.0,
+        0.0,
+        0.0
+      ],
+      "offset": [
+        0.8,
+        -7.2,
+        -1.6
+      ]
+    },
+    "bipedHandLeft": {
+      "slot": "offhand",
+      "rotation": [
+        0.0,
+        180.0,
+        0.0
+      ],
+      "offset": [
+        0.8,
+        -7.2,
+        -1.6
+      ]
+    }
+  }
+}

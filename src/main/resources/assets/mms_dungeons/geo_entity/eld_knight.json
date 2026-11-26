@@ -1,0 +1,13 @@
+{
+  "geo": "knightquest:geo/eldknight.geo.json",
+  "texture": "knightquest:textures/entity/eldknight.png",
+  "emissive_texture": "knightquest:textures/entity/eldknight_glowmask.png",
+  "scale": 1.1,
+  "shadow_radius": 0.5,
+  "head_bone": "head",
+  "animations": "knightquest:animations/eldknight.animation.json",
+  "idle": "idle",
+  "walk": "walk",
+  "attack": "attack",
+  "transition_ticks": 0
+}

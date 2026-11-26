@@ -1,0 +1,13 @@
+{
+  "geo": "knightquest:geo/eldbomb.geo.json",
+  "texture": "knightquest:textures/entity/eldbomb.png",
+  "emissive_texture": "knightquest:textures/entity/eldbomb_glowmask.png",
+  "scale": 1.1,
+  "shadow_radius": 0.4,
+  "head_bone": "Body",
+  "animations": "knightquest:animations/eldbomb.animation.json",
+  "idle": "idle",
+  "walk": "walk",
+  "driver": "mms_dungeons:eld_bomb",
+  "transition_ticks": 1
+}

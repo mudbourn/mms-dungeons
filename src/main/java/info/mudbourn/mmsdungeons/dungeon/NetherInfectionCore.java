@@ -2,9 +2,12 @@ package info.mudbourn.mmsdungeons.dungeon;
 
 import com.mojang.serialization.MapCodec;
 import info.mudbourn.mmsdungeons.MmsDungeons;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
+import net.fabricmc.fabric.api.biome.v1.BiomeSelectionContext;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.fabricmc.fabric.api.resource.v1.pack.PackActivationType;
@@ -16,6 +19,8 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.biome.Biome;
@@ -23,6 +28,8 @@ import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.feature.Feature;
@@ -32,10 +39,16 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.BlockIgnorePr
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 
-// Places a Nether Infection cavern's ruined portal core and its ancient debris, chunk by chunk.
+// Places ruined portal cores and ancient debris on cave floors in Nether Infection biomes, chunk by chunk.
 public final class NetherInfectionCore implements Feature {
 
     private static final MapCodec<NetherInfectionCore> CODEC = MapCodec.unit(NetherInfectionCore::new);
+    // Nether ores placed at Periculum heights, which the Nether's own placements barely reach.
+    private static final List<String> PERICULUM_ORES = List.of(
+        "periculum_quartz_ore",
+        "periculum_nether_gold_ore",
+        "periculum_magma"
+    );
     private static final ResourceKey<PlacedFeature> PLACED = ResourceKey.create(
         Registries.PLACED_FEATURE,
         MmsDungeons.id("nether_infection_core")
@@ -50,30 +63,38 @@ public final class NetherInfectionCore implements Feature {
         "wailing_garth"
     ).map(name -> ResourceKey.create(Registries.BIOME, Identifier.fromNamespaceAndPath(NETHER_DESCENT, name))).toList();
 
+    private static final TagKey<Biome> NETHER_INFESTATION = TagKey.create(
+        Registries.BIOME,
+        MmsDungeons.id("nether_infestation")
+    );
+
     private static final int PORTAL_VARIANTS = 10;
-    private static final int WRITE_REACH = 16;
-    private static final int DEBRIS_MIN_RADIUS = 16;
-    private static final int DEBRIS_RADIUS_SPREAD = 16;
-    private static final int SCAN_ABOVE = 4;
+    private static final int CORE_ONE_IN = 48;
+    private static final int DEBRIS_ONE_IN = 64;
+    private static final int CORE_SALT = 1;
+    private static final int DEBRIS_SALT = 2;
+    private static final int CORE_HEADROOM = 4;
+    private static final int CORE_EDGE_MARGIN = 4;
+    private static final int COLUMN_ATTEMPTS = 8;
+    private static final int BEDROCK_CLEARANCE = 8;
 
     public static void register() {
         Registry.register(BuiltInRegistries.FEATURE_TYPE, MmsDungeons.id("nether_infection_core"), CODEC);
-        BiomeModifications.addFeature(
-            BiomeSelectors.includeByKey(
-                Biomes.NETHER_WASTES,
-                Biomes.CRIMSON_FOREST,
-                Biomes.WARPED_FOREST,
-                Biomes.SOUL_SAND_VALLEY,
-                Biomes.BASALT_DELTAS
-            ),
-            GenerationStep.Decoration.UNDERGROUND_DECORATION,
-            PLACED
-        );
-        BiomeModifications.addFeature(
-            BiomeSelectors.includeByKey(NETHER_DESCENT_BIOMES),
-            GenerationStep.Decoration.UNDERGROUND_DECORATION,
-            PLACED
-        );
+        Predicate<BiomeSelectionContext> netherBiomes = BiomeSelectors.includeByKey(
+            Biomes.NETHER_WASTES,
+            Biomes.CRIMSON_FOREST,
+            Biomes.WARPED_FOREST,
+            Biomes.SOUL_SAND_VALLEY,
+            Biomes.BASALT_DELTAS
+        ).or(BiomeSelectors.includeByKey(NETHER_DESCENT_BIOMES));
+        BiomeModifications.addFeature(netherBiomes, GenerationStep.Decoration.UNDERGROUND_DECORATION, PLACED);
+        for (String ore : PERICULUM_ORES) {
+            BiomeModifications.addFeature(
+                netherBiomes,
+                GenerationStep.Decoration.UNDERGROUND_ORES,
+                ResourceKey.create(Registries.PLACED_FEATURE, MmsDungeons.id(ore))
+            );
+        }
         if (FabricLoader.getInstance().isModLoaded(NETHER_DESCENT)) {
             ResourceLoader.registerBuiltinPack(
                 MmsDungeons.id("nether_descent"),
@@ -95,35 +116,55 @@ public final class NetherInfectionCore implements Feature {
         }
         int minX = origin.getX() & ~15;
         int minZ = origin.getZ() & ~15;
-        FillCaverns.Cavern cavern = FillCaverns.cavernAtColumn(minX, minZ);
-        if (cavern == null || !FillCaverns.isNetherInfection(cavern.biome())) {
-            return false;
+        long hash = level.getSeed() ^ (minX >> 4) * 341873128712L ^ (minZ >> 4) * 132897987541L;
+        boolean placed = waterToLava(level, minX, minZ);
+        RandomSource coreRandom = RandomSource.create(mix(hash, CORE_SALT));
+        if (coreRandom.nextInt(CORE_ONE_IN) == 0) {
+            placed = placeCore(level, coreRandom, minX, minZ);
         }
-        boolean placed = false;
-        if (cavern.x() >> 4 == minX >> 4 && cavern.z() >> 4 == minZ >> 4) {
-            placed = placeCore(level, cavern, minX, minZ);
+        RandomSource debrisRandom = RandomSource.create(mix(hash, DEBRIS_SALT));
+        if (debrisRandom.nextInt(DEBRIS_ONE_IN) == 0) {
+            placed |= placeDebris(level, debrisRandom, minX, minZ);
         }
-        return placeDebris(level, cavern, minX, minZ) || placed;
+        return placed;
     }
 
-    private static boolean placeCore(WorldGenLevel level, FillCaverns.Cavern cavern, int minX, int minZ) {
-        int floor = floorBelow(
-            level,
-            cavern.x(),
-            cavern.z(),
-            cavern.y() + SCAN_ABOVE,
-            cavern.y() - FillCaverns.HALF_HEIGHT
-        );
-        if (floor == Integer.MIN_VALUE) {
+    // Turns every water block in the chunk's Nether Infection biomes into lava.
+    private static boolean waterToLava(WorldGenLevel level, int minX, int minZ) {
+        boolean changed = false;
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+        for (int x = minX; x < minX + 16; x++) {
+            for (int z = minZ; z < minZ + 16; z++) {
+                for (int y = level.getMinY(); y <= DungeonDimension.PERICULUM_TOP; y++) {
+                    pos.set(x, y, z);
+                    BlockState state = level.getBlockState(pos);
+                    boolean water = state.getFluidState().is(FluidTags.WATER);
+                    if (!water || !level.getBiome(pos).is(NETHER_INFESTATION)) {
+                        continue;
+                    }
+                    if (state.hasProperty(BlockStateProperties.WATERLOGGED)) {
+                        level.setBlock(pos, state.setValue(BlockStateProperties.WATERLOGGED, false), 2);
+                    } else {
+                        level.setBlock(pos, Blocks.LAVA.defaultBlockState(), 2);
+                    }
+                    changed = true;
+                }
+            }
+        }
+        return changed;
+    }
+
+    private static boolean placeCore(WorldGenLevel level, RandomSource random, int minX, int minZ) {
+        BlockPos floor = randomFloor(level, random, minX, minZ, CORE_EDGE_MARGIN, CORE_HEADROOM);
+        if (floor == null) {
             return false;
         }
-        RandomSource random = RandomSource.create(mix(cavern.hash(), 0));
         int variant = random.nextInt(PORTAL_VARIANTS) + 1;
         Identifier id = Identifier.withDefaultNamespace("ruined_portal/portal_" + variant);
         StructureTemplate template = level.getLevel().getStructureTemplateManager().getOrCreate(id);
         Vec3i size = template.getSize(Rotation.NONE);
         BlockPos pivot = new BlockPos(size.getX() / 2, 0, size.getZ() / 2);
-        BlockPos start = new BlockPos(cavern.x(), floor + 1, cavern.z()).subtract(pivot);
+        BlockPos start = floor.above().subtract(pivot);
         StructurePlaceSettings settings = new StructurePlaceSettings()
             .setRotation(Rotation.getRandom(random))
             .setMirror(Mirror.NONE)
@@ -131,53 +172,73 @@ public final class NetherInfectionCore implements Feature {
             .setIgnoreEntities(true)
             .addProcessor(BlockIgnoreProcessor.STRUCTURE_AND_AIR)
             .setBoundingBox(new BoundingBox(
-                minX - WRITE_REACH,
+                minX,
                 level.getMinY(),
-                minZ - WRITE_REACH,
-                minX + WRITE_REACH + 15,
+                minZ,
+                minX + 15,
                 level.getMaxY(),
-                minZ + WRITE_REACH + 15
+                minZ + 15
             ));
         return template.placeInWorld(level, start, start, settings, random, 2);
     }
 
-    private static boolean placeDebris(WorldGenLevel level, FillCaverns.Cavern cavern, int minX, int minZ) {
-        int count = 2 + (int) (mix(cavern.hash(), 1) >>> 63);
-        double base = (mix(cavern.hash(), 2) >>> 11) * 0x1.0p-53 * Math.PI * 2;
-        boolean placed = false;
-        for (int i = 0; i < count; i++) {
-            double angle = base + i * Math.PI * 2 / count;
-            double radius = DEBRIS_MIN_RADIUS + (mix(cavern.hash(), 3 + i) >>> 11) * 0x1.0p-53 * DEBRIS_RADIUS_SPREAD;
-            int x = cavern.x() + (int) Math.round(Math.cos(angle) * radius);
-            int z = cavern.z() + (int) Math.round(Math.sin(angle) * radius);
-            if (x < minX || x > minX + 15 || z < minZ || z > minZ + 15) {
-                continue;
-            }
-            double ratio = radius / FillCaverns.RADIUS;
-            int reach = (int) Math.ceil(FillCaverns.HALF_HEIGHT * Math.sqrt(1.0 - ratio * ratio));
-            int floor = floorBelow(level, x, z, cavern.y() + reach, cavern.y() - reach - 2);
-            if (floor == Integer.MIN_VALUE) {
-                continue;
-            }
-            BlockPos target = new BlockPos(x, floor - 1, z);
-            if (!level.getBlockState(target).isAir() && !level.getBlockState(target).is(Blocks.BEDROCK)) {
-                level.setBlock(target, Blocks.ANCIENT_DEBRIS.defaultBlockState(), 2);
-                placed = true;
-            }
+    private static boolean placeDebris(WorldGenLevel level, RandomSource random, int minX, int minZ) {
+        BlockPos floor = randomFloor(level, random, minX, minZ, 0, 1);
+        if (floor == null) {
+            return false;
         }
-        return placed;
+        BlockPos target = floor.below();
+        if (level.getBlockState(target).isAir()
+            || level.getBlockState(target).is(Blocks.BEDROCK)
+            || !level.getFluidState(target).isEmpty()) {
+            return false;
+        }
+        level.setBlock(target, Blocks.ANCIENT_DEBRIS.defaultBlockState(), 2);
+        return true;
     }
 
-    private static int floorBelow(WorldGenLevel level, int x, int z, int top, int bottom) {
-        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos(x, top, z);
-        for (int y = top; y >= bottom; y--) {
-            pos.setY(y);
-            boolean solid = !level.getBlockState(pos).isAir() && level.getFluidState(pos).isEmpty();
-            if (solid && level.getBlockState(pos.above()).isAir()) {
-                return y;
+    // A random cave floor in a Nether Infection biome, from a few random columns of the chunk.
+    private static BlockPos randomFloor(
+        WorldGenLevel level,
+        RandomSource random,
+        int minX,
+        int minZ,
+        int margin,
+        int headroom
+    ) {
+        for (int attempt = 0; attempt < COLUMN_ATTEMPTS; attempt++) {
+            int x = minX + margin + random.nextInt(16 - 2 * margin);
+            int z = minZ + margin + random.nextInt(16 - 2 * margin);
+            List<BlockPos> floors = floorsIn(level, x, z, headroom);
+            if (!floors.isEmpty()) {
+                return floors.get(random.nextInt(floors.size()));
             }
         }
-        return Integer.MIN_VALUE;
+        return null;
+    }
+
+    private static List<BlockPos> floorsIn(WorldGenLevel level, int x, int z, int headroom) {
+        List<BlockPos> floors = new ArrayList<>();
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos(x, DungeonDimension.PERICULUM_TOP, z);
+        for (int y = DungeonDimension.PERICULUM_TOP; y >= level.getMinY() + BEDROCK_CLEARANCE; y--) {
+            pos.setY(y);
+            if (isFloor(level, pos, headroom) && level.getBiome(pos).is(NETHER_INFESTATION)) {
+                floors.add(pos.immutable());
+            }
+        }
+        return floors;
+    }
+
+    private static boolean isFloor(WorldGenLevel level, BlockPos pos, int headroom) {
+        if (level.getBlockState(pos).isAir() || !level.getFluidState(pos).isEmpty()) {
+            return false;
+        }
+        for (int i = 1; i <= headroom; i++) {
+            if (!level.getBlockState(pos.above(i)).isAir()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private static long mix(long hash, int salt) {

@@ -1,0 +1,6 @@
+{
+  "geo": "knightquest:geo/ghosty.geo.json",
+  "texture": "knightquest:textures/entity/ghosty.png",
+  "scale": 1.1,
+  "shadow_radius": 0.0
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "mms_dungeons:item/knightquest/fallen_knight_spawn_egg"
+  }
+}

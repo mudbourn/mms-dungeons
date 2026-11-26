@@ -11,6 +11,17 @@
               "weight": 10
             }
           ],
+          "creature": [
+            {
+              "type": "mms_dungeons:lizzy",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 1,
+                "max_inclusive": 2
+              },
+              "weight": 6
+            }
+          ],
           "monster": [
             {
               "type": "minecraft:zombie",
@@ -54,7 +65,7 @@
                 "min_inclusive": 1,
                 "max_inclusive": 3
               },
-              "weight": 10
+              "weight": 60
             },
             {
               "type": "mms_dungeons:kobold_warrior",
@@ -63,32 +74,32 @@
                 "min_inclusive": 1,
                 "max_inclusive": 2
               },
-              "weight": 6
+              "weight": 40
             },
             {
               "type": "mms_dungeons:kobold_enchanter",
               "count": 1,
-              "weight": 2
+              "weight": 15
             },
             {
               "type": "mms_dungeons:kobold_engineer",
               "count": 1,
-              "weight": 2
+              "weight": 15
             },
             {
               "type": "mms_dungeons:kobold_pirate",
               "count": 1,
-              "weight": 2
+              "weight": 15
             },
             {
               "type": "mms_dungeons:kobold_captain",
               "count": 1,
-              "weight": 1
+              "weight": 6
             },
             {
               "type": "mms_dungeons:kobold_rascal",
               "count": 1,
-              "weight": 2
+              "weight": 15
             },
             {
               "type": "mms_dungeons:kobold_skeleton",
@@ -97,7 +108,7 @@
                 "min_inclusive": 1,
                 "max_inclusive": 3
               },
-              "weight": 20
+              "weight": 60
             },
             {
               "type": "mms_dungeons:kobold_zombie",
@@ -106,12 +117,12 @@
                 "min_inclusive": 1,
                 "max_inclusive": 3
               },
-              "weight": 20
+              "weight": 60
             },
             {
               "type": "mms_dungeons:witherbold",
               "count": 1,
-              "weight": 3
+              "weight": 15
             },
             {
               "type": "mms_dungeons:tar_cube",
@@ -120,12 +131,12 @@
                 "min_inclusive": 1,
                 "max_inclusive": 3
               },
-              "weight": 12
+              "weight": 40
             },
             {
               "type": "mms_dungeons:wraith",
               "count": 1,
-              "weight": 6
+              "weight": 25
             },
             {
               "type": "mms_dungeons:wisp",
@@ -134,12 +145,12 @@
                 "min_inclusive": 1,
                 "max_inclusive": 2
               },
-              "weight": 8
+              "weight": 30
             },
             {
               "type": "mms_dungeons:craw",
               "count": 1,
-              "weight": 4
+              "weight": 20
             },
             {
               "type": "mms_dungeons:sap",
@@ -148,7 +159,91 @@
                 "min_inclusive": 2,
                 "max_inclusive": 3
               },
-              "weight": 8
+              "weight": 30
+            },
+            {
+              "type": "mms_dungeons:ratman",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 1,
+                "max_inclusive": 3
+              },
+              "weight": 30
+            },
+            {
+              "type": "mms_dungeons:eld_bomb",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 1,
+                "max_inclusive": 3
+              },
+              "weight": 25
+            },
+            {
+              "type": "mms_dungeons:gremlin",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 1,
+                "max_inclusive": 2
+              },
+              "weight": 15
+            },
+            {
+              "type": "mms_dungeons:swampman",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 1,
+                "max_inclusive": 2
+              },
+              "weight": 15
+            },
+            {
+              "type": "mms_dungeons:ghosty",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 1,
+                "max_inclusive": 2
+              },
+              "weight": 15
+            },
+            {
+              "type": "mms_dungeons:bad_patch",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 1,
+                "max_inclusive": 3
+              },
+              "weight": 10
+            },
+            {
+              "type": "mms_dungeons:eld_knight",
+              "count": 1,
+              "weight": 10
+            },
+            {
+              "type": "mms_dungeons:fallen_knight",
+              "count": 1,
+              "weight": 5
+            },
+            {
+              "type": "mutantmonsters:mutant_zombie",
+              "count": 1,
+              "weight": 3
+            },
+            {
+              "type": "mutantmonsters:mutant_skeleton",
+              "count": 1,
+              "weight": 3
+            },
+            {
+              "type": "mutantmonsters:mutant_creeper",
+              "count": 1,
+              "weight": 3
+            },
+            {
+              "type": "mutantmonsters:mutant_enderman",
+              "count": 1,
+              "weight": 2
             }
           ],
           "underground_water_creature": [

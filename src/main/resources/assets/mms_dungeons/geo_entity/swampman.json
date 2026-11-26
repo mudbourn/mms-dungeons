@@ -1,0 +1,19 @@
+{
+  "geo": "knightquest:geo/swampman.geo.json",
+  "texture": "knightquest:textures/entity/swampman.png",
+  "emissive_texture": "knightquest:textures/entity/swampman_glowmask.png",
+  "scale": 1.1,
+  "shadow_radius": 0.5,
+  "head_bone": "Head",
+  "animations": "knightquest:animations/swampman.animation.json",
+  "idle": "idle",
+  "walk": "walk",
+  "attack": "attack",
+  "states": [
+    {
+      "when": "q.is_using_item",
+      "animation": "bow_attack"
+    }
+  ],
+  "transition_ticks": 0
+}

@@ -1,0 +1,17 @@
+{
+  "geo": "knightquest:geo/ratman.geo.json",
+  "texture": "knightquest:textures/entity/ratman1.png",
+  "emissive_texture": "knightquest:textures/entity/ratman1_glowmask.png",
+  "shadow_radius": 0.4,
+  "head_bone": "head",
+  "animations": "knightquest:animations/ratman.animation.json",
+  "idle": "idle",
+  "walk": "walk",
+  "states": [
+    {
+      "when": "q.is_using_item",
+      "animation": "attack"
+    }
+  ],
+  "transition_ticks": 0
+}

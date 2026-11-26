@@ -2,12 +2,14 @@ package info.mudbourn.mmsdungeons.client;
 
 import info.mudbourn.mmsdungeons.MmsDungeons;
 import info.mudbourn.mmsdungeons.client.guild.GuildsClient;
+import info.mudbourn.mmsdungeons.client.mobs.knightquest.KnightQuestClient;
 import info.mudbourn.mmsdungeons.client.mobs.kobolds.KoboldsClient;
 import info.mudbourn.mmsdungeons.client.mobs.orpiment.OrpimentClient;
 import info.mudbourn.mmsdungeons.config.FeaturesConfig;
 import info.mudbourn.mmsdungeons.dungeon.DungeonBlocks;
 import info.mudbourn.mmsdungeons.net.PartyAlertPayload;
 import info.mudbourn.mmsdungeons.net.PartySyncPayload;
+import info.mudbourn.mmsdungeons.net.RegionNoticePayload;
 import info.mudbourn.mmsdungeons.party.PartyView;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
@@ -26,15 +28,22 @@ public final class MmsDungeonsClient implements ClientModInitializer {
             context.client().execute(() -> PartyView.alert(
                 payload.victim(),
                 System.currentTimeMillis() + FeaturesConfig.get().alertSeconds * 1000L)));
+        ClientPlayNetworking.registerGlobalReceiver(RegionNoticePayload.TYPE, (payload, context) ->
+            context.client().execute(() -> RegionBanner.show(payload.title(), payload.color())));
         BlockEntityRendererRegistry.register(DungeonBlocks.DUNGEON_PORTAL_ENTITY, context -> new DungeonPortalRenderer());
-        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> PartyView.clear());
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
+            PartyView.clear();
+            RegionBanner.clear();
+        });
         GuildsClient.register();
         KoboldsClient.register();
         OrpimentClient.register();
+        KnightQuestClient.register();
 
         HudElementRegistry.attachElementAfter(
             VanillaHudElements.HOTBAR,
             MmsDungeons.id("party_hud"),
             new PartyHudRenderer());
+        HudElementRegistry.attachElementBefore(VanillaHudElements.TITLE_AND_SUBTITLE, MmsDungeons.id("region_banner"), new RegionBanner());
     }
 }

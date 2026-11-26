@@ -321,6 +321,14 @@
       }
     ]
   },
+  "the_architect_of_chaos": {
+    "sounds": [
+      {
+        "name": "knightquest:the_architect_of_chaos",
+        "stream": true
+      }
+    ]
+  },
   "music_disc_fossil": {
     "sounds": [
       {
@@ -972,19 +980,6 @@
       }
     ]
   },
-  "entity.stellar_stone_automaton.hurt": {
-    "subtitle": "subtitles.aerialhell.entity.stellar_stone_automaton.hurt",
-    "sounds": [
-      "mms_dungeons:entity/stellar_stone_automaton/hurt",
-      "mms_dungeons:entity/stellar_stone_automaton/hurt_scream"
-    ]
-  },
-  "entity.stellar_stone_automaton.death": {
-    "subtitle": "subtitles.aerialhell.entity.stellar_stone_automaton.death",
-    "sounds": [
-      "mms_dungeons:entity/stellar_stone_automaton/death"
-    ]
-  },
   "skelebold_idle": {
     "subtitle": "subtitles.mms_dungeons.skelebold.idle",
     "sounds": [
@@ -1010,6 +1005,33 @@
     "sounds": [
       "mms_dungeons:entity/skelebold/death1",
       "mms_dungeons:entity/skelebold/death2"
+    ]
+  },
+  "witherbold_idle": {
+    "subtitle": "subtitles.mms_dungeons.witherbold.idle",
+    "sounds": [
+      "mms_dungeons:entity/witherbold/idle1",
+      "mms_dungeons:entity/witherbold/idle2",
+      "mms_dungeons:entity/witherbold/idle3",
+      "mms_dungeons:entity/witherbold/idle4",
+      "mms_dungeons:entity/witherbold/idle5",
+      "mms_dungeons:entity/witherbold/idle6"
+    ]
+  },
+  "witherbold_hurt": {
+    "subtitle": "subtitles.mms_dungeons.witherbold.hurt",
+    "sounds": [
+      "mms_dungeons:entity/witherbold/hurt1",
+      "mms_dungeons:entity/witherbold/hurt2",
+      "mms_dungeons:entity/witherbold/hurt3",
+      "mms_dungeons:entity/witherbold/hurt4"
+    ]
+  },
+  "witherbold_death": {
+    "subtitle": "subtitles.mms_dungeons.witherbold.death",
+    "sounds": [
+      "mms_dungeons:entity/witherbold/death1",
+      "mms_dungeons:entity/witherbold/death2"
     ]
   },
   "zombold_idle": {

@@ -1,0 +1,13 @@
+{
+  "geo": "knightquest:geo/gremlin.geo.json",
+  "texture": "knightquest:textures/entity/gremlin.png",
+  "emissive_texture": "knightquest:textures/entity/gremlin_glowmask.png",
+  "scale": 1.1,
+  "shadow_radius": 0.4,
+  "animations": "knightquest:animations/gremlin.animation.json",
+  "idle": "idle",
+  "walk": "walk",
+  "attack": "attack",
+  "death": "death",
+  "transition_ticks": 0
+}

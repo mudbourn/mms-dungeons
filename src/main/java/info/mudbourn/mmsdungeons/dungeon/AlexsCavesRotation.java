@@ -5,7 +5,7 @@ public final class AlexsCavesRotation {
 
     // Distance tiers from spawn, nearest first, one per biome.
     private static final double[] TIERS = {800.0, 900.0, 1000.0, 1100.0, 1200.0, 1300.0};
-    public static final double SAME_BIOME_FACTOR = 1.75;
+    public static final double SAME_BIOME_FACTOR = 2.0;
 
     private AlexsCavesRotation() {
     }

@@ -1,0 +1,38 @@
+{
+  "geo": "knightquest:geo/fallenknight.geo.json",
+  "texture": "knightquest:textures/entity/fallenknight.png",
+  "shadow_radius": 0.5,
+  "animations": "knightquest:animations/fallenknight.animation.json",
+  "idle": "animation.model.idle",
+  "walk": "animation.model.walk",
+  "attack": "animation.model.attack",
+  "transition_ticks": 5,
+  "held_items": {
+    "bipedHandRight": {
+      "slot": "mainhand",
+      "rotation": [
+        -180.0,
+        0.0,
+        0.0
+      ],
+      "offset": [
+        0.8,
+        -7.2,
+        -1.6
+      ]
+    },
+    "bipedHandLeft": {
+      "slot": "offhand",
+      "rotation": [
+        0.0,
+        180.0,
+        0.0
+      ],
+      "offset": [
+        0.8,
+        -7.2,
+        -1.6
+      ]
+    }
+  }
+}

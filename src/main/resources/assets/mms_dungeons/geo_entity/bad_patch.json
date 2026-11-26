@@ -1,0 +1,13 @@
+{
+  "geo": "knightquest:geo/bad_patch.geo.json",
+  "texture": "knightquest:textures/entity/bad_patch.png",
+  "scale": 0.85,
+  "shadow_radius": 0.4,
+  "head_bone": "body",
+  "animations": "knightquest:animations/bad_patch.animation.json",
+  "idle": "idle",
+  "walk": "walk",
+  "attack": "attack",
+  "death": "death",
+  "transition_ticks": 0
+}

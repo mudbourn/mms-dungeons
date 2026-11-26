@@ -20,6 +20,7 @@ public final class DungeonDimension {
         PericulumRules.register();
         RegionNotices.register();
         DepthGear.register();
+        DragonDepth.register();
         ForcedArrivals.register();
         DeepGate.register();
         NearSpawns.register();
@@ -28,9 +29,8 @@ public final class DungeonDimension {
         CavernDisc.register();
         CavernTunnels.register();
         CavernGrid.register();
-        FillCavern.register();
-        FillCaverns.register();
         NetherInfectionCore.register();
+        HostOres.register();
         OffsetSpreadPlacement.register();
     }
 

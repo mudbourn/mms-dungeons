@@ -9,8 +9,7 @@
     "MannequinAccessor",
     "MobAccessor",
     "MobShriekerMixin",
-    "StellarLighterMixin",
-    "StellarStoneAutomatonMixin"
+    "StellarLighterMixin"
   ],
   "client": [
     "ClientInputAccessor",

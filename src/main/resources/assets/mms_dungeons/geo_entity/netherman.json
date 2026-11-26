@@ -1,0 +1,14 @@
+{
+  "geo": "knightquest:geo/netherman_fire.geo.json",
+  "texture": "knightquest:textures/entity/netherman_fire.png",
+  "scale": 1.0,
+  "shadow_radius": 0.0,
+  "head_bone": "head",
+  "animations": "knightquest:animations/netherman_fire.animation.json",
+  "idle": "idle",
+  "walk": "walk",
+  "attack": "attack",
+  "death": "death",
+  "driver": "mms_dungeons:netherman",
+  "transition_ticks": 2
+}

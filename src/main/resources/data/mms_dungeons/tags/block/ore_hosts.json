@@ -1,0 +1,19 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:netherrack",
+    "minecraft:sandstone",
+    "minecraft:red_sandstone",
+    "minecraft:packed_ice",
+    "minecraft:calcite",
+    "minecraft:dripstone_block",
+    "minecraft:end_stone",
+    "mms_dungeons:tarred_sandstone",
+    {"id": "netherdescent:blue_netherrack", "required": false},
+    {"id": "alexscaves:galena", "required": false},
+    {"id": "alexscaves:limestone", "required": false},
+    {"id": "alexscaves:guanostone", "required": false},
+    {"id": "alexscaves:coprolith", "required": false},
+    {"id": "alexscaves:radrock", "required": false}
+  ]
+}

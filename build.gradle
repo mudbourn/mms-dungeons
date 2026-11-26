@@ -20,6 +20,7 @@ dependencies {
     implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
     implementation "info.mudbourn:mms-economy:${project.economy_version}"
     implementation "info.mudbourn:mms-combat:${project.combat_version}"
+    implementation "info.mudbourn:mms-render-common:${project.render_common_version}"
     // Third-party mods this mod calls into. The pack provides them at runtime.
     compileOnly files(
         "libs/26.3/open-parties-and-claims-fabric-26.3-0.33.0.jar",
@@ -47,11 +48,11 @@ java {
 }
 
 def netherDescentBiomes = [
-    "netherdescent:arisian_undergrowth",
-    "netherdescent:crimson_gardens",
-    "netherdescent:embur_bog",
-    "netherdescent:sythian_torrids",
-    "netherdescent:wailing_garth"
+    "minecraft:nether_wastes"   : "netherdescent:embur_bog",
+    "minecraft:crimson_forest"  : "netherdescent:crimson_gardens",
+    "minecraft:warped_forest"   : "netherdescent:sythian_torrids",
+    "minecraft:soul_sand_valley": "netherdescent:wailing_garth",
+    "minecraft:basalt_deltas"   : "netherdescent:arisian_undergrowth"
 ]
 
 tasks.register("generateNetherDescentPack") {
@@ -84,9 +85,14 @@ tasks.register("generateNetherDescentPack") {
 
         def dimension = slurper.parse(new File(dataDir, "dimension/dungeon.json"))
         def entries = dimension.generator.biome_source.biomes
-        def template = entries.find { it.biome == "minecraft:nether_wastes" }
-        netherDescentBiomes.each { id ->
-            entries << [biome: id, parameters: template.parameters]
+        netherDescentBiomes.each { vanilla, descent ->
+            def cell = entries.find { it.biome == vanilla }
+            def range = cell.parameters.continentalness
+            def middle = (range[0] + range[1]) / 2
+            def upper = new LinkedHashMap(cell.parameters)
+            upper.continentalness = [middle, range[1]]
+            cell.parameters.continentalness = [range[0], middle]
+            entries << [biome: descent, parameters: upper]
         }
         write(new File(root, "data/mms_dungeons/dimension/dungeon.json"), dimension)
 

@@ -1,0 +1,4 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {"layer0": "mms_dungeons:item/knightquest/netherman_spawn_egg"}
+}

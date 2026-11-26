@@ -19,19 +19,23 @@ import net.minecraft.world.phys.Vec3;
 // Moves players between a surface portal and its linked exit portal in the dungeon, building the exit on first use.
 public final class DungeonPortals {
 
+    // Blocks around an arrival searched for open floor.
+    private static final int ARRIVAL_SEARCH = 32;
+    // Spacing of the columns checked in that search.
+    private static final int ARRIVAL_STEP = 4;
     private static final Component GATEKEEPER_LAUGHS = Component.literal("The gatekeeper notices your effort, and laughs.");
     // Flood fill cap when finding a portal's anchor block.
     private static final int MAX_PORTAL_BLOCKS = 256;
     // The roof's lowest bedrock layer.
     private static final int ROOF_Y = 157;
-    private static final int ROOF_GAP = 5;
-    private static final int MIN_HEADROOM = 10;
+    private static final int ROOF_GAP = 2;
+    private static final int MIN_HEADROOM = 5;
     // The highest feet position whose headroom still stops ROOF_GAP blocks under the roof.
     private static final int SEARCH_TOP = ROOF_Y - ROOF_GAP - MIN_HEADROOM;
     // Arrivals stay in the Sanctuary Region, never deeper.
     private static final int SEARCH_BOTTOM = DungeonDimension.SANCTUARY_BOTTOM;
     // Where an exit portal and its chamber are carved when no open space is found.
-    private static final int FALLBACK_Y = 111;
+    private static final int FALLBACK_Y = 140;
     // Width and height of a portal's opening.
     private static final int OPENING = 3;
     // How far from the dungeon's centre a new exit portal may be placed.
@@ -57,14 +61,37 @@ public final class DungeonPortals {
     // Where a player forced into the dungeon at this column lands: the open Sanctuary floor an exit portal would
     // use, or a carved chamber with an exit portal when the column has no room.
     static Vec3 arrivalSpot(ServerLevel dungeon, int x, int z) {
-        dungeon.getChunk(x >> 4, z >> 4);
-        int floor = highestOpenFloor(dungeon, x, z);
-        BlockPos feet = new BlockPos(x, floor, z);
-        if (hasHeadroom(dungeon, feet) && dungeon.getBlockState(feet.below()).isFaceSturdy(dungeon, feet.below(), Direction.UP)) {
-            return Vec3.atBottomCenterOf(feet);
+        for (int ring = 0; ring <= ARRIVAL_SEARCH; ring += ARRIVAL_STEP) {
+            for (int dx = -ring; dx <= ring; dx += ARRIVAL_STEP) {
+                for (int dz = -ring; dz <= ring; dz += ARRIVAL_STEP) {
+                    if (Math.max(Math.abs(dx), Math.abs(dz)) != ring) {
+                        continue;
+                    }
+                    dungeon.getChunk((x + dx) >> 4, (z + dz) >> 4);
+                    int floor = highestOpenFloor(dungeon, x + dx, z + dz);
+                    BlockPos feet = new BlockPos(x + dx, floor, z + dz);
+                    if (hasHeadroom(dungeon, feet) && dungeon.getBlockState(feet.below()).isFaceSturdy(dungeon, feet.below(), Direction.UP)) {
+                        return Vec3.atBottomCenterOf(feet);
+                    }
+                }
+            }
         }
-        BlockPos exit = buildExit(dungeon, new BlockPos(x, floor, z));
-        return Vec3.atBottomCenterOf(standingSpotNear(dungeon, exit));
+        return Vec3.atBottomCenterOf(carveRoom(dungeon, new BlockPos(x, FALLBACK_Y, z)));
+    }
+
+    // Opens a small room with a stone floor and no portal.
+    private static BlockPos carveRoom(ServerLevel dungeon, BlockPos feet) {
+        BlockState air = Blocks.AIR.defaultBlockState();
+        BlockState stone = Blocks.STONE.defaultBlockState();
+        for (int dx = -1; dx <= 1; dx++) {
+            for (int dz = -1; dz <= 1; dz++) {
+                dungeon.setBlockAndUpdate(feet.offset(dx, -1, dz), stone);
+                for (int dy = 0; dy < MIN_HEADROOM; dy++) {
+                    dungeon.setBlockAndUpdate(feet.offset(dx, dy, dz), air);
+                }
+            }
+        }
+        return feet;
     }
 
     // Where the portal at pos sends the player, or null when it sends them nowhere.

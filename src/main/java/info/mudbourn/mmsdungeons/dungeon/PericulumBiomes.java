@@ -2,12 +2,11 @@ package info.mudbourn.mmsdungeons.dungeon;
 
 import com.github.alexmodguy.alexscaves.server.config.BiomeGenerationConfig;
 
-// Gives the Periculum its own Alex's Caves layout under the Deep Region's: each cell takes a different
-// biome from the one above it, and copies may sit nearer spawn and nearer each other.
+// Gives the Periculum its own Alex's Caves layout, with a different biome per cell and tighter spacing.
 public final class PericulumBiomes {
 
     // Periculum spawn distances and same-biome spacing, as a share of the Deep Region's.
-    public static final double LENIENCY = 0.6;
+    public static final double LENIENCY = 0.5;
 
     private static final ThreadLocal<Boolean> SAMPLING = ThreadLocal.withInitial(() -> false);
 

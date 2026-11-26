@@ -48,12 +48,23 @@
                               "y_scale": 0.6666666666666666
                             },
                             "right": {
-                              "type": "minecraft:gradient",
-                              "axis": "y",
-                              "from_coordinate": 80,
-                              "from_value": 0.27,
-                              "to_coordinate": 100,
-                              "to_value": 0.02
+                              "type": "minecraft:add",
+                              "left": {
+                                "type": "minecraft:gradient",
+                                "axis": "y",
+                                "from_coordinate": 80,
+                                "from_value": 0.27,
+                                "to_coordinate": 100,
+                                "to_value": 0.02
+                              },
+                              "right": {
+                                "type": "minecraft:gradient",
+                                "axis": "y",
+                                "from_coordinate": -16,
+                                "from_value": 0.0,
+                                "to_coordinate": -80,
+                                "to_value": -0.22
+                              }
                             }
                           },
                           "max": 1.0,
@@ -120,7 +131,7 @@
       "axis": "y",
       "from_coordinate": -127,
       "from_value": 3.0,
-      "to_coordinate": -112,
+      "to_coordinate": -119,
       "to_value": -1.0
     },
     "right": {

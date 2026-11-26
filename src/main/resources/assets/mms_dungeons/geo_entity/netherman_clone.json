@@ -1,0 +1,13 @@
+{
+  "geo": "knightquest:geo/netherman_clone.geo.json",
+  "texture": "knightquest:textures/entity/netherman_clone.png",
+  "translucent": true,
+  "scale": 1.2,
+  "shadow_radius": 0.0,
+  "head_bone": "head",
+  "animations": "knightquest:animations/netherman_clone.animation.json",
+  "idle": "idle",
+  "walk": "walk",
+  "attack": "attack",
+  "transition_ticks": 2
+}

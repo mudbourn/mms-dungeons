@@ -13,7 +13,10 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.spell_engine.internals.container.SpellContainerSource;
 
@@ -42,6 +45,8 @@ public final class GateCheck {
     private static final double ENTRY_WEAPON = 5.0;
     public static final double DEEP_DEFENCE = 30.0;
     public static final double DEEP_WEAPON = 7.0;
+    // Blocks around the player searched for weapons they threw.
+    private static final double THROWN_REACH = 64.0;
     private static final double RANGED_BASE = 6.0;
     // A proven armor piece counts for at least a netherite piece in its slot, toughness included.
     private static final Map<EquipmentSlot, Double> PROVEN_FLOOR = Map.of(
@@ -87,6 +92,13 @@ public final class GateCheck {
         double best = weaponScore(player.getOffhandItem());
         for (ItemStack stack : player.getInventory().getNonEquipmentItems()) {
             best = Math.max(best, weaponScore(stack));
+        }
+        AABB around = player.getBoundingBox().inflate(THROWN_REACH);
+        for (AbstractArrow thrown : player.level().getEntitiesOfClass(AbstractArrow.class, around, arrow -> arrow.getOwner() == player)) {
+            best = Math.max(best, weaponScore(thrown.getPickupItemStackOrigin()));
+        }
+        for (ItemEntity item : player.level().getEntitiesOfClass(ItemEntity.class, around, item -> item.getOwner() == player)) {
+            best = Math.max(best, weaponScore(item.getItem()));
         }
         return best;
     }

@@ -18,6 +18,9 @@ public final class KoboldSounds {
     public static SoundEvent SKELEBOLD_IDLE;
     public static SoundEvent SKELEBOLD_HURT;
     public static SoundEvent SKELEBOLD_DEATH;
+    public static SoundEvent WITHERBOLD_IDLE;
+    public static SoundEvent WITHERBOLD_HURT;
+    public static SoundEvent WITHERBOLD_DEATH;
     public static SoundEvent ZOMBOLD_IDLE;
     public static SoundEvent ZOMBOLD_HURT;
     public static SoundEvent ZOMBOLD_DEATH;
@@ -36,6 +39,9 @@ public final class KoboldSounds {
         SKELEBOLD_IDLE = register("skelebold_idle");
         SKELEBOLD_HURT = register("skelebold_hurt");
         SKELEBOLD_DEATH = register("skelebold_death");
+        WITHERBOLD_IDLE = register("witherbold_idle");
+        WITHERBOLD_HURT = register("witherbold_hurt");
+        WITHERBOLD_DEATH = register("witherbold_death");
         ZOMBOLD_IDLE = register("zombold_idle");
         ZOMBOLD_HURT = register("zombold_hurt");
         ZOMBOLD_DEATH = register("zombold_death");

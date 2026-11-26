@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": ["GGG", " B ", "BBB"],
+  "key": {"G": "minecraft:gold_ingot", "B": "minecraft:polished_blackstone"},
+  "result": {"id": "mms_dungeons:great_chalice"}
+}

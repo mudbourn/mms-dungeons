@@ -32,6 +32,7 @@
     "fabric-api": "*",
     "mms_economy": "*",
     "mms_combat": "*",
+    "mms_render_common": "*",
     "mms_uproot": "*",
     "openpartiesandclaims": "*",
     "spell_engine": "*",

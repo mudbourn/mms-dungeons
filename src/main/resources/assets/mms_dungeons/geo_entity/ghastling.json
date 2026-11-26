@@ -1,0 +1,7 @@
+{
+  "geo": "knightquest:geo/shield.geo.json",
+  "texture": "knightquest:textures/entity/shield.png",
+  "scale": 1.15,
+  "shadow_radius": 0.0,
+  "head_bone": "head"
+}

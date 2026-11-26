@@ -1,0 +1,6 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": ["mms_dungeons:small_essence", "minecraft:nether_star"],
+  "result": {"id": "mms_dungeons:radiant_essence"}
+}

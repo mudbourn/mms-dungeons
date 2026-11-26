@@ -89,9 +89,7 @@
       },
       "then_run": {
         "type": "minecraft:block",
-        "result_state": {
-          "Name": "minecraft:netherrack"
-        }
+        "result_state": "minecraft:netherrack"
       }
     },
     {
@@ -114,16 +112,12 @@
             },
             "then_run": {
               "type": "minecraft:block",
-              "result_state": {
-                "Name": "minecraft:crimson_nylium"
-              }
+              "result_state": "minecraft:crimson_nylium"
             }
           },
           {
             "type": "minecraft:block",
-            "result_state": {
-              "Name": "minecraft:netherrack"
-            }
+            "result_state": "minecraft:netherrack"
           }
         ]
       }
@@ -148,16 +142,12 @@
             },
             "then_run": {
               "type": "minecraft:block",
-              "result_state": {
-                "Name": "minecraft:warped_nylium"
-              }
+              "result_state": "minecraft:warped_nylium"
             }
           },
           {
             "type": "minecraft:block",
-            "result_state": {
-              "Name": "minecraft:netherrack"
-            }
+            "result_state": "minecraft:netherrack"
           }
         ]
       }
@@ -190,9 +180,7 @@
               },
               "then_run": {
                 "type": "minecraft:block",
-                "result_state": {
-                  "Name": "minecraft:soul_sand"
-                }
+                "result_state": "minecraft:soul_sand"
               }
             }
           },
@@ -207,16 +195,12 @@
             },
             "then_run": {
               "type": "minecraft:block",
-              "result_state": {
-                "Name": "minecraft:soul_soil"
-              }
+              "result_state": "minecraft:soul_soil"
             }
           },
           {
             "type": "minecraft:block",
-            "result_state": {
-              "Name": "minecraft:netherrack"
-            }
+            "result_state": "minecraft:netherrack"
           }
         ]
       }
@@ -240,16 +224,12 @@
             },
             "then_run": {
               "type": "minecraft:block",
-              "result_state": {
-                "Name": "minecraft:blackstone"
-              }
+              "result_state": "minecraft:blackstone"
             }
           },
           {
             "type": "minecraft:block",
-            "result_state": {
-              "Name": "minecraft:basalt"
-            }
+            "result_state": "minecraft:basalt"
           }
         ]
       }

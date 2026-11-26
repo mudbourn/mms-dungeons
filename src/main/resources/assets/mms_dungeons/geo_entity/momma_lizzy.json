@@ -1,0 +1,11 @@
+{
+  "geo": "knightquest:geo/momma_lizzy.geo.json",
+  "texture": "knightquest:textures/entity/momma_lizzy.png",
+  "scale": 1.1,
+  "shadow_radius": 0.5,
+  "head_bone": "head",
+  "animations": "knightquest:animations/momma_lizzy.animation.json",
+  "idle": "idle",
+  "walk": "walk",
+  "transition_ticks": 0
+}

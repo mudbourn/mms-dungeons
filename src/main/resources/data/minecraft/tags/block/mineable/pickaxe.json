@@ -27,6 +27,7 @@
     "mms_dungeons:burst_spawner",
     "mms_dungeons:relay_spawner",
     "mms_dungeons:wraith_altar",
-    "mms_dungeons:tar_cauldron"
+    "mms_dungeons:tar_cauldron",
+    "mms_dungeons:great_chalice"
   ]
 }

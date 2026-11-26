@@ -110,7 +110,8 @@
     "sounds": [
       {
         "name": "mms_dungeons:aerialhell_mono/mob/snake/hurt",
-        "attenuation_distance": 16
+        "attenuation_distance": 16,
+        "volume": 0.93
       }
     ],
     "subtitle": "subtitles.aerialhell.entity.snake.hurt"
@@ -120,7 +121,8 @@
     "sounds": [
       {
         "name": "mms_dungeons:aerialhell_mono/mob/snake/death",
-        "attenuation_distance": 16
+        "attenuation_distance": 16,
+        "volume": 0.64
       }
     ],
     "subtitle": "subtitles.aerialhell.entity.snake.death"
@@ -248,7 +250,8 @@
     "sounds": [
       {
         "name": "mms_dungeons:aerialhell_mono/mob/stellar_stone_automaton/activation",
-        "attenuation_distance": 16
+        "attenuation_distance": 16,
+        "volume": 0.3
       }
     ],
     "subtitle": "subtitles.aerialhell.entity.stellar_stone_automaton.activation"
@@ -282,7 +285,8 @@
     "sounds": [
       {
         "name": "mms_dungeons:aerialhell_mono/mob/warden_volucite_golem/death",
-        "attenuation_distance": 24
+        "attenuation_distance": 24,
+        "volume": 0.72
       }
     ],
     "subtitle": "subtitles.aerialhell.entity.warden_volucite_golem.death"
@@ -292,7 +296,8 @@
     "sounds": [
       {
         "name": "mms_dungeons:aerialhell_mono/mob/warden_volucite_golem/activation",
-        "attenuation_distance": 24
+        "attenuation_distance": 24,
+        "volume": 0.42
       }
     ],
     "subtitle": "subtitles.aerialhell.entity.warden_volucite_golem.activation"
@@ -302,7 +307,8 @@
     "sounds": [
       {
         "name": "mms_dungeons:aerialhell_mono/mob/warden_volucite_golem/hurt",
-        "attenuation_distance": 24
+        "attenuation_distance": 24,
+        "volume": 0.98
       }
     ],
     "subtitle": "subtitles.aerialhell.entity.warden_volucite_golem.hurt"
@@ -330,7 +336,8 @@
     "sounds": [
       {
         "name": "mms_dungeons:aerialhell_mono/mob/volucite_golem/ambient_alert",
-        "attenuation_distance": 24
+        "attenuation_distance": 24,
+        "volume": 0.59
       }
     ],
     "subtitle": "subtitles.aerialhell.entity.volucite_golem.ambient_alert"
@@ -350,11 +357,13 @@
     "sounds": [
       {
         "name": "mms_dungeons:aerialhell_mono/mob/volucite_golem/ambient_normal",
-        "attenuation_distance": 24
+        "attenuation_distance": 24,
+        "volume": 0.97
       },
       {
         "name": "mms_dungeons:aerialhell_mono/mob/volucite_golem/ambient_speak",
-        "attenuation_distance": 24
+        "attenuation_distance": 24,
+        "volume": 0.57
       }
     ],
     "subtitle": "subtitles.aerialhell.entity.volucite_golem.ambient"
@@ -364,11 +373,13 @@
     "sounds": [
       {
         "name": "mms_dungeons:aerialhell_mono/mob/volucite_golem/ambient_angry",
-        "attenuation_distance": 24
+        "attenuation_distance": 24,
+        "volume": 0.89
       },
       {
         "name": "mms_dungeons:aerialhell_mono/mob/volucite_golem/ambient_mad",
-        "attenuation_distance": 24
+        "attenuation_distance": 24,
+        "volume": 0.92
       }
     ],
     "subtitle": "subtitles.aerialhell.entity.volucite_golem.ambient_angry"
@@ -388,7 +399,8 @@
     "sounds": [
       {
         "name": "mms_dungeons:aerialhell_mono/mob/volucite_golem/beam_loop",
-        "attenuation_distance": 24
+        "attenuation_distance": 24,
+        "volume": 0.89
       }
     ],
     "subtitle": "subtitles.aerialhell.entity.volucite_golem.beam"
@@ -496,15 +508,18 @@
     "sounds": [
       {
         "name": "mms_dungeons:aerialhell_mono/mob/gliding_turtle/say_1",
-        "attenuation_distance": 16
+        "attenuation_distance": 16,
+        "volume": 0.52
       },
       {
         "name": "mms_dungeons:aerialhell_mono/mob/gliding_turtle/say_2",
-        "attenuation_distance": 16
+        "attenuation_distance": 16,
+        "volume": 0.5
       },
       {
         "name": "mms_dungeons:aerialhell_mono/mob/gliding_turtle/say_3",
-        "attenuation_distance": 16
+        "attenuation_distance": 16,
+        "volume": 0.56
       }
     ],
     "subtitle": "subtitles.aerialhell.entity.gliding_turtle.ambient"
@@ -514,11 +529,13 @@
     "sounds": [
       {
         "name": "mms_dungeons:aerialhell_mono/mob/gliding_turtle/hurt_1",
-        "attenuation_distance": 16
+        "attenuation_distance": 16,
+        "volume": 0.3
       },
       {
         "name": "mms_dungeons:aerialhell_mono/mob/gliding_turtle/hurt_2",
-        "attenuation_distance": 16
+        "attenuation_distance": 16,
+        "volume": 0.3
       }
     ],
     "subtitle": "subtitles.aerialhell.entity.gliding_turtle.hurt"
@@ -528,7 +545,8 @@
     "sounds": [
       {
         "name": "mms_dungeons:aerialhell_mono/mob/gliding_turtle/death",
-        "attenuation_distance": 16
+        "attenuation_distance": 16,
+        "volume": 0.52
       }
     ],
     "subtitle": "subtitles.aerialhell.entity.gliding_turtle.death"
@@ -652,7 +670,8 @@
     "sounds": [
       {
         "name": "mms_dungeons:aerialhell_mono/mob/chained_god/death",
-        "attenuation_distance": 48
+        "attenuation_distance": 48,
+        "volume": 0.58
       }
     ],
     "subtitle": "subtitles.aerialhell.entity.chained_god.death"
@@ -702,7 +721,8 @@
     "sounds": [
       {
         "name": "mms_dungeons:aerialhell_mono/mob/chained_god/roar",
-        "attenuation_distance": 48
+        "attenuation_distance": 48,
+        "volume": 0.94
       }
     ],
     "subtitle": "subtitles.aerialhell.entity.chained_god.roar"
@@ -712,7 +732,8 @@
     "sounds": [
       {
         "name": "mms_dungeons:aerialhell_mono/mob/chained_god/unchain",
-        "attenuation_distance": 48
+        "attenuation_distance": 48,
+        "volume": 0.44
       }
     ],
     "subtitle": "subtitles.aerialhell.entity.chained_god.unchain"
@@ -722,7 +743,8 @@
     "sounds": [
       {
         "name": "mms_dungeons:aerialhell_mono/mob/chained_god/transition",
-        "attenuation_distance": 48
+        "attenuation_distance": 48,
+        "volume": 0.56
       }
     ],
     "subtitle": "subtitles.aerialhell.entity.chained_god.transition"
@@ -834,7 +856,8 @@
     "sounds": [
       {
         "name": "mms_dungeons:aerialhell_mono/mob/lilith/transformation",
-        "attenuation_distance": 48
+        "attenuation_distance": 48,
+        "volume": 0.94
       }
     ],
     "subtitle": "subtitles.aerialhell.entity.lilith.transformation"
@@ -844,7 +867,8 @@
     "sounds": [
       {
         "name": "mms_dungeons:aerialhell_mono/mob/shadow_automaton/hurt",
-        "attenuation_distance": 16
+        "attenuation_distance": 16,
+        "volume": 0.83
       }
     ],
     "subtitle": "subtitles.aerialhell.entity.shadow_automaton.hurt"
@@ -854,7 +878,8 @@
     "sounds": [
       {
         "name": "mms_dungeons:aerialhell_mono/mob/shadow_automaton/death",
-        "attenuation_distance": 16
+        "attenuation_distance": 16,
+        "volume": 0.88
       }
     ],
     "subtitle": "subtitles.aerialhell.entity.shadow_automaton.death"
@@ -1042,7 +1067,8 @@
     "sounds": [
       {
         "name": "mms_dungeons:aerialhell_mono/block/reactor/reactor_ambient",
-        "attenuation_distance": 16
+        "attenuation_distance": 16,
+        "volume": 0.89
       }
     ],
     "subtitle": "subtitles.aerialhell.block.reactor.ambient"

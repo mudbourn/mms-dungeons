@@ -56,6 +56,26 @@
               "type": "aerialhell:stellar_stone_automaton",
               "count": 2,
               "weight": 20
+            },
+            {
+              "type": "mutantmonsters:mutant_zombie",
+              "count": 1,
+              "weight": 3
+            },
+            {
+              "type": "mutantmonsters:mutant_skeleton",
+              "count": 1,
+              "weight": 3
+            },
+            {
+              "type": "mutantmonsters:mutant_creeper",
+              "count": 1,
+              "weight": 3
+            },
+            {
+              "type": "mutantmonsters:mutant_enderman",
+              "count": 1,
+              "weight": 2
             }
           ],
           "underground_water_creature": [
@@ -93,7 +113,9 @@
     [
       "minecraft:amethyst_geode"
     ],
-    [],
+    [
+      "mms_dungeons:cavern_crystal_blob"
+    ],
     [],
     [],
     [
@@ -139,7 +161,10 @@
     [
       "minecraft:glow_lichen",
       "minecraft:brown_mushroom_normal",
-      "minecraft:red_mushroom_normal"
+      "minecraft:red_mushroom_normal",
+      "mms_dungeons:cavern_glowing_vines",
+      "mms_dungeons:cavern_glowing_grass",
+      "mms_dungeons:cavern_glowing_boletus"
     ],
     [
       "minecraft:freeze_top_layer"

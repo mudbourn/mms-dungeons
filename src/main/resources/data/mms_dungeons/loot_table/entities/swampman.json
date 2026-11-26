@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:entity",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "mms_dungeons:small_essence",
+          "condition": {
+            "type": "minecraft:random_chance",
+            "chance": 0.35
+          }
+        }
+      ]
+    }
+  ],
+  "random_sequence": "mms_dungeons:entities/swampman"
+}

@@ -65,7 +65,55 @@
                 "min_inclusive": 2,
                 "max_inclusive": 3
               },
-              "weight": 10
+              "weight": 40
+            },
+            {
+              "type": "mms_dungeons:tar_cube",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 1,
+                "max_inclusive": 3
+              },
+              "weight": 40
+            },
+            {
+              "type": "mms_dungeons:wisp",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 1,
+                "max_inclusive": 2
+              },
+              "weight": 30
+            },
+            {
+              "type": "mms_dungeons:wraith",
+              "count": 1,
+              "weight": 25
+            },
+            {
+              "type": "mms_dungeons:craw",
+              "count": 1,
+              "weight": 20
+            },
+            {
+              "type": "mutantmonsters:mutant_zombie",
+              "count": 1,
+              "weight": 3
+            },
+            {
+              "type": "mutantmonsters:mutant_skeleton",
+              "count": 1,
+              "weight": 3
+            },
+            {
+              "type": "mutantmonsters:mutant_creeper",
+              "count": 1,
+              "weight": 3
+            },
+            {
+              "type": "mutantmonsters:mutant_enderman",
+              "count": 1,
+              "weight": 2
             }
           ]
         }

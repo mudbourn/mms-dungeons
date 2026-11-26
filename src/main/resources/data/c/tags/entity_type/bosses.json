@@ -54,9 +54,45 @@
       "required": false
     },
     "mms_dungeons:wraith",
+    "mms_dungeons:netherman",
     {
       "id": "uselessreptile:lightning_chaser",
       "required": false
-    }
+    },
+    "minecraft:ravager",
+    "minecraft:warden",
+    {
+      "id": "uselessreptile:wyvern",
+      "required": false
+    },
+    {
+      "id": "uselessreptile:moleclaw",
+      "required": false
+    },
+    {
+      "id": "aerialhell:volucite_golem",
+      "required": false
+    },
+    {
+      "id": "aerialhell:fat_phantom",
+      "required": false
+    },
+    {
+      "id": "alexscaves:atlatitan",
+      "required": false
+    },
+    {
+      "id": "alexscaves:relicheirus",
+      "required": false
+    },
+    {
+      "id": "alexscaves:tremorsaurus",
+      "required": false
+    },
+    {
+      "id": "frostiful:frostologer",
+      "required": false
+    },
+    "mms_dungeons:eld_knight"
   ]
 }

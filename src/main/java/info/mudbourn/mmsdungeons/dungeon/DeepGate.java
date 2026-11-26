@@ -1,5 +1,8 @@
 package info.mudbourn.mmsdungeons.dungeon;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
@@ -12,6 +15,9 @@ import net.minecraft.world.phys.Vec3;
 public final class DeepGate {
 
     private static final int CHECK_INTERVAL = 10;
+    // Ticks after a player last passed in which they still count as passing.
+    private static final int GRACE_TICKS = 600;
+    private static final Map<UUID, Integer> PASSED_AT = new HashMap<>();
 
     private DeepGate() {
     }
@@ -29,8 +35,16 @@ public final class DeepGate {
                 || !DungeonDimension.isDungeon(level)
                 || player.getBlockY() >= DungeonDimension.SANCTUARY_BOTTOM
                 || player.isCreative()
-                || player.isSpectator()
-                || GateCheck.passesDeep(player)) {
+                || player.isSpectator()) {
+                continue;
+            }
+            int now = server.getTickCount();
+            if (GateCheck.passesDeep(player)) {
+                PASSED_AT.put(player.getUUID(), now);
+                continue;
+            }
+            Integer passedAt = PASSED_AT.get(player.getUUID());
+            if (passedAt != null && now - passedAt < GRACE_TICKS) {
                 continue;
             }
             Vec3 spot = DungeonPortals.arrivalSpot(level, player.getBlockX(), player.getBlockZ());

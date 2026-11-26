@@ -1,0 +1,9 @@
+{
+  "variants": {
+    "essence=0": {"model": "mms_dungeons:block/knightquest/great_chalice_0"},
+    "essence=1": {"model": "mms_dungeons:block/knightquest/great_chalice_1"},
+    "essence=2": {"model": "mms_dungeons:block/knightquest/great_chalice_2"},
+    "essence=3": {"model": "mms_dungeons:block/knightquest/great_chalice_3"},
+    "essence=4": {"model": "mms_dungeons:block/knightquest/great_chalice_4"}
+  }
+}

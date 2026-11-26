@@ -19,16 +19,12 @@
           },
           "then_run": {
             "type": "minecraft:block",
-            "result_state": {
-              "Name": "netherdescent:crimson_blackstone_nylium"
-            }
+            "result_state": "netherdescent:crimson_blackstone_nylium"
           }
         },
         {
           "type": "minecraft:block",
-          "result_state": {
-            "Name": "minecraft:blackstone"
-          }
+          "result_state": "minecraft:blackstone"
         }
       ]
     }
@@ -64,25 +60,19 @@
                 },
                 "then_run": {
                   "type": "minecraft:block",
-                  "result_state": {
-                    "Name": "netherdescent:embur_moss_block"
-                  }
+                  "result_state": "netherdescent:embur_moss_block"
                 }
               },
               {
                 "type": "minecraft:block",
-                "result_state": {
-                  "Name": "netherdescent:embur_nylium"
-                }
+                "result_state": "netherdescent:embur_nylium"
               }
             ]
           }
         },
         {
           "type": "minecraft:block",
-          "result_state": {
-            "Name": "netherdescent:blue_netherrack"
-          }
+          "result_state": "netherdescent:blue_netherrack"
         }
       ]
     }
@@ -118,16 +108,12 @@
                 },
                 "then_run": {
                   "type": "minecraft:block",
-                  "result_state": {
-                    "Name": "netherdescent:sythian_soil"
-                  }
+                  "result_state": "netherdescent:sythian_soil"
                 }
               },
               {
                 "type": "minecraft:block",
-                "result_state": {
-                  "Name": "netherdescent:sythian_nylium"
-                }
+                "result_state": "netherdescent:sythian_nylium"
               }
             ]
           }
@@ -151,17 +137,13 @@
             },
             "then_run": {
               "type": "minecraft:block",
-              "result_state": {
-                "Name": "netherdescent:sythian_soil"
-              }
+              "result_state": "netherdescent:sythian_soil"
             }
           }
         },
         {
           "type": "minecraft:block",
-          "result_state": {
-            "Name": "minecraft:netherrack"
-          }
+          "result_state": "minecraft:netherrack"
         }
       ]
     }
@@ -197,16 +179,12 @@
                 },
                 "then_run": {
                   "type": "minecraft:block",
-                  "result_state": {
-                    "Name": "netherdescent:wailing_nylium"
-                  }
+                  "result_state": "netherdescent:wailing_nylium"
                 }
               },
               {
                 "type": "minecraft:block",
-                "result_state": {
-                  "Name": "minecraft:soul_soil"
-                }
+                "result_state": "minecraft:soul_soil"
               }
             ]
           }
@@ -222,16 +200,12 @@
           },
           "then_run": {
             "type": "minecraft:block",
-            "result_state": {
-              "Name": "minecraft:soul_soil"
-            }
+            "result_state": "minecraft:soul_soil"
           }
         },
         {
           "type": "minecraft:block",
-          "result_state": {
-            "Name": "minecraft:netherrack"
-          }
+          "result_state": "minecraft:netherrack"
         }
       ]
     }
@@ -256,9 +230,7 @@
           },
           "then_run": {
             "type": "minecraft:block",
-            "result_state": {
-              "Name": "netherdescent:arisian_moss_block"
-            }
+            "result_state": "netherdescent:arisian_moss_block"
           }
         },
         {
@@ -280,17 +252,13 @@
             },
             "then_run": {
               "type": "minecraft:block",
-              "result_state": {
-                "Name": "netherdescent:arisian_moss_block"
-              }
+              "result_state": "netherdescent:arisian_moss_block"
             }
           }
         },
         {
           "type": "minecraft:block",
-          "result_state": {
-            "Name": "minecraft:blackstone"
-          }
+          "result_state": "minecraft:blackstone"
         }
       ]
     }
