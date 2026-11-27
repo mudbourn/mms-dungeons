@@ -1,0 +1,41 @@
+{
+  "description": {
+    "translate": "enchantment.mms_dungeons.blazing"
+  },
+  "supported_items": "#mms_dungeons:enchantable/fire_pitchfork",
+  "slots": ["mainhand"],
+  "weight": 10,
+  "anvil_cost": 2,
+  "max_level": 5,
+  "min_cost": {
+    "base": 1,
+    "per_level_above_first": 8
+  },
+  "max_cost": {
+    "base": 25,
+    "per_level_above_first": 8
+  },
+  "effects": {
+    "minecraft:damage": [
+      {
+        "effect": {
+          "type": "minecraft:add",
+          "value": {
+            "type": "minecraft:linear",
+            "base": 0.5,
+            "per_level_above_first": 0.5
+          }
+        },
+        "requirements": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:flags": {
+              "is_on_fire": true
+            }
+          }
+        }
+      }
+    ]
+  }
+}

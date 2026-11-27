@@ -1,0 +1,19 @@
+{
+  "description": {
+    "translate": "enchantment.mms_dungeons.critical_backstab"
+  },
+  "supported_items": "#mms_dungeons:enchantable/dagger",
+  "slots": ["mainhand"],
+  "weight": 3,
+  "anvil_cost": 4,
+  "max_level": 3,
+  "min_cost": {
+    "base": 1,
+    "per_level_above_first": 10
+  },
+  "max_cost": {
+    "base": 55,
+    "per_level_above_first": 10
+  },
+  "exclusive_set": "#mms_dungeons:exclusive/dagger_special"
+}

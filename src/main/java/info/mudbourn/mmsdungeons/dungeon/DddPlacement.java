@@ -29,9 +29,9 @@ public final class DddPlacement {
     private static final int AC_BUFFER = 250;
     private static final int SAMPLE_STEP = 50;
     private static final int[] SAMPLE_HEIGHTS = {-32, 0, 32};
-    // Swaps mob spawners for air as a piece is placed. Trial spawners stay.
+    // Swaps mob spawners for void air, which RemovedBlocks then settles, as a piece is placed. Trial spawners stay.
     public static final StructureProcessor NO_SPAWNERS = new RuleProcessor(List.of(
-        new ProcessorRule(new BlockMatchTest(Blocks.SPAWNER), AlwaysTrueTest.INSTANCE, Blocks.AIR.defaultBlockState())
+        new ProcessorRule(new BlockMatchTest(Blocks.SPAWNER), AlwaysTrueTest.INSTANCE, Blocks.VOID_AIR.defaultBlockState())
     ));
 
     private DddPlacement() {

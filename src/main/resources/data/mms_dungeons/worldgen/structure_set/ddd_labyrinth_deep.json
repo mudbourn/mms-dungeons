@@ -1,0 +1,20 @@
+{
+  "placement": {
+    "type": "mms_dungeons:labyrinth_cell",
+    "salt": 611820432
+  },
+  "structures": [
+    {
+      "structure": "mms_dungeons:ddd_labyrinth_deep",
+      "weight": 1
+    },
+    {
+      "structure": "mms_dungeons:ddd_labyrinth_desert_deep",
+      "weight": 1
+    },
+    {
+      "structure": "mms_dungeons:ddd_labyrinth_frozen_deep",
+      "weight": 1
+    }
+  ]
+}

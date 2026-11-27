@@ -17,8 +17,12 @@ public final class AlexsCavesSpacing {
     private AlexsCavesSpacing() {
     }
 
-    // Whether a nearby cell of the same biome outranks this one, so this one stays empty.
+    // Whether this cell stays empty: a nearby cell of the same biome outranks it, or, in the Periculum, the Deep
+    // Region already holds a biome in the same cell above it.
     public static boolean yields(long worldSeed, VoronoiInfo info, boolean periculum) {
+        if (periculum && !yields(worldSeed, info, false) && reachesSpawnDistance(worldSeed, info)) {
+            return true;
+        }
         double cellBlocks = AlexsCaves.COMMON_CONFIG.caveBiomeMeanWidth.get() + AlexsCaves.COMMON_CONFIG.caveBiomeMeanSeparation.get();
         double jitter = JITTER * AlexsCaves.COMMON_CONFIG.caveBiomeSpacingRandomness.get();
         int cellX = (int) Math.round(info.cellPos().x);
@@ -49,6 +53,18 @@ public final class AlexsCavesSpacing {
             }
         }
         return false;
+    }
+
+    // Whether the cell's Deep Region biome sits far enough from spawn to generate.
+    private static boolean reachesSpawnDistance(long worldSeed, VoronoiInfo info) {
+        double cellBlocks = AlexsCaves.COMMON_CONFIG.caveBiomeMeanWidth.get() + AlexsCaves.COMMON_CONFIG.caveBiomeMeanSeparation.get();
+        double jitter = JITTER * AlexsCaves.COMMON_CONFIG.caveBiomeSpacingRandomness.get();
+        int cellX = (int) Math.round(info.cellPos().x);
+        int cellZ = (int) Math.round(info.cellPos().z);
+        int hash = hash(worldSeed, cellX, cellZ);
+        double distance = AlexsCavesRotation.distanceFor(biomeOf(hash, cellX, cellZ, false));
+        double[] center = center(cellX, cellZ, hash, jitter, cellBlocks);
+        return center[0] * center[0] + center[1] * center[1] >= distance * distance;
     }
 
     private static boolean outranks(int otherHash, int dx, int dz, int hash) {

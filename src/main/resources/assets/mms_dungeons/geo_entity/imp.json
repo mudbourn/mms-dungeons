@@ -1,0 +1,28 @@
+{
+  "geo": "fangs_n_claws:geo/imp.geo.json",
+  "texture": "fangs_n_claws:textures/entity/imp.png",
+  "emissive_texture": "fangs_n_claws:textures/entity/glowing_eyes/imp_eyes.png",
+  "shadow_radius": 0.25,
+  "head_bone": "Head",
+  "animations": "fangs_n_claws:animations/imp.animation.json",
+  "idle": "idle",
+  "walk": "walk",
+  "driver": "mms_dungeons:imp",
+  "transition_ticks": 5,
+  "held_items": {
+    "rightItem": {
+      "slot": "mainhand",
+      "rotation": [
+        -90.0,
+        0.0,
+        0.0
+      ],
+      "scale": 0.7,
+      "offset": [
+        0.0,
+        1.6,
+        1.6
+      ]
+    }
+  }
+}

@@ -40,6 +40,8 @@ public class VariantGeoRenderer<T extends LivingEntity> extends GeoEntityRendere
             definition.death(),
             definition.heldItems(),
             definition.attachments(),
+            definition.restRotations(),
+            definition.armorBones(),
             definition.animation()
         );
     }

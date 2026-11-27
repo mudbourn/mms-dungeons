@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": ["SDS", "SDS", "SSS"],
+  "key": {
+    "S": "mms_dungeons:snow_duvet",
+    "D": "minecraft:diamond"
+  },
+  "result": {"id": "mms_dungeons:shrike_upgrade_smithing_template"}
+}

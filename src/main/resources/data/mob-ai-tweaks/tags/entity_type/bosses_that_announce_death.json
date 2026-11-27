@@ -42,10 +42,6 @@
       "required": false
     },
     {
-      "id": "friendsandfoes:wildfire",
-      "required": false
-    },
-    {
       "id": "undergroundworlds:abyssal_guardian",
       "required": false
     },
@@ -93,6 +89,9 @@
       "id": "frostiful:frostologer",
       "required": false
     },
-    "mms_dungeons:eld_knight"
+    "mms_dungeons:eld_knight",
+    "mms_dungeons:golem",
+    "mms_dungeons:ice_golem",
+    "mms_dungeons:purple_worm"
   ]
 }

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "P": "mms_dungeons:spectral_essence",
+    "G": "minecraft:glass"
+  },
+  "pattern": [
+    "PPP",
+    "PGP",
+    "PPP"
+  ],
+  "result": {
+    "id": "mms_dungeons:ghost_block",
+    "count": 8
+  }
+}

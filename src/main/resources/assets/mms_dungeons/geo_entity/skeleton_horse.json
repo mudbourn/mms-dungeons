@@ -1,0 +1,23 @@
+{
+  "geo": "fangs_n_claws:geo/horse_mob.json",
+  "texture": "fangs_n_claws:textures/entity/skeleton_horse.png",
+  "shadow_radius": 0.7,
+  "head_bone": "Head",
+  "animations": "fangs_n_claws:animations/horse_mob.animation.json",
+  "idle": "idle",
+  "states": [
+    {
+      "when": "q.ground_speed > 4.0",
+      "animation": "run"
+    },
+    {
+      "when": "q.ground_speed > 2.0",
+      "animation": "walk"
+    },
+    {
+      "when": "q.ground_speed > 0.3",
+      "animation": "walk_slow"
+    }
+  ],
+  "transition_ticks": 4
+}

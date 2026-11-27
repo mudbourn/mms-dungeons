@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": "minecraft:elytra",
+  "base": "mms_dungeons:owl_chestplate",
+  "result": {
+    "id": "mms_dungeons:shrike_chestplate"
+  },
+  "template": "mms_dungeons:shrike_upgrade_smithing_template"
+}

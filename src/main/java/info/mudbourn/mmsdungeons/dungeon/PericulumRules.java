@@ -104,7 +104,8 @@ public final class PericulumRules extends SavedData {
         long until = player.level().getServer().overworld().getGameTime() + BAN_TICKS;
         rules.bans.put(player.getUUID(), until);
         rules.setDirty();
-        moveToDeep(player, "You left the game without exiting the Periculum Region properly. You are now forbidden to enter it for two days.");
+        DeepRebuild.evacuate(player);
+        player.sendSystemMessage(Component.literal("You left the game without exiting the Periculum Region properly. You are now forbidden to enter it for two days."));
     }
 
     // Moves banned players back up into the Deep Region if they cross below Y 0.
@@ -125,8 +126,7 @@ public final class PericulumRules extends SavedData {
         }
     }
 
-    // Moves a player out of the Periculum Region to the nearest safe spot in the Deep Region above it, keeping them
-    // in the dungeon. Falls back to the Sanctuary landing spot when nothing nearby is safe to stand on.
+    // Moves a player up to the nearest safe Deep Region spot, or the Sanctuary landing spot.
     private static void moveToDeep(ServerPlayer player, String message) {
         if (player.level() instanceof ServerLevel level && DungeonDimension.isDungeon(level)) {
             Vec3 spot = deepSpotNear(level, player.blockPosition());

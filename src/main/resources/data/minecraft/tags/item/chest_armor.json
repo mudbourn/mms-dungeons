@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "mms_dungeons:fur_chestplate",
+    "mms_dungeons:owl_chestplate",
+    "mms_dungeons:scorpion_chestplate",
+    "mms_dungeons:shrike_chestplate"
+  ]
+}

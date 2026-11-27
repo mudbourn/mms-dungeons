@@ -1,6 +1,13 @@
 {
   "replace": false,
   "values": [
-    "mms_dungeons:kobold_zombie"
+    "mms_dungeons:kobold_zombie",
+    "mms_dungeons:miner_zombie",
+    "mms_dungeons:icy_zombie",
+    "mms_dungeons:swamp_zombie",
+    "mms_dungeons:dark_oak_zombie",
+    "mms_dungeons:cherry_zombie",
+    "mms_dungeons:savanna_zombie",
+    "mms_dungeons:crimson_walker"
   ]
 }

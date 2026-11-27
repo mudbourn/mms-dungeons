@@ -1,0 +1,31 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:spider",
+    "minecraft:cave_spider",
+    "minecraft:silverfish",
+    "minecraft:endermite",
+    "minecraft:bee",
+    "mms_dungeons:baby_scorpion",
+    "mms_dungeons:scorpion",
+    "mms_dungeons:desert_scorpion",
+    "mms_dungeons:frost_scorpion",
+    "mms_dungeons:nether_scorpion",
+    {"id": "alexscaves:gammaroach", "required": false},
+    {"id": "alexscaves:gloomoth", "required": false},
+    {"id": "alexscaves:gossamer_worm", "required": false},
+    {"id": "alexscaves:trilocaris", "required": false},
+    {"id": "aerialhell:crystal_caterpillar", "required": false},
+    {"id": "aerialhell:crystal_spider", "required": false},
+    {"id": "aerialhell:forest_caterpillar", "required": false},
+    {"id": "aerialhell:hell_spider", "required": false},
+    {"id": "aerialhell:shadow_spider", "required": false},
+    {"id": "enderscape:rubblemite", "required": false},
+    {"id": "enderscape:rustle", "required": false},
+    {"id": "netherdescent:hornet", "required": false},
+    {"id": "mutantmonsters:spider_pig", "required": false},
+    {"id": "undergroundworlds:black_recluse", "required": false},
+    {"id": "undergroundworlds:spider_hatchling", "required": false},
+    {"id": "undergroundworlds:hatchling_spider", "required": false}
+  ]
+}

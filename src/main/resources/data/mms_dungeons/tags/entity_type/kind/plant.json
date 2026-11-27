@@ -1,0 +1,18 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:creaking",
+    "mms_dungeons:bad_patch",
+    "mms_dungeons:swampman",
+    {"id": "aerialhell:aerial_tree_mimic", "required": false},
+    {"id": "aerialhell:copper_pine_mimic", "required": false},
+    {"id": "aerialhell:golden_beech_mimic", "required": false},
+    {"id": "aerialhell:kodama", "required": false},
+    {"id": "aerialhell:shadow_pine_mimic", "required": false},
+    {"id": "aerialhell:shroomboom", "required": false},
+    {"id": "aerialhell:sky_cactus_fiber_mimic", "required": false},
+    {"id": "aerialhell:stellar_ent", "required": false},
+    {"id": "variantsandventures:thicket", "required": false},
+    {"id": "variantsandventures:verdant", "required": false}
+  ]
+}

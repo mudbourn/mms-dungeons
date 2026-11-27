@@ -1,0 +1,17 @@
+{
+  "geo": "fangs_n_claws:geo/werewolf.geo.json",
+  "texture": "fangs_n_claws:textures/entity/werewolf.png",
+  "emissive_texture": "fangs_n_claws:textures/entity/glowing_eyes/werewolf_eyes.png",
+  "shadow_radius": 0.5,
+  "head_bone": "Head",
+  "animations": "fangs_n_claws:animations/werewolf.animation.json",
+  "idle": "idle",
+  "walk": "walk",
+  "states": [
+    {
+      "when": "q.ground_speed > 4.5",
+      "animation": "run"
+    }
+  ],
+  "transition_ticks": 4
+}

@@ -1,0 +1,41 @@
+{
+  "kinds": [
+    "undead",
+    "kobold",
+    "human",
+    "illager",
+    "dragon",
+    "reptile",
+    "beast",
+    "arthropod",
+    "construct",
+    "spirit",
+    "demon",
+    "aberration",
+    "ooze",
+    "plant",
+    "aquatic",
+    "flying",
+    "giant",
+    "goblin",
+    "explosive"
+  ],
+  "treated_as_player": ["human"],
+  "relations": {
+    "undead": {
+      "kobold": "hostile"
+    },
+    "kobold": {
+      "*": "neutral",
+      "undead": "hostile"
+    },
+    "human": {
+      "*": "hostile",
+      "human": "allied"
+    },
+    "dragon": {
+      "*": "hostile",
+      "reptile": "allied"
+    }
+  }
+}

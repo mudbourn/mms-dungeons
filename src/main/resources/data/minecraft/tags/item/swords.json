@@ -1,6 +1,9 @@
 {
   "replace": false,
   "values": [
-    "mms_dungeons:kobold_iron_sword"
+    "mms_dungeons:kobold_iron_sword",
+    "mms_dungeons:fang_dagger",
+    "mms_dungeons:netherite_dagger",
+    "mms_dungeons:silver_sword"
   ]
 }

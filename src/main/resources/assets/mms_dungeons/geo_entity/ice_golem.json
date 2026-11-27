@@ -1,0 +1,12 @@
+{
+  "geo": "fangs_n_claws:geo/ice_golem.geo.json",
+  "texture": "fangs_n_claws:textures/entity/ice_golem.png",
+  "shadow_radius": 1.6,
+  "head_bone": "Head",
+  "animations": "fangs_n_claws:animations/ice_golem.animation.json",
+  "idle": "idle",
+  "walk": "walk",
+  "death": "death",
+  "driver": "mms_dungeons:golem",
+  "transition_ticks": 4
+}

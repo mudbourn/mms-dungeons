@@ -1,0 +1,17 @@
+{
+  "geo": "luminous_monsters:net/mcreator/luminousmonsters/client/renderer/modelminerskeleton.class",
+  "texture": "luminous_monsters:textures/entities/miner_skeleton.png",
+  "shadow_radius": 0.5,
+  "head_bone": "head",
+  "animations": "mms_dungeons:animations/luminous/skeleton.animation.json",
+  "idle": "idle",
+  "walk": "walk",
+  "driver": "mms_dungeons:luminous_skeleton",
+  "transition_ticks": 3,
+  "held_items": {
+    "right_arm": {
+      "slot": "mainhand",
+      "offset": [0.0, -10.0, 0.0]
+    }
+  }
+}

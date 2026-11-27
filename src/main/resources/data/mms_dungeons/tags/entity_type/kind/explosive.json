@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:creeper",
+    "mms_dungeons:eld_bomb",
+    {"id": "alexscaves:gumbeeper", "required": false},
+    {"id": "alexscaves:nucleeper", "required": false},
+    {"id": "aerialhell:shroomboom", "required": false},
+    {"id": "mutantmonsters:mutant_creeper", "required": false},
+    {"id": "mutantmonsters:creeper_minion", "required": false},
+    {"id": "undergroundworlds:icy_creeper", "required": false}
+  ]
+}

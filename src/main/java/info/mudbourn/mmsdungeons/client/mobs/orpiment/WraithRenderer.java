@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.layers.LivingEntityEmissiveLayer;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.resources.Identifier;
+import org.joml.Matrix4f;
 
 public class WraithRenderer extends MobRenderer<Wraith, WraithRenderState, WraithModel> {
 
@@ -38,6 +39,8 @@ public class WraithRenderer extends MobRenderer<Wraith, WraithRenderState, Wrait
     public void extractRenderState(Wraith wraith, WraithRenderState state, float partialTick) {
         super.extractRenderState(wraith, state, partialTick);
         state.phase2 = wraith.isPhase2();
+        state.windingUp = wraith.isWindingUp();
+        state.dazed = wraith.isDazed();
         state.summon.copyFrom(wraith.summonState);
         state.idle.copyFrom(wraith.idleState);
         state.fire.copyFrom(wraith.fireState);
@@ -48,6 +51,13 @@ public class WraithRenderer extends MobRenderer<Wraith, WraithRenderState, Wrait
     protected void scale(WraithRenderState state, PoseStack poseStack) {
         super.scale(state, poseStack);
         poseStack.translate(0.0, -0.9, 0.0);
+        float age = state.ageInTicks;
+        if (state.windingUp) {
+            poseStack.translate(Math.sin(age * 3.1) * 0.06, Math.sin(age * 4.3) * 0.03, Math.cos(age * 2.7) * 0.06);
+        }
+        if (state.dazed) {
+            poseStack.mulPose(new Matrix4f().rotationZ((float) Math.toRadians(Math.sin(age * 0.25) * 18.0)));
+        }
     }
 
     @Override

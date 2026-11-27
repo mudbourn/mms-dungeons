@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": ["LSL", "HHH"],
+  "key": {
+    "L": "minecraft:leather",
+    "S": "minecraft:saddle",
+    "H": "mms_dungeons:heavy_claw"
+  },
+  "result": {"id": "mms_dungeons:sturdy_saddle"}
+}

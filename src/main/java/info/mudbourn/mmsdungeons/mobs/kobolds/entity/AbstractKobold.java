@@ -8,6 +8,7 @@ import info.mudbourn.mmsdungeons.mobs.kobolds.KoboldMobs;
 import info.mudbourn.mmsdungeons.mobs.kobolds.KoboldPotions;
 import info.mudbourn.mmsdungeons.mobs.kobolds.KoboldSounds;
 import info.mudbourn.mmsdungeons.mobs.kobolds.KoboldTags;
+import info.mudbourn.mmsdungeons.relations.FeudAware;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
@@ -77,7 +78,7 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import org.jspecify.annotations.Nullable;
 
-public abstract class AbstractKobold extends AgeableMob implements CrossbowAttackMob, RangedAttackMob {
+public abstract class AbstractKobold extends AgeableMob implements CrossbowAttackMob, RangedAttackMob, FeudAware {
 
     private static final EntityDataAccessor<Boolean> DATA_CHARGING = SynchedEntityData.defineId(
         AbstractKobold.class,

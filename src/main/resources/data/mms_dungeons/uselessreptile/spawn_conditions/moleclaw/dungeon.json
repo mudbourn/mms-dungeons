@@ -17,6 +17,10 @@
         "max": 0
       }
     },
-    "weight": 10
+    "weight": 4,
+    "spacing": {
+      "max_entity_count": 1,
+      "range": 48.0
+    }
   }
 ]

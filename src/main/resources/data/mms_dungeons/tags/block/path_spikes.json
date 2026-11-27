@@ -1,0 +1,25 @@
+{
+  "values": [
+    "#minecraft:speleothems",
+    {
+      "id": "aerialhell:brambles",
+      "required": false
+    },
+    {
+      "id": "aerialhell:shadow_brambles",
+      "required": false
+    },
+    {
+      "id": "aerialhell:thorny_cobweb",
+      "required": false
+    },
+    {
+      "id": "aerialhell:sky_cactus",
+      "required": false
+    },
+    {
+      "id": "aerialhell:vibrant_sky_cactus",
+      "required": false
+    }
+  ]
+}

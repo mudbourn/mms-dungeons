@@ -1,4 +1,170 @@
 {
+  "goblin_ambient": {
+    "subtitle": "subtitles.mms_dungeons.goblin.ambient",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:goblin/goblin_idle1",
+        "stream": false
+      },
+      {
+        "name": "fangs_n_claws:goblin/goblin_idle2",
+        "stream": false
+      },
+      {
+        "name": "fangs_n_claws:goblin/goblin_idle3",
+        "stream": false
+      },
+      {
+        "name": "fangs_n_claws:goblin/goblin_idle4",
+        "stream": false
+      }
+    ]
+  },
+  "goblin_hurt": {
+    "subtitle": "subtitles.mms_dungeons.goblin.hurt",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:goblin/goblin_hurt1",
+        "stream": false
+      },
+      {
+        "name": "fangs_n_claws:goblin/goblin_hurt2",
+        "stream": false
+      },
+      {
+        "name": "fangs_n_claws:goblin/goblin_hurt3",
+        "stream": false
+      }
+    ]
+  },
+  "goblin_death": {
+    "subtitle": "subtitles.mms_dungeons.goblin.death",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:goblin/goblin_death1",
+        "stream": false
+      },
+      {
+        "name": "fangs_n_claws:goblin/goblin_death2",
+        "stream": false
+      }
+    ]
+  },
+  "goblin_celebrate": {
+    "subtitle": "subtitles.mms_dungeons.goblin.celebrate",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:goblin/goblin_celebrate",
+        "stream": false
+      }
+    ]
+  },
+  "ogre_ambient": {
+    "subtitle": "subtitles.mms_dungeons.ogre.ambient",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:ogre/ogre_idle1",
+        "stream": false
+      },
+      {
+        "name": "fangs_n_claws:ogre/ogre_idle2",
+        "stream": false
+      },
+      {
+        "name": "fangs_n_claws:ogre/ogre_idle3",
+        "stream": false
+      }
+    ]
+  },
+  "ogre_hurt": {
+    "subtitle": "subtitles.mms_dungeons.ogre.hurt",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:ogre/ogre_hurt1",
+        "stream": false
+      },
+      {
+        "name": "fangs_n_claws:ogre/ogre_hurt2",
+        "stream": false
+      },
+      {
+        "name": "fangs_n_claws:ogre/ogre_hurt3",
+        "stream": false
+      }
+    ]
+  },
+  "ogre_death": {
+    "subtitle": "subtitles.mms_dungeons.ogre.death",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:ogre/ogre_death",
+        "stream": false
+      }
+    ]
+  },
+  "ogre_roar": {
+    "subtitle": "subtitles.mms_dungeons.ogre.roar",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:ogre/ogre_roar",
+        "stream": false
+      }
+    ]
+  },
+  "hell_ogre_fire_breath": {
+    "subtitle": "subtitles.mms_dungeons.hell_ogre.fire_breath",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:fire_breath_loop",
+        "stream": false
+      }
+    ]
+  },
+  "mimic_open": {
+    "subtitle": "subtitles.mms_dungeons.mimic.open",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:mimic/mimic_open",
+        "stream": false
+      }
+    ]
+  },
+  "mimic_death": {
+    "subtitle": "subtitles.mms_dungeons.mimic.death",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:mimic/mimic_death",
+        "stream": false
+      }
+    ]
+  },
+  "dart_hit": {
+    "subtitle": "subtitles.mms_dungeons.dart.hit",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:dart_hit",
+        "stream": false
+      }
+    ]
+  },
+  "blowgun_shoot": {
+    "subtitle": "subtitles.mms_dungeons.blowgun.shoot",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:blowgun_shoot",
+        "stream": false
+      }
+    ]
+  },
+  "backstab_impact": {
+    "subtitle": "subtitles.mms_dungeons.backstab.impact",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:backstab_impact",
+        "stream": false
+      }
+    ]
+  },
   "chained_god_roar": {
     "subtitle": "sound.mms_dungeons.chained_god_roar",
     "sounds": [
@@ -1075,6 +1241,540 @@
     "subtitle": "sound.mms_dungeons.periculum_enter",
     "sounds": [
       "mms_dungeons:region/periculum_enter"
+    ]
+  },
+  "crimson_growl": {
+    "sounds": [
+      {
+        "name": "luminous_monsters:crimsongrowl_2",
+        "stream": false
+      }
+    ]
+  },
+  "crimson_explosion": {
+    "sounds": [
+      {
+        "name": "luminous_monsters:crimsonexplosion",
+        "stream": false
+      }
+    ]
+  },
+  "hyena_ambient": {
+    "subtitle": "subtitles.mms_dungeons.hyena.ambient",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:hyena/hyena_idle1",
+        "stream": false
+      },
+      {
+        "name": "fangs_n_claws:hyena/hyena_idle2",
+        "stream": false
+      },
+      {
+        "name": "fangs_n_claws:hyena/hyena_idle3",
+        "stream": false
+      }
+    ]
+  },
+  "hyena_hurt": {
+    "subtitle": "subtitles.mms_dungeons.hyena.hurt",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:hyena/hyena_hurt1",
+        "stream": false
+      }
+    ]
+  },
+  "hyena_death": {
+    "subtitle": "subtitles.mms_dungeons.hyena.death",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:hyena/hyena_death",
+        "stream": false
+      }
+    ]
+  },
+  "wild_wolf_growl": {
+    "subtitle": "subtitles.mms_dungeons.wild_wolf.growl",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:wild_wolf/wild_wolf_idle1",
+        "stream": false
+      },
+      {
+        "name": "fangs_n_claws:wild_wolf/wild_wolf_idle2",
+        "stream": false
+      },
+      {
+        "name": "fangs_n_claws:wild_wolf/wild_wolf_idle3",
+        "stream": false
+      }
+    ]
+  },
+  "wild_wolf_hurt": {
+    "subtitle": "subtitles.mms_dungeons.wild_wolf.hurt",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:wild_wolf/wild_wolf_hurt1",
+        "stream": false
+      },
+      {
+        "name": "fangs_n_claws:wild_wolf/wild_wolf_hurt2",
+        "stream": false
+      }
+    ]
+  },
+  "wild_wolf_death": {
+    "subtitle": "subtitles.mms_dungeons.wild_wolf.death",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:wild_wolf/wild_wolf_death",
+        "stream": false
+      }
+    ]
+  },
+  "owlbear_howl": {
+    "subtitle": "subtitles.mms_dungeons.owlbear.howl",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:owlbear/owlbear_howl_1",
+        "stream": false
+      },
+      {
+        "name": "fangs_n_claws:owlbear/owlbear_howl_2",
+        "stream": false
+      },
+      {
+        "name": "fangs_n_claws:owlbear/owlbear_howl_3",
+        "stream": false
+      }
+    ]
+  },
+  "owlbear_slash": {
+    "subtitle": "subtitles.mms_dungeons.owlbear.slash",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:owlbear/owlbear_slash",
+        "stream": false
+      }
+    ]
+  },
+  "owlbear_flap": {
+    "subtitle": "subtitles.mms_dungeons.owlbear.flap",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:owlbear/owlbear_flap_1",
+        "stream": false
+      },
+      {
+        "name": "fangs_n_claws:owlbear/owlbear_flap_2",
+        "stream": false
+      },
+      {
+        "name": "fangs_n_claws:owlbear/owlbear_flap_3",
+        "stream": false
+      }
+    ]
+  },
+  "owlbear_hurt": {
+    "subtitle": "subtitles.mms_dungeons.owlbear.hurt",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:owlbear/owlbear_hurt",
+        "stream": false
+      }
+    ]
+  },
+  "owlbear_death": {
+    "subtitle": "subtitles.mms_dungeons.owlbear.death",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:owlbear/owlbear_death",
+        "stream": false
+      }
+    ]
+  },
+  "baby_owlbear_hurt": {
+    "subtitle": "subtitles.mms_dungeons.baby_owlbear.hurt",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:owlbear/baby_owlbear_hurt",
+        "stream": false
+      }
+    ]
+  },
+  "baby_owlbear_death": {
+    "subtitle": "subtitles.mms_dungeons.baby_owlbear.death",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:owlbear/baby_owlbear_death",
+        "stream": false
+      }
+    ]
+  },
+  "werewolf_ambient": {
+    "subtitle": "subtitles.mms_dungeons.werewolf.ambient",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:werewolf/werewolf_idle1",
+        "stream": false
+      },
+      {
+        "name": "fangs_n_claws:werewolf/werewolf_idle2",
+        "stream": false
+      },
+      {
+        "name": "fangs_n_claws:werewolf/werewolf_idle3",
+        "stream": false
+      },
+      {
+        "name": "fangs_n_claws:werewolf/werewolf_idle4",
+        "stream": false
+      }
+    ]
+  },
+  "werewolf_howl": {
+    "subtitle": "subtitles.mms_dungeons.werewolf.howl",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:werewolf/werewolf_howl1",
+        "stream": false
+      },
+      {
+        "name": "fangs_n_claws:werewolf/werewolf_howl2",
+        "stream": false
+      },
+      {
+        "name": "fangs_n_claws:werewolf/werewolf_howl3",
+        "stream": false
+      }
+    ]
+  },
+  "werewolf_bite": {
+    "subtitle": "subtitles.mms_dungeons.werewolf.bite",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:werewolf/werewolf_bite",
+        "stream": false
+      }
+    ]
+  },
+  "werewolf_hurt": {
+    "subtitle": "subtitles.mms_dungeons.werewolf.hurt",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:werewolf/werewolf_hurt1",
+        "stream": false
+      },
+      {
+        "name": "fangs_n_claws:werewolf/werewolf_hurt2",
+        "stream": false
+      }
+    ]
+  },
+  "werewolf_death": {
+    "subtitle": "subtitles.mms_dungeons.werewolf.death",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:werewolf/werewolf_death1",
+        "stream": false
+      },
+      {
+        "name": "fangs_n_claws:werewolf/werewolf_death2",
+        "stream": false
+      }
+    ]
+  },
+  "scorpion_hurt": {
+    "subtitle": "subtitles.mms_dungeons.scorpion.hurt",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:scorpion/scorpion_hurt",
+        "stream": false
+      }
+    ]
+  },
+  "scorpion_death": {
+    "subtitle": "subtitles.mms_dungeons.scorpion.death",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:scorpion/scorpion_death",
+        "stream": false
+      }
+    ]
+  },
+  "scorpion_stinger": {
+    "subtitle": "subtitles.mms_dungeons.scorpion.stinger",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:scorpion/scorpion_stinger",
+        "stream": false
+      }
+    ]
+  },
+  "scorpion_claw1": {
+    "subtitle": "subtitles.mms_dungeons.scorpion.claw1",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:scorpion/scorpion_claw1",
+        "stream": false
+      }
+    ]
+  },
+  "scorpion_claw2": {
+    "subtitle": "subtitles.mms_dungeons.scorpion.claw2",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:scorpion/scorpion_claw2",
+        "stream": false
+      }
+    ]
+  },
+  "golem_ambient": {
+    "subtitle": "subtitles.mms_dungeons.golem.ambient",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:golem/golem_idle1",
+        "stream": false
+      },
+      {
+        "name": "fangs_n_claws:golem/golem_idle2",
+        "stream": false
+      },
+      {
+        "name": "fangs_n_claws:golem/golem_idle3",
+        "stream": false
+      },
+      {
+        "name": "fangs_n_claws:golem/golem_idle4",
+        "stream": false
+      }
+    ]
+  },
+  "golem_hurt": {
+    "subtitle": "subtitles.mms_dungeons.golem.hurt",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:golem/golem_hurt1",
+        "stream": false
+      },
+      {
+        "name": "fangs_n_claws:golem/golem_hurt2",
+        "stream": false
+      },
+      {
+        "name": "fangs_n_claws:golem/golem_hurt3",
+        "stream": false
+      }
+    ]
+  },
+  "golem_death": {
+    "subtitle": "subtitles.mms_dungeons.golem.death",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:golem/golem_death",
+        "stream": false
+      }
+    ]
+  },
+  "purple_worm_ambient": {
+    "subtitle": "subtitles.mms_dungeons.purple_worm.ambient",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:purple_worm/purple_worm_idle1",
+        "stream": false
+      },
+      {
+        "name": "fangs_n_claws:purple_worm/purple_worm_idle2",
+        "stream": false
+      },
+      {
+        "name": "fangs_n_claws:purple_worm/purple_worm_idle3",
+        "stream": false
+      }
+    ]
+  },
+  "purple_worm_hurt": {
+    "subtitle": "subtitles.mms_dungeons.purple_worm.hurt",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:purple_worm/purple_worm_hurt1",
+        "stream": false
+      },
+      {
+        "name": "fangs_n_claws:purple_worm/purple_worm_hurt2",
+        "stream": false
+      },
+      {
+        "name": "fangs_n_claws:purple_worm/purple_worm_hurt3",
+        "stream": false
+      }
+    ]
+  },
+  "purple_worm_death": {
+    "subtitle": "subtitles.mms_dungeons.purple_worm.death",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:purple_worm/purple_worm_death",
+        "stream": false
+      }
+    ]
+  },
+  "purple_worm_claw": {
+    "subtitle": "subtitles.mms_dungeons.purple_worm.claw",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:purple_worm/purple_worm_attack_claw",
+        "stream": false
+      }
+    ]
+  },
+  "purple_worm_bite": {
+    "subtitle": "subtitles.mms_dungeons.purple_worm.bite",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:purple_worm/purple_worm_attack_bite1",
+        "stream": false
+      },
+      {
+        "name": "fangs_n_claws:purple_worm/purple_worm_attack_bite2",
+        "stream": false
+      }
+    ]
+  },
+  "purple_worm_split": {
+    "subtitle": "subtitles.mms_dungeons.purple_worm.split",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:purple_worm/purple_worm_attack_split1",
+        "stream": false
+      },
+      {
+        "name": "fangs_n_claws:purple_worm/purple_worm_attack_split2",
+        "stream": false
+      },
+      {
+        "name": "fangs_n_claws:purple_worm/purple_worm_attack_split3",
+        "stream": false
+      }
+    ]
+  },
+  "purple_worm_split_volley": {
+    "subtitle": "subtitles.mms_dungeons.purple_worm.split_volley",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:purple_worm/purple_worm_attack_split_volley",
+        "stream": false
+      }
+    ]
+  },
+  "purple_worm_breath": {
+    "subtitle": "subtitles.mms_dungeons.purple_worm.breath",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:purple_worm/purple_worm_attack_breath",
+        "stream": false
+      }
+    ]
+  },
+  "acid_splash": {
+    "subtitle": "subtitles.mms_dungeons.purple_worm.acid_splash",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:purple_worm/acid_splash",
+        "stream": false
+      }
+    ]
+  },
+  "acid_puddle": {
+    "subtitle": "subtitles.mms_dungeons.purple_worm.acid_puddle",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:purple_worm/acid_puddle_loop",
+        "stream": false
+      }
+    ]
+  },
+  "purple_worm_emerge": {
+    "subtitle": "subtitles.mms_dungeons.purple_worm.emerge",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:purple_worm/purple_worm_emerge",
+        "stream": false
+      }
+    ]
+  },
+  "purple_worm_hide": {
+    "subtitle": "subtitles.mms_dungeons.purple_worm.hide",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:purple_worm/purple_worm_hide",
+        "stream": false
+      }
+    ]
+  },
+  "purple_worm_arm_emerge": {
+    "subtitle": "subtitles.mms_dungeons.purple_worm.arm_emerge",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:purple_worm/small_emerge",
+        "stream": false
+      }
+    ]
+  },
+  "purple_worm_arm_dig": {
+    "subtitle": "subtitles.mms_dungeons.purple_worm.arm_dig",
+    "sounds": [
+      {
+        "name": "fangs_n_claws:purple_worm/small_dig",
+        "stream": false
+      }
+    ]
+  },
+  "locator.searching": {
+    "subtitle": "subtitles.mms_dungeons.locator.searching",
+    "sounds": [
+      {
+        "name": "mms_dungeons:locator/searching",
+        "stream": false
+      }
+    ]
+  },
+  "locator.connect": {
+    "subtitle": "subtitles.mms_dungeons.locator.connect",
+    "sounds": [
+      {
+        "name": "mms_dungeons:locator/connect",
+        "stream": false
+      }
+    ]
+  },
+  "locator.ping": {
+    "subtitle": "subtitles.mms_dungeons.locator.ping",
+    "sounds": [
+      {
+        "name": "mms_dungeons:locator/ping",
+        "stream": false
+      }
+    ]
+  },
+  "locator.toggle": {
+    "subtitle": "subtitles.mms_dungeons.locator.toggle",
+    "sounds": [
+      {
+        "name": "mms_dungeons:locator/toggle",
+        "stream": false
+      }
+    ]
+  },
+  "locator.static": {
+    "subtitle": "subtitles.mms_dungeons.locator.static",
+    "sounds": [
+      {
+        "name": "mms_dungeons:locator/nosignal",
+        "volume": 0.35,
+        "stream": false
+      }
     ]
   }
 }

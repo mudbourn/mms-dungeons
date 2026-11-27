@@ -21,17 +21,25 @@ public final class DungeonDimension {
         RegionNotices.register();
         DepthGear.register();
         DragonDepth.register();
+        MutantBuffs.register();
+        DungeonBosses.register();
         ForcedArrivals.register();
         DeepGate.register();
         NearSpawns.register();
         DungeonGeneration.register();
+        SanctuaryStash.register();
+        DeepEntities.register();
+        DeepRebuild.register();
         DddEntranceTunnel.register();
+        LabyrinthCorridor.register();
         CavernDisc.register();
         CavernTunnels.register();
         CavernGrid.register();
+        LabyrinthCells.register();
+        LabyrinthMask.register();
+        LabyrinthPlacement.register();
         NetherInfectionCore.register();
         HostOres.register();
-        OffsetSpreadPlacement.register();
     }
 
     public static boolean isDungeon(Level level) {

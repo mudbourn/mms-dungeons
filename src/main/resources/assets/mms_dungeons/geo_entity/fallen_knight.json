@@ -11,7 +11,7 @@
     "bipedHandRight": {
       "slot": "mainhand",
       "rotation": [
-        -180.0,
+        -90.0,
         0.0,
         0.0
       ],
@@ -24,7 +24,7 @@
     "bipedHandLeft": {
       "slot": "offhand",
       "rotation": [
-        0.0,
+        -90.0,
         180.0,
         0.0
       ],
@@ -33,6 +33,40 @@
         -7.2,
         -1.6
       ]
+    }
+  },
+  "armor_bones": {
+    "armorBipedHead": {
+      "slot": "head",
+      "part": "head"
+    },
+    "armorBipedBody": {
+      "slot": "chest",
+      "part": "body"
+    },
+    "armorBipedRightArm": {
+      "slot": "chest",
+      "part": "right_arm"
+    },
+    "armorBipedLeftArm": {
+      "slot": "chest",
+      "part": "left_arm"
+    },
+    "armorBipedRightLeg": {
+      "slot": "legs",
+      "part": "right_leg"
+    },
+    "armorBipedLeftLeg": {
+      "slot": "legs",
+      "part": "left_leg"
+    },
+    "armorBipedRightFoot": {
+      "slot": "feet",
+      "part": "right_leg"
+    },
+    "armorBipedLeftFoot": {
+      "slot": "feet",
+      "part": "left_leg"
     }
   }
 }

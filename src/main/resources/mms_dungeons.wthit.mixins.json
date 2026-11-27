@@ -1,0 +1,11 @@
+{
+  "required": false,
+  "package": "info.mudbourn.mmsdungeons.mixin.wthit",
+  "compatibilityLevel": "JAVA_25",
+  "client": [
+    "WthitAttributesMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 0
+  }
+}

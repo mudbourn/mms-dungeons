@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "mms_dungeons:kobold_iron_axe"
+    "mms_dungeons:kobold_iron_axe",
+    "mms_dungeons:tomahawk"
   ]
 }

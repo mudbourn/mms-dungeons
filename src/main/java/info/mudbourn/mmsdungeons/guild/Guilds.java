@@ -25,6 +25,8 @@ public final class Guilds {
     public static void register() {
         GuildBlocks.register();
         GuildNetworking.register();
+        GuildClaims.register();
+        GuildPortals.register();
         ServerLifecycleEvents.SERVER_STARTED.register(server ->
             data = server.overworld().getDataStorage().computeIfAbsent(GuildData.TYPE));
         ServerLifecycleEvents.SERVER_STOPPED.register(server -> {

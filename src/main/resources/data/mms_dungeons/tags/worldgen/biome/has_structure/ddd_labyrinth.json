@@ -1,0 +1,84 @@
+{
+  "values": [
+    {
+      "id": "alexscaves:abyssal_chasm",
+      "required": false
+    },
+    {
+      "id": "alexscaves:candy_cavity",
+      "required": false
+    },
+    {
+      "id": "alexscaves:forlorn_hollows",
+      "required": false
+    },
+    {
+      "id": "alexscaves:magnetic_caves",
+      "required": false
+    },
+    {
+      "id": "alexscaves:primordial_caves",
+      "required": false
+    },
+    {
+      "id": "alexscaves:toxic_caves",
+      "required": false
+    },
+    "minecraft:basalt_deltas",
+    "minecraft:crimson_forest",
+    "minecraft:deep_dark",
+    "minecraft:dripstone_caves",
+    "minecraft:lush_caves",
+    "minecraft:nether_wastes",
+    "minecraft:soul_sand_valley",
+    "minecraft:sulfur_caves",
+    "minecraft:warped_forest",
+    "mms_dungeons:aerial_hell_cavern",
+    "mms_dungeons:amber_caves",
+    "mms_dungeons:dungeon_caves",
+    {
+      "id": "netherdescent:arisian_undergrowth",
+      "required": false
+    },
+    {
+      "id": "netherdescent:crimson_gardens",
+      "required": false
+    },
+    {
+      "id": "netherdescent:embur_bog",
+      "required": false
+    },
+    {
+      "id": "netherdescent:sythian_torrids",
+      "required": false
+    },
+    {
+      "id": "netherdescent:wailing_garth",
+      "required": false
+    },
+    {
+      "id": "undergroundworlds:glowshroom_cave",
+      "required": false
+    },
+    {
+      "id": "undergroundworlds:mushroom_cave",
+      "required": false
+    },
+    {
+      "id": "undergroundworlds:spider_cave",
+      "required": false
+    },
+    {
+      "id": "undergroundworlds:underground_desert",
+      "required": false
+    },
+    {
+      "id": "undergroundworlds:underground_jungle",
+      "required": false
+    },
+    {
+      "id": "undergroundworlds:underground_tundra",
+      "required": false
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "model": {
+    "type": "minecraft:select",
+    "property": "minecraft:display_context",
+    "cases": [
+      {
+        "when": [
+          "gui",
+          "ground",
+          "fixed",
+          "on_shelf"
+        ],
+        "model": {
+          "type": "minecraft:model",
+          "model": "mms_dungeons:item/fangsnclaws/fire_pitchfork"
+        }
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:condition",
+      "property": "minecraft:using_item",
+      "transformation": {
+        "left_rotation": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "right_rotation": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          -1.0,
+          -1.0
+        ],
+        "translation": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "on_true": {
+        "type": "minecraft:special",
+        "base": "minecraft:item/trident_throwing",
+        "model": {
+          "type": "mms_dungeons:pitchfork",
+          "hellfire": false
+        }
+      },
+      "on_false": {
+        "type": "minecraft:special",
+        "base": "minecraft:item/trident_in_hand",
+        "model": {
+          "type": "mms_dungeons:pitchfork",
+          "hellfire": false
+        }
+      }
+    }
+  }
+}

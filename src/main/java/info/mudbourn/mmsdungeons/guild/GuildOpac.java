@@ -30,6 +30,11 @@ final class GuildOpac {
         return party == null ? null : party.getId();
     }
 
+    // Removes a party that was created for a guild that never formed.
+    static void drop(MinecraftServer server, UUID party) {
+        parties(server).removePartyById(party);
+    }
+
     static void add(MinecraftServer server, Guild guild, UUID player, String name) {
         IServerPartyAPI party = party(server, guild);
         if (party != null && party.getMemberInfo(player) == null) {

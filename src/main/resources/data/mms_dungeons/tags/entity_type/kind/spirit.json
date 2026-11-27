@@ -1,0 +1,26 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:vex",
+    "minecraft:breeze",
+    "mms_dungeons:ghost",
+    "mms_dungeons:fire_ghost",
+    "mms_dungeons:ghosty",
+    "mms_dungeons:wisp",
+    "mms_dungeons:wraith",
+    {"id": "alexscaves:dinosaur_spirit", "required": false},
+    {"id": "aerialhell:electro_spirit", "required": false},
+    {"id": "aerialhell:fire_spirit", "required": false},
+    {"id": "aerialhell:ice_spirit", "required": false},
+    {"id": "aerialhell:kodama", "required": false},
+    {"id": "aerialhell:mud_spectral_cycle_mage", "required": false},
+    {"id": "aerialhell:mud_spectral_golem", "required": false},
+    {"id": "aerialhell:mud_spectral_soldier", "required": false},
+    {"id": "aerialhell:ghost_slime_pirate", "required": false},
+    {"id": "aerialhell:ghost_slime_ninja_pirate", "required": false},
+    {"id": "aerialhell:shadow_flying_skull", "required": false},
+    {"id": "mutantmonsters:skull_spirit", "required": false},
+    {"id": "wizards:frost_elemental", "required": false},
+    {"id": "variantsandventures:gelid", "required": false}
+  ]
+}

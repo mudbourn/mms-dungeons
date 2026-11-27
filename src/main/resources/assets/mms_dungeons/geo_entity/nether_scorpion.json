@@ -1,0 +1,11 @@
+{
+  "geo": "fangs_n_claws:geo/scorpion.geo.json",
+  "texture": "fangs_n_claws:textures/entity/nether_scorpion.png",
+  "emissive_texture": "fangs_n_claws:textures/entity/glowing_eyes/nether_scorpion_eyes.png",
+  "scale": 1.3,
+  "shadow_radius": 0.9,
+  "animations": "fangs_n_claws:animations/scorpion.animation.json",
+  "idle": "idle",
+  "walk": "walk",
+  "transition_ticks": 4
+}

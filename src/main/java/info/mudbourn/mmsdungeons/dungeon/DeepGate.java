@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -50,11 +49,7 @@ public final class DeepGate {
             Vec3 spot = DungeonPortals.arrivalSpot(level, player.getBlockX(), player.getBlockZ());
             player.teleportTo(spot.x, spot.y, spot.z);
             player.resetFallDistance();
-            player.sendSystemMessage(Component.literal(String.format(
-                java.util.Locale.ROOT,
-                "The Deep Region is beyond you for now. Defence %.0f of %.0f needed, weapon %.1f of %.1f needed.",
-                GateCheck.defence(player), GateCheck.DEEP_DEFENCE, GateCheck.bestWeapon(player), GateCheck.DEEP_WEAPON
-            )));
+            player.sendSystemMessage(GateCheck.shortfall(player, true));
         }
     }
 }

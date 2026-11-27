@@ -33,35 +33,35 @@
       "required": false
     },
     {
-      "id": "mms_weapons:arsonist_arcane_staff",
+      "id": "mms_weapons:phoenix_arcane_staff",
       "required": false
     },
     {
-      "id": "mms_weapons:arsonist_arcane_wand",
+      "id": "mms_weapons:phoenix_arcane_wand",
       "required": false
     },
     {
-      "id": "mms_weapons:arsonist_fire_staff",
+      "id": "mms_weapons:phoenix_fire_staff",
       "required": false
     },
     {
-      "id": "mms_weapons:arsonist_fire_wand",
+      "id": "mms_weapons:phoenix_fire_wand",
       "required": false
     },
     {
-      "id": "mms_weapons:arsonist_frost_staff",
+      "id": "mms_weapons:phoenix_frost_staff",
       "required": false
     },
     {
-      "id": "mms_weapons:arsonist_frost_wand",
+      "id": "mms_weapons:phoenix_frost_wand",
       "required": false
     },
     {
-      "id": "mms_weapons:arsonist_holy_staff",
+      "id": "mms_weapons:phoenix_holy_staff",
       "required": false
     },
     {
-      "id": "mms_weapons:arsonist_holy_wand",
+      "id": "mms_weapons:phoenix_holy_wand",
       "required": false
     },
     {

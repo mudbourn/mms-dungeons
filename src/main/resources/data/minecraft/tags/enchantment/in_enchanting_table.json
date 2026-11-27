@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "mms_dungeons:scratch",
+    "mms_dungeons:critical_backstab",
+    "mms_dungeons:quick_killer",
+    "mms_dungeons:item_catcher",
+    "mms_dungeons:blazing"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "geo": "fangs_n_claws:geo/baby_wild_hyena.geo.json",
+  "texture": "fangs_n_claws:textures/entity/baby_wild_hyena.png",
+  "shadow_radius": 0.3,
+  "head_bone": "Head",
+  "animations": "fangs_n_claws:animations/baby_hyena.animation.json",
+  "idle": "idle",
+  "walk": "walk",
+  "transition_ticks": 4
+}

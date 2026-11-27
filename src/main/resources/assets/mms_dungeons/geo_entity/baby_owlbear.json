@@ -1,0 +1,10 @@
+{
+  "geo": "fangs_n_claws:geo/baby_owlbear.json",
+  "texture": "fangs_n_claws:textures/entity/baby_owlbear.png",
+  "shadow_radius": 0.4,
+  "head_bone": "head",
+  "animations": "fangs_n_claws:animations/baby_owlbear.animation.json",
+  "idle": "idle",
+  "walk": "walk",
+  "transition_ticks": 4
+}

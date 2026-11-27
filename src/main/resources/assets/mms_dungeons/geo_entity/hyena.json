@@ -1,0 +1,12 @@
+{
+  "geo": "fangs_n_claws:geo/hyena.geo.json",
+  "texture": "fangs_n_claws:textures/entity/hyena.png",
+  "emissive_texture": "fangs_n_claws:textures/entity/glowing_eyes/hyena_eyes.png",
+  "scale": 1.1,
+  "shadow_radius": 0.5,
+  "head_bone": "Head",
+  "animations": "fangs_n_claws:animations/hyena.animation.json",
+  "idle": "idle",
+  "walk": "walk",
+  "transition_ticks": 4
+}

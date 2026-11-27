@@ -1,0 +1,27 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:blaze",
+    "minecraft:ghast",
+    "minecraft:piglin",
+    "minecraft:piglin_brute",
+    "minecraft:hoglin",
+    "minecraft:zombified_piglin",
+    "minecraft:magma_cube",
+    "minecraft:wither",
+    "mms_dungeons:imp",
+    "mms_dungeons:hell_ogre",
+    "mms_dungeons:nether_scorpion",
+    "mms_dungeons:nightmare_horse",
+    "mms_dungeons:crimson_walker",
+    "mms_dungeons:netherman",
+    "mms_dungeons:netherman_clone",
+    "mms_dungeons:ghastling",
+    {"id": "aerialhell:lilith", "required": false},
+    {"id": "friendsandfoes:wildfire", "required": false},
+    {"id": "netherdescent:hornet", "required": false},
+    {"id": "netherdescent:pendorite_blaze", "required": false},
+    {"id": "netherdescent:soul_blaze", "required": false},
+    {"id": "netherdescent:soul_ghast", "required": false}
+  ]
+}

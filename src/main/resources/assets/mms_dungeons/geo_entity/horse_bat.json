@@ -1,0 +1,25 @@
+{
+  "geo": "fangs_n_claws:geo/horse_bat.json",
+  "texture": "fangs_n_claws:textures/entity/horse_bat.png",
+  "emissive_texture": "fangs_n_claws:textures/entity/glowing_eyes/horse_bat_eyes.png",
+  "shadow_radius": 0.7,
+  "head_bone": "Head",
+  "animations": "fangs_n_claws:animations/horse_bat.animation.json",
+  "idle": "idle",
+  "states": [
+    {
+      "when": "q.ground_speed > 4.0",
+      "animation": "run"
+    },
+    {
+      "when": "q.ground_speed > 2.0",
+      "animation": "walk"
+    },
+    {
+      "when": "q.ground_speed > 0.3",
+      "animation": "walk_slow"
+    }
+  ],
+  "driver": "mms_dungeons:horse_bat",
+  "transition_ticks": 4
+}

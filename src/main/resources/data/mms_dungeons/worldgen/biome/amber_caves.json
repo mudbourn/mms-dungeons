@@ -59,6 +59,11 @@
               "weight": 5
             },
             {
+              "type": "mms_dungeons:cave_ogre",
+              "count": 1,
+              "weight": 15
+            },
+            {
               "type": "mms_dungeons:sap",
               "count": {
                 "type": "minecraft:uniform",
@@ -94,6 +99,20 @@
               "type": "mms_dungeons:craw",
               "count": 1,
               "weight": 20
+            },
+            {
+              "type": "mms_dungeons:desert_scorpion",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 1,
+                "max_inclusive": 3
+              },
+              "weight": 15
+            },
+            {
+              "type": "mms_dungeons:werewolf",
+              "count": 1,
+              "weight": 8
             },
             {
               "type": "mutantmonsters:mutant_zombie",

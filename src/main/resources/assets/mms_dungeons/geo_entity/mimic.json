@@ -1,0 +1,8 @@
+{
+  "geo": "fangs_n_claws:geo/mimic.geo.json",
+  "texture": "fangs_n_claws:textures/entity/mimic_chest.png",
+  "shadow_radius": 0.5,
+  "animations": "fangs_n_claws:animations/mimic.animation.json",
+  "driver": "mms_dungeons:mimic",
+  "transition_ticks": 3
+}

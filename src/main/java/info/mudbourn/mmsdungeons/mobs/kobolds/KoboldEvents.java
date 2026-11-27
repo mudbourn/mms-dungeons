@@ -1,11 +1,8 @@
 package info.mudbourn.mmsdungeons.mobs.kobolds;
 
 import info.mudbourn.mmsdungeons.MmsDungeons;
-import info.mudbourn.mmsdungeons.mixin.features.MobAccessor;
 import info.mudbourn.mmsdungeons.mobs.kobolds.entity.AbstractKobold;
-import info.mudbourn.mmsdungeons.mobs.kobolds.entity.KoboldRascal;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.core.BlockPos;
@@ -20,15 +17,9 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.goal.GoalSelector;
-import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Enemy;
-import net.minecraft.world.entity.monster.zombie.Zombie;
-import net.minecraft.world.entity.monster.zombie.ZombifiedPiglin;
-import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -50,7 +41,6 @@ public final class KoboldEvents {
     }
 
     public static void register() {
-        ServerEntityEvents.ENTITY_LOAD.register(KoboldEvents::onLoad);
         ServerLivingEntityEvents.AFTER_DEATH.register(KoboldEvents::onDeath);
         UseBlockCallback.EVENT.register((player, level, hand, hit) -> {
             if (level instanceof ServerLevel server) {
@@ -78,24 +68,6 @@ public final class KoboldEvents {
 
     private static boolean inDen(ServerLevel level, BlockPos pos) {
         return level.structureManager().getStructureWithPieceAt(pos, holder -> DENS.stream().anyMatch(holder::is)).isValid();
-    }
-
-    // Raiders and zombies go after kobolds, though zombies leave a Rascal alone until it hurts them.
-    private static void onLoad(Entity entity, ServerLevel level) {
-        if (entity instanceof Raider raider) {
-            GoalSelector targets = ((MobAccessor) raider).mmsDungeons$getTargetSelector();
-            targets.addGoal(3, new NearestAttackableTargetGoal<>(raider, AbstractKobold.class, false));
-        } else if (entity instanceof Zombie zombie && !(zombie instanceof ZombifiedPiglin)) {
-            ((MobAccessor) zombie).mmsDungeons$getTargetSelector().addGoal(
-                3,
-                new NearestAttackableTargetGoal<>(
-                    zombie,
-                    AbstractKobold.class,
-                    false,
-                    (target, targetLevel) -> !(target instanceof KoboldRascal) || zombie.getLastHurtByMob() == target
-                )
-            );
-        }
     }
 
     // Prospector gives a small chance of emeralds, one per level, from enemies the wielder kills.

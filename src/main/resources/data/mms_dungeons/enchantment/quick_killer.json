@@ -1,0 +1,19 @@
+{
+  "description": {
+    "translate": "enchantment.mms_dungeons.quick_killer"
+  },
+  "supported_items": "#mms_dungeons:enchantable/dagger",
+  "slots": ["mainhand"],
+  "weight": 5,
+  "anvil_cost": 2,
+  "max_level": 2,
+  "min_cost": {
+    "base": 5,
+    "per_level_above_first": 8
+  },
+  "max_cost": {
+    "base": 25,
+    "per_level_above_first": 8
+  },
+  "exclusive_set": "#mms_dungeons:exclusive/dagger_special"
+}

@@ -1,0 +1,24 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:guardian",
+    "minecraft:elder_guardian",
+    "minecraft:drowned",
+    "minecraft:pufferfish",
+    "minecraft:dolphin",
+    "minecraft:nautilus",
+    "minecraft:zombie_nautilus",
+    "mms_dungeons:sunken_skeleton",
+    {"id": "alexscaves:deep_one", "required": false},
+    {"id": "alexscaves:deep_one_knight", "required": false},
+    {"id": "alexscaves:deep_one_mage", "required": false},
+    {"id": "alexscaves:hullbreaker", "required": false},
+    {"id": "alexscaves:lanternfish", "required": false},
+    {"id": "alexscaves:radgill", "required": false},
+    {"id": "alexscaves:sea_pig", "required": false},
+    {"id": "alexscaves:sweetish_fish", "required": false},
+    {"id": "alexscaves:tripodfish", "required": false},
+    {"id": "frostiful:biter", "required": false},
+    {"id": "undergroundworlds:abyssal_guardian", "required": false}
+  ]
+}

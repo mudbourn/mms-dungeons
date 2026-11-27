@@ -1,0 +1,12 @@
+{
+  "geo": "fangs_n_claws:geo/owlbear.geo.json",
+  "texture": "fangs_n_claws:textures/entity/shrike.png",
+  "emissive_texture": "fangs_n_claws:textures/entity/glowing_eyes/shrike_eyes.png",
+  "shadow_radius": 0.8,
+  "head_bone": "Head",
+  "animations": "fangs_n_claws:animations/owlbear.animation.json",
+  "idle": "idle",
+  "walk": "walk",
+  "driver": "mms_dungeons:owlbear",
+  "transition_ticks": 4
+}

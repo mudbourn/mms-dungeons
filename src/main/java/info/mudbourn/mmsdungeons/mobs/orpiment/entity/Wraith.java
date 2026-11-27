@@ -16,8 +16,11 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.EntitySpawnReason;
@@ -36,6 +39,7 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.projectile.ProjectileDeflection;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -45,6 +49,11 @@ public class Wraith extends Monster {
 
     private static final EntityDataAccessor<Boolean> SUMMONING = SynchedEntityData.defineId(Wraith.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> FIRING = SynchedEntityData.defineId(Wraith.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> WINDING_UP = SynchedEntityData.defineId(Wraith.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> DAZED = SynchedEntityData.defineId(Wraith.class, EntityDataSerializers.BOOLEAN);
+    private static final int WIND_UP_TICKS = 60;
+    private static final int GLOW_TICKS = 8;
+    private static final int DAZE_TICKS = 40;
     private static final Identifier SLAM_RESIST = MmsDungeons.id("wraith_slam_resist");
     private static final int WISP_CLEAR_RANGE = 30;
 
@@ -86,6 +95,8 @@ public class Wraith extends Monster {
         super.defineSynchedData(builder);
         builder.define(SUMMONING, false);
         builder.define(FIRING, false);
+        builder.define(WINDING_UP, false);
+        builder.define(DAZED, false);
     }
 
     public boolean isSummoning() {
@@ -94,6 +105,22 @@ public class Wraith extends Monster {
 
     public void setSummoning(boolean value) {
         this.entityData.set(SUMMONING, value);
+    }
+
+    public boolean isWindingUp() {
+        return this.entityData.get(WINDING_UP);
+    }
+
+    public void setWindingUp(boolean value) {
+        this.entityData.set(WINDING_UP, value);
+    }
+
+    public boolean isDazed() {
+        return this.entityData.get(DAZED);
+    }
+
+    public void setDazed(boolean value) {
+        this.entityData.set(DAZED, value);
     }
 
     public boolean isFiring() {
@@ -284,8 +311,23 @@ public class Wraith extends Monster {
         super.remove(reason);
     }
 
+    // Whether ranged hits and spells glance off: any time it is not winding up or dazed.
+    private boolean guarded() {
+        return !this.isWindingUp() && !this.isDazed();
+    }
+
+    @Override
+    public ProjectileDeflection deflection(Projectile projectile) {
+        return this.guarded() ? ProjectileDeflection.REVERSE : ProjectileDeflection.NONE;
+    }
+
     @Override
     public boolean hurtServer(ServerLevel level, DamageSource source, float amount) {
+        boolean melee = source.is(DamageTypes.PLAYER_ATTACK) || source.is(DamageTypes.MOB_ATTACK);
+        if (this.guarded() && !melee && !source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
+            level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.SHIELD_BLOCK, SoundSource.HOSTILE, 1.0f, 0.6f);
+            return false;
+        }
         if (source.getDirectEntity() instanceof Projectile) {
             amount *= 0.8f;
         }
@@ -377,6 +419,7 @@ public class Wraith extends Monster {
         ORBITING,
         FREEZE,
         DASH,
+        DAZED,
         RETREAT,
         ARROW_FREEZE,
         ARROW_HANG,
@@ -561,7 +604,8 @@ public class Wraith extends Monster {
         private void startSwoop() {
             this.hasDamagedThisSwing = false;
             this.wraith.attackPhase = Wraith.AttackPhase.FREEZE;
-            this.wraith.phaseTimer = 10;
+            this.wraith.phaseTimer = Wraith.WIND_UP_TICKS;
+            this.wraith.setWindingUp(true);
             Player player = this.wraith.getNearestSurvivalPlayer();
             if (player != null) {
                 this.wraith.retreatTarget = new Vec3(this.wraith.getX(), player.getY() + 6.5, this.wraith.getZ());
@@ -585,8 +629,9 @@ public class Wraith extends Monster {
             this.wraith.phaseTimer--;
             switch (this.wraith.attackPhase) {
                 case FREEZE:
-                    this.wraith.setDeltaMovement(Vec3.ZERO);
                     Player p = this.wraith.getNearestSurvivalPlayer();
+                    this.wraith.setDeltaMovement(this.windUpDrop(p));
+                    this.wraith.setGlowingTag(this.wraith.phaseTimer <= Wraith.GLOW_TICKS);
                     if (p != null) {
                         Wraith.faceEntity(this.wraith, p);
                     }
@@ -620,6 +665,10 @@ public class Wraith extends Monster {
 
                     if (!this.hasDamagedThisSwing) {
                         List<Player> hit = this.wraith.level().getEntitiesOfClass(Player.class, this.wraith.getBoundingBox().inflate(0.5));
+                        if (!hit.isEmpty() && this.blocks(hit.get(0))) {
+                            this.startDaze();
+                            break;
+                        }
                         if (!hit.isEmpty()) {
                             this.wraith.doHurtTarget((ServerLevel) this.wraith.level(), hit.get(0));
                             this.hasDamagedThisSwing = true;
@@ -643,6 +692,27 @@ public class Wraith extends Monster {
                         this.startRetreatPhase();
                     }
                     break;
+                case DAZED:
+                    this.wraith.setDeltaMovement(Vec3.ZERO);
+                    if (this.wraith.level() instanceof ServerLevel dazedLevel && this.wraith.tickCount % 4 == 0) {
+                        double angle = this.wraith.tickCount * 0.4;
+                        dazedLevel.sendParticles(
+                            ParticleTypes.CRIT,
+                            this.wraith.getX() + Math.cos(angle) * 0.6,
+                            this.wraith.getY() + this.wraith.getBbHeight() + 0.2,
+                            this.wraith.getZ() + Math.sin(angle) * 0.6,
+                            1,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                        );
+                    }
+                    if (this.wraith.phaseTimer <= 0) {
+                        this.wraith.setDazed(false);
+                        this.startRetreatPhase();
+                    }
+                    break;
                 case RETREAT:
                     if (this.wraith.retreatTarget != null) {
                         this.wraith
@@ -659,7 +729,48 @@ public class Wraith extends Monster {
             }
         }
 
+        // Sinks to the target's feet during the wind-up, stopping on any floor on the way.
+        private Vec3 windUpDrop(Player target) {
+            if (target == null || this.wraith.getY() <= target.getY()) {
+                return Vec3.ZERO;
+            }
+            Vec3 drop = new Vec3(0.0, -Math.min(0.4, this.wraith.getY() - target.getY()), 0.0);
+            return this.wraith.level().noCollision(this.wraith, this.wraith.getBoundingBox().move(drop)) ? drop : Vec3.ZERO;
+        }
+
+        // Whether the player is raising a shield toward the Wraith.
+        private boolean blocks(Player player) {
+            if (!player.isBlocking()) {
+                return false;
+            }
+            Vec3 toWraith = this.wraith.position().subtract(player.position()).normalize();
+            return player.getViewVector(1.0F).dot(toWraith) > 0.0;
+        }
+
+        private void startDaze() {
+            this.hasDamagedThisSwing = true;
+            this.wraith.setDeltaMovement(Vec3.ZERO);
+            this.wraith.dashDirection = null;
+            this.wraith.attackPhase = Wraith.AttackPhase.DAZED;
+            this.wraith.phaseTimer = Wraith.DAZE_TICKS;
+            this.wraith.setDazed(true);
+            this.wraith
+                .level()
+                .playSound(
+                    null,
+                    this.wraith.getX(),
+                    this.wraith.getY(),
+                    this.wraith.getZ(),
+                    SoundEvents.SHIELD_BLOCK.value(),
+                    SoundSource.HOSTILE,
+                    1.0F,
+                    0.6F
+                );
+        }
+
         private void startDashPhase() {
+            this.wraith.setWindingUp(false);
+            this.wraith.setGlowingTag(false);
             Player player = this.wraith.getNearestSurvivalPlayer();
             if (player == null) {
                 this.endAttack();
@@ -1042,6 +1153,9 @@ public class Wraith extends Monster {
             this.active = false;
             this.wraith.setSummoning(false);
             this.wraith.setFiring(false);
+            this.wraith.setWindingUp(false);
+            this.wraith.setGlowingTag(false);
+            this.wraith.setDazed(false);
             this.cleanupProjectiles();
             int cooldownMin;
             int cooldownMax;

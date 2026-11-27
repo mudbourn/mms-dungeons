@@ -1,0 +1,18 @@
+{
+  "required": true,
+  "package": "info.mudbourn.mmsdungeons.mixin.combat",
+  "plugin": "info.mudbourn.mmsdungeons.mixin.combat.CombatMixinPlugin",
+  "compatibilityLevel": "JAVA_25",
+  "mixins": [
+    "MobSwingMixin"
+  ],
+  "client": [
+    "ArmedRenderStateMixin",
+    "IllagerModelAccessor",
+    "LivingRendererSwingMixin",
+    "ModelFeatureSwingMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

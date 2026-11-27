@@ -1,0 +1,16 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:giant",
+    "minecraft:ravager",
+    "mms_dungeons:cave_ogre",
+    "mms_dungeons:ogre",
+    "mms_dungeons:hell_ogre",
+    {"id": "alexscaves:atlatitan", "required": false},
+    {"id": "alexscaves:luxtructosaurus", "required": false},
+    {"id": "alexscaves:tremorsaurus", "required": false},
+    {"id": "alexscaves:tremorzilla", "required": false},
+    {"id": "aerialhell:shadow_troll", "required": false},
+    {"id": "aerialhell:stellar_ent", "required": false}
+  ]
+}

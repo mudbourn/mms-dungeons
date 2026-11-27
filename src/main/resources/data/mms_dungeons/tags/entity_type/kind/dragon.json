@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    {"id": "uselessreptile:wyvern", "required": false},
+    {"id": "uselessreptile:lightning_chaser", "required": false},
+    {"id": "uselessreptile:magmamuncher", "required": false},
+    {"id": "uselessreptile:river_pikehorn", "required": false}
+  ]
+}

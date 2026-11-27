@@ -69,10 +69,10 @@ public final class OrpimentMobs {
         FabricDefaultAttributeRegistry.register(WISP, Wisp.createAttributes());
         FabricDefaultAttributeRegistry.register(CRAW, Craw.createAttributes());
         SpawnPlacements.register(SAP, SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, OrpimentMobs::checkSapSpawn);
-        SpawnPlacements.register(TAR_CUBE, SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, OrpimentMobs::checkPericulumSpawn);
-        SpawnPlacements.register(WRAITH, SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, OrpimentMobs::checkPericulumSpawn);
-        SpawnPlacements.register(WISP, SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, OrpimentMobs::checkPericulumSpawn);
-        SpawnPlacements.register(CRAW, SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, OrpimentMobs::checkPericulumSpawn);
+        SpawnPlacements.register(TAR_CUBE, SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, OrpimentMobs::checkDungeonSpawn);
+        SpawnPlacements.register(WRAITH, SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, OrpimentMobs::checkDungeonSpawn);
+        SpawnPlacements.register(WISP, SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, OrpimentMobs::checkDungeonSpawn);
+        SpawnPlacements.register(CRAW, SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, OrpimentMobs::checkDungeonSpawn);
     }
 
     private static <T extends Entity> EntityType<T> register(String name, EntityType.Builder<T> builder) {
@@ -80,7 +80,7 @@ public final class OrpimentMobs {
         return Registry.register(BuiltInRegistries.ENTITY_TYPE, id, builder.build(ResourceKey.create(Registries.ENTITY_TYPE, id)));
     }
 
-    // Sap settles the Deep Region of the dungeon and nowhere else.
+    // Sap settles the Deep and Periculum Regions of the dungeon and nowhere else.
     private static boolean checkSapSpawn(
         EntityType<Sap> type,
         ServerLevelAccessor level,
@@ -95,7 +95,7 @@ public final class OrpimentMobs {
         return !worldSpawn || DungeonDimension.isDungeon(level.getLevel()) && pos.getY() < DungeonDimension.SANCTUARY_BOTTOM;
     }
 
-    // Tar Cubes, Wraiths, Wisps and Craws rise from the world only in the Periculum Region; spawners, eggs and commands work anywhere.
+    // Tar Cubes, Wraiths, Wisps and Craws rise from the world only in the Deep and Periculum Regions; spawners, eggs and commands work anywhere.
     // Wraiths, wisps and their skulls tear at the soul: their hits are re-dealt as soul damage, which ignores armor.
     private static boolean soulDamage(LivingEntity victim, DamageSource source, float amount) {
         boolean spectral = source.getEntity() instanceof Wraith || source.getEntity() instanceof Wisp
@@ -112,7 +112,7 @@ public final class OrpimentMobs {
         return false;
     }
 
-    private static boolean checkPericulumSpawn(
+    private static boolean checkDungeonSpawn(
         EntityType<? extends Mob> type,
         ServerLevelAccessor level,
         EntitySpawnReason reason,
@@ -123,6 +123,6 @@ public final class OrpimentMobs {
             return false;
         }
         boolean worldSpawn = reason == EntitySpawnReason.NATURAL || reason == EntitySpawnReason.CHUNK_GENERATION;
-        return !worldSpawn || DungeonDimension.isDungeon(level.getLevel()) && pos.getY() <= DungeonDimension.PERICULUM_TOP;
+        return !worldSpawn || DungeonDimension.isDungeon(level.getLevel()) && pos.getY() < DungeonDimension.SANCTUARY_BOTTOM;
     }
 }

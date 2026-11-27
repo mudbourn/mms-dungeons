@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "mms_dungeons:kobold",
+    "mms_dungeons:kobold_child",
+    "mms_dungeons:kobold_captain",
+    "mms_dungeons:kobold_enchanter",
+    "mms_dungeons:kobold_engineer",
+    "mms_dungeons:kobold_pirate",
+    "mms_dungeons:kobold_rascal",
+    "mms_dungeons:kobold_warrior"
+  ]
+}

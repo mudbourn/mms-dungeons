@@ -1,0 +1,29 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:enderman",
+    "minecraft:warden",
+    "minecraft:creaking",
+    "minecraft:shulker",
+    "minecraft:ender_dragon",
+    "mms_dungeons:mimic",
+    "mms_dungeons:purple_worm",
+    "mms_dungeons:the_architect_of_chaos",
+    {"id": "alexscaves:brainiac", "required": false},
+    {"id": "alexscaves:deep_one", "required": false},
+    {"id": "alexscaves:deep_one_knight", "required": false},
+    {"id": "alexscaves:deep_one_mage", "required": false},
+    {"id": "alexscaves:floater", "required": false},
+    {"id": "alexscaves:gum_worm", "required": false},
+    {"id": "alexscaves:licowitch", "required": false},
+    {"id": "alexscaves:nucleeper", "required": false},
+    {"id": "alexscaves:underzealot", "required": false},
+    {"id": "alexscaves:watcher", "required": false},
+    {"id": "aerialhell:flying_jellyfish", "required": false},
+    {"id": "aerialhell:lilith", "required": false},
+    {"id": "enderscape:drifter", "required": false},
+    {"id": "mutantmonsters:mutant_creeper", "required": false},
+    {"id": "mutantmonsters:mutant_enderman", "required": false},
+    {"id": "variantsandventures:murk", "required": false}
+  ]
+}

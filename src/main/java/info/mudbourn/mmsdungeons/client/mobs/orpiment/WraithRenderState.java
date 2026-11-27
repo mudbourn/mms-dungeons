@@ -10,4 +10,6 @@ public class WraithRenderState extends LivingEntityRenderState {
     public final AnimationState fire = new AnimationState();
     public final AnimationState move = new AnimationState();
     public boolean phase2;
+    public boolean windingUp;
+    public boolean dazed;
 }

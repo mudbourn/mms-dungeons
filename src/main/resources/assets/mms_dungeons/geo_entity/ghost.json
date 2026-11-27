@@ -1,0 +1,13 @@
+{
+  "geo": "fangs_n_claws:geo/ghost.geo.json",
+  "texture": "fangs_n_claws:textures/entity/ghost.png",
+  "scale": 1.5,
+  "shadow_radius": 0.4,
+  "head_bone": "Head",
+  "animations": "fangs_n_claws:animations/ghost.animation.json",
+  "idle": "idle",
+  "walk": "walk",
+  "death": "idle",
+  "driver": "mms_dungeons:ghost",
+  "transition_ticks": 5
+}

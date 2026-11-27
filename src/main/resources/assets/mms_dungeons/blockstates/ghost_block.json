@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "has_mimic=false": {
+      "model": "mms_dungeons:block/fangsnclaws/ghost_block"
+    },
+    "has_mimic=true": {
+      "model": "mms_dungeons:block/fangsnclaws/ghost_block_mimic"
+    }
+  }
+}

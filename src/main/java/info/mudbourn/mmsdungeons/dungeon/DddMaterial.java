@@ -14,20 +14,35 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProc
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import org.jspecify.annotations.Nullable;
 
-// Turns every block of a ruin into one family, all stone or all deepslate, keeping each block's shape.
+// Turns every block of a ruin into one family, keeping each block's shape.
 public final class DddMaterial implements StructureProcessor {
 
     public static final DddMaterial STONE = new DddMaterial(toStone());
     public static final DddMaterial DEEPSLATE = new DddMaterial(toDeepslate());
 
     private final Map<Block, Block> mapping;
+    private final @Nullable StructureProcessor accent;
 
-    private DddMaterial(Map<Block, Block> mapping) {
+    DddMaterial(Map<Block, Block> mapping) {
+        this(mapping, null);
+    }
+
+    private DddMaterial(Map<Block, Block> mapping, @Nullable StructureProcessor accent) {
         this.mapping = mapping;
+        this.accent = accent;
+    }
+
+    // The same block set with a processor that runs after it, for per-block variety.
+    public DddMaterial withAccent(StructureProcessor processor) {
+        return new DddMaterial(mapping, processor);
+    }
+
+    public @Nullable StructureProcessor accent() {
+        return accent;
     }
 
     public static DddMaterial of(DddRuin ruin) {
-        return ruin == DddRuin.DEEPSLATE ? DEEPSLATE : STONE;
+        return ruin.deep() ? DEEPSLATE : STONE;
     }
 
     @Override
@@ -46,12 +61,18 @@ public final class DddMaterial implements StructureProcessor {
         return new StructureTemplate.StructureBlockInfo(info.pos(), copyShape(info.state(), target), info.nbt());
     }
 
+    // The block a template block turns into in this family, shape kept.
+    public BlockState apply(BlockState state) {
+        Block target = mapping.get(state.getBlock());
+        return target == null ? state : copyShape(state, target);
+    }
+
     @Override
     public MapCodec<? extends StructureProcessor> codec() {
         return MapCodec.unit(this);
     }
 
-    private static BlockState copyShape(BlockState from, Block to) {
+    static BlockState copyShape(BlockState from, Block to) {
         BlockState out = to.defaultBlockState();
         for (Property<?> property : from.getProperties()) {
             out = copyProperty(out, from, property);

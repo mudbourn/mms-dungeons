@@ -4,6 +4,7 @@ import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import info.mudbourn.mmsdungeons.MmsDungeons;
 import info.mudbourn.mmsdungeons.dungeon.DungeonDimension;
+import info.mudbourn.mmsdungeons.dungeon.DungeonGeneration;
 import info.mudbourn.mmsdungeons.dungeon.NetherPatches;
 import java.util.Comparator;
 import java.util.List;
@@ -21,7 +22,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
-// Breaks up large single-biome patches in the Periculum and caps Nether Infection patches.
+// Breaks up large single-biome patches in the Periculum and caps Nether Infection patches in the Deep and Periculum Regions.
 @Mixin(value = MultiNoiseBiomeSource.class, priority = 1600)
 public abstract class PericulumSpreadMixin {
 
@@ -76,6 +77,9 @@ public abstract class PericulumSpreadMixin {
 
     @Unique
     private Holder<Biome> mmsDungeons$spread(Holder<Biome> biome, int x, int y, int z, Climate.Sampler sampler) {
+        if (QuartPos.toBlock(y) > DungeonDimension.PERICULUM_TOP && QuartPos.toBlock(y) < DungeonDimension.SANCTUARY_BOTTOM && biome.is(NETHER)) {
+            return mmsDungeons$capNether(biome, x, y, z, sampler);
+        }
         if (QuartPos.toBlock(y) > DungeonDimension.PERICULUM_TOP
             || biome.is(DUNGEON_CAVES)
             || biome.unwrapKey().map(k -> k.identifier().getNamespace().equals("alexscaves")).orElse(true)) {
@@ -87,8 +91,14 @@ public abstract class PericulumSpreadMixin {
             || getNoiseBiome(sampler.sample(x, y, z - REACH)) != biome) {
             return mmsDungeons$capNether(biome, x, y, z, sampler);
         }
-        Holder<Biome> swap = getNoiseBiome(sampler.sample(x + FAR, y, z + FAR));
+        Holder<Biome> swap = getNoiseBiome(sampler.sample(x + mmsDungeons$far(), y, z + mmsDungeons$far()));
         return mmsDungeons$capNether(swap == biome || swap.is(DUNGEON_CAVES) ? biome : swap, x, y, z, sampler);
+    }
+
+    // The swap sample's offset, moved by every Deep Region rebuild.
+    @Unique
+    private static int mmsDungeons$far() {
+        return FAR + DungeonGeneration.current() * 977;
     }
 
     @Unique

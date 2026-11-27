@@ -1,0 +1,11 @@
+{
+  "geo": "fangs_n_claws:geo/evil_bat.geo.json",
+  "texture": "fangs_n_claws:textures/entity/evil_bat.png",
+  "emissive_texture": "fangs_n_claws:textures/entity/glowing_eyes/evil_bat_eyes.png",
+  "shadow_radius": 0.2,
+  "head_bone": "Head",
+  "animations": "fangs_n_claws:animations/evil_bat.animation.json",
+  "death": "flying",
+  "driver": "mms_dungeons:evil_bat",
+  "transition_ticks": 3
+}

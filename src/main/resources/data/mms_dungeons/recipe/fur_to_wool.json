@@ -1,0 +1,6 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": ["mms_dungeons:fur"],
+  "result": {"id": "minecraft:white_wool"}
+}

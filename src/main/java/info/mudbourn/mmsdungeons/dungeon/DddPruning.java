@@ -2,6 +2,7 @@ package info.mudbourn.mmsdungeons.dungeon;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Deque;
 import java.util.List;
 import net.minecraft.core.BlockPos;
@@ -20,7 +21,7 @@ import net.minecraft.world.level.levelgen.structure.pools.SinglePoolElement;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 
-// Cuts dead ends out of Deadly Deadly Dungeon ruins and opens up to four side tunnels as entrances.
+// Cuts dead ends out of labyrinths and opens a few side tunnels as entrances.
 public final class DddPruning {
 
     private enum Kind {
@@ -36,16 +37,17 @@ public final class DddPruning {
     private static final String[] ROADBLOCKS = {"dungeon_obstructed_hall", "fallen_hall", "floded_hall", "death_stairs"};
 
     private static final int ENCAPSULATE_REACH = 12;
-    private static final int MAX_TUNNEL = 24;
     private static final int[] DROP_INTERVALS = {0, 3, 2};
 
     private static final int CORE_HEADROOM = 8;
     private static final int TUNNEL_SPACING = 24;
+    // Doorways farthest from the core that are tried as tunnel starts.
+    private static final int MAX_DOORWAYS = 48;
 
     private DddPruning() {
     }
 
-    // Returns the surviving pieces inside the ruin's Y band with a trimmed tower and entrance tunnels, or an empty list when no entrance reaches cave air.
+    // Returns the surviving pieces inside the labyrinth's Y band with a trimmed tower and entrance tunnels, or an empty list when no entrance reaches cave air.
     public static List<StructurePiece> prune(
         List<StructurePiece> pieces,
         DddRuin ruin,
@@ -58,12 +60,15 @@ public final class DddPruning {
         if (count == 0 || !(pieces.get(0) instanceof PoolElementStructurePiece)) {
             return pieces;
         }
-        if (!inBand(pieces.get(0), ruin)) {
+        BlockPos core = pieces.get(0).getBoundingBox().getCenter();
+        int cellX = LabyrinthCells.cellOfBlock(core.getX());
+        int cellZ = LabyrinthCells.cellOfBlock(core.getZ());
+        if (!allowed(pieces.get(0), ruin, cellX, cellZ)) {
             return List.of();
         }
         Kind[] kinds = new Kind[count];
         for (int i = 0; i < count; i++) {
-            kinds[i] = i == 0 ? Kind.START : inBand(pieces.get(i), ruin) ? classify(pieces.get(i)) : Kind.REMOVED;
+            kinds[i] = i == 0 ? Kind.START : allowed(pieces.get(i), ruin, cellX, cellZ) ? classify(pieces.get(i)) : Kind.REMOVED;
         }
         boolean[][] links = links(pieces);
         boolean[] alive = new boolean[count];
@@ -99,7 +104,6 @@ public final class DddPruning {
         return kept;
     }
 
-    // Trims each reachable tower to the cave air it meets and drops the ones that never meet any.
     // Cuts the core's spire off a few blocks above its highest side doorway.
     private static void capCore(List<StructurePiece> pieces, StructureTemplateManager templates) {
         if (!(pieces.get(0) instanceof PoolElementStructurePiece core)) {
@@ -117,11 +121,16 @@ public final class DddPruning {
         }
     }
 
-    private static boolean inBand(StructurePiece piece, DddRuin ruin) {
+    // Inside the labyrinth's Y band and its own cell.
+    private static boolean allowed(StructurePiece piece, DddRuin ruin, int cellX, int cellZ) {
         BoundingBox box = piece.getBoundingBox();
-        return box.minY() >= ruin.minY() && box.maxY() <= ruin.maxY();
+        if (box.minY() < ruin.minY() || box.maxY() > ruin.maxY()) {
+            return false;
+        }
+        return LabyrinthCells.insideCell(box, cellX, cellZ);
     }
 
+    // Trims each reachable tower to the cave air it meets and drops the ones that never meet any.
     private static boolean trimTowers(
         List<StructurePiece> pieces,
         Kind[] kinds,
@@ -129,12 +138,13 @@ public final class DddPruning {
         RandomState randomState,
         LevelHeightAccessor heights
     ) {
-        List<BoundingBox> reachBoxes = new ArrayList<>();
+        List<BoundingBox> reachList = new ArrayList<>();
         for (int i = 0; i < pieces.size(); i++) {
             if (reached[i] && kinds[i] != Kind.SURFACE) {
-                reachBoxes.add(pieces.get(i).getBoundingBox().inflatedBy(ENCAPSULATE_REACH));
+                reachList.add(pieces.get(i).getBoundingBox().inflatedBy(ENCAPSULATE_REACH));
             }
         }
+        BoxIndex reachBoxes = new BoxIndex(reachList);
         boolean towered = false;
         for (int i = 0; i < pieces.size(); i++) {
             if (!reached[i] || kinds[i] != Kind.SURFACE) {
@@ -241,7 +251,7 @@ public final class DddPruning {
         return false;
     }
 
-    // Short tunnels, a few per ruin, from doorways spread around the ruin out to cave air.
+    // Tunnels, a few per ruin, from doorways spread around the ruin out to cave air.
     private static List<DddEntranceTunnel> findTunnels(
         List<StructurePiece> pieces,
         Kind[] kinds,
@@ -258,34 +268,40 @@ public final class DddPruning {
                 ruins.add(pieces.get(i).getBoundingBox());
             }
         }
-        List<BoundingBox> reachBoxes = ruins.stream().map(box -> box.inflatedBy(ENCAPSULATE_REACH)).toList();
+        BoxIndex reachBoxes = new BoxIndex(ruins.stream().map(box -> box.inflatedBy(ENCAPSULATE_REACH)).toList());
 
         RandomSource random = RandomSource.create(0L);
-        List<List<BlockPos>> candidates = new ArrayList<>();
+        List<StructureTemplate.JigsawBlockInfo> doorways = new ArrayList<>();
         for (int i = 0; i < pieces.size(); i++) {
             if (!alive[i] || kinds[i] == Kind.ATTACHMENT || !(pieces.get(i) instanceof PoolElementStructurePiece pool)) {
                 continue;
             }
-            List<StructureTemplate.JigsawBlockInfo> doorways = pool.getElement()
-                .getShuffledJigsawBlocks(templates, pool.getPosition(), pool.getRotation(), random);
-            for (StructureTemplate.JigsawBlockInfo doorway : doorways) {
-                Direction facing = JigsawBlock.getFrontFacing(doorway.state());
-                if (facing.getAxis().isVertical()) {
-                    continue;
-                }
-                List<BlockPos> shortest = null;
-                for (int dropEvery : DROP_INTERVALS) {
-                    List<BlockPos> path = walk(doorway.pos(), facing, dropEvery, ruin, reachBoxes, generator, randomState, heights);
-                    if (path != null && (shortest == null || path.size() < shortest.size())) {
-                        shortest = path;
-                    }
-                }
-                if (shortest != null) {
-                    candidates.add(shortest);
+            for (StructureTemplate.JigsawBlockInfo doorway : pool.getElement()
+                .getShuffledJigsawBlocks(templates, pool.getPosition(), pool.getRotation(), random)) {
+                if (JigsawBlock.getFrontFacing(doorway.state()).getAxis().isHorizontal()) {
+                    doorways.add(doorway);
                 }
             }
         }
-        candidates.sort(java.util.Comparator.comparingInt(List::size));
+        BlockPos center = pieces.get(0).getBoundingBox().getCenter();
+        doorways.sort(Comparator.comparingDouble((StructureTemplate.JigsawBlockInfo doorway) -> doorway.pos().distSqr(center)).reversed());
+
+        List<List<BlockPos>> candidates = new ArrayList<>();
+        for (StructureTemplate.JigsawBlockInfo doorway : doorways.subList(0, Math.min(MAX_DOORWAYS, doorways.size()))) {
+            Direction facing = JigsawBlock.getFrontFacing(doorway.state());
+            List<BlockPos> shortest = null;
+            for (int dropEvery : DROP_INTERVALS) {
+                int limit = shortest == null ? ruin.maxTunnelLength() : shortest.size() - 2;
+                List<BlockPos> path = walk(doorway.pos(), facing, dropEvery, limit, ruin, reachBoxes, generator, randomState, heights);
+                if (path != null && (shortest == null || path.size() < shortest.size())) {
+                    shortest = path;
+                }
+            }
+            if (shortest != null) {
+                candidates.add(shortest);
+            }
+        }
+        candidates.sort(Comparator.comparingInt(List::size));
         List<BlockPos> doors = new ArrayList<>();
         List<DddEntranceTunnel> tunnels = new ArrayList<>();
         for (List<BlockPos> path : candidates) {
@@ -304,17 +320,18 @@ public final class DddPruning {
         BlockPos doorway,
         Direction facing,
         int dropEvery,
+        int maxSteps,
         DddRuin ruin,
-        List<BoundingBox> reachBoxes,
+        BoxIndex reachBoxes,
         ChunkGenerator generator,
         RandomState randomState,
         LevelHeightAccessor heights
     ) {
         List<BlockPos> path = new ArrayList<>();
         BlockPos pos = doorway.relative(facing);
-        for (int step = 0; step <= MAX_TUNNEL; step++) {
+        for (int step = 0; step <= maxSteps; step++) {
             path.add(pos);
-            if (!insideAny(reachBoxes, pos) && openAir(pos, generator, randomState, heights)) {
+            if (!reachBoxes.contains(pos.getX(), pos.getY(), pos.getZ()) && openAir(pos, generator, randomState, heights)) {
                 return path;
             }
             pos = pos.relative(facing);
@@ -328,21 +345,11 @@ public final class DddPruning {
         return null;
     }
 
-    private static boolean insideAny(List<BoundingBox> boxes, BlockPos pos) {
-        return insideAny(boxes, pos.getX(), pos.getY(), pos.getZ());
-    }
-
-    static boolean insideAny(List<BoundingBox> boxes, int x, int y, int z) {
-        for (BoundingBox box : boxes) {
-            if (box.isInside(x, y, z)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     private static boolean openAir(BlockPos pos, ChunkGenerator generator, RandomState randomState, LevelHeightAccessor heights) {
         if (pos.getY() < heights.getMinY() || pos.getY() + 1 >= heights.getMaxY()) {
+            return false;
+        }
+        if (LabyrinthCells.isSolid(pos.getX(), pos.getY(), pos.getZ())) {
             return false;
         }
         DensityFunction density = TerrainAir.finalDensity(randomState);

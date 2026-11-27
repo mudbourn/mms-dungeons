@@ -1,0 +1,103 @@
+{
+  "replace": false,
+  "values": [
+    "#minecraft:undead",
+    "minecraft:zombie",
+    "minecraft:husk",
+    "minecraft:drowned",
+    "minecraft:zombie_villager",
+    "minecraft:zombified_piglin",
+    "minecraft:skeleton",
+    "minecraft:stray",
+    "minecraft:bogged",
+    "minecraft:wither_skeleton",
+    "minecraft:wither",
+    "minecraft:phantom",
+    "minecraft:zoglin",
+    "minecraft:skeleton_horse",
+    "minecraft:zombie_horse",
+    "minecraft:zombie_nautilus",
+    "minecraft:camel_husk",
+    "minecraft:parched",
+    "minecraft:giant",
+    "mms_dungeons:cherry_skeleton",
+    "mms_dungeons:cherry_zombie",
+    "mms_dungeons:crimson_walker",
+    "mms_dungeons:dark_oak_skeleton",
+    "mms_dungeons:dark_oak_zombie",
+    "mms_dungeons:hollow_skeleton",
+    "mms_dungeons:icy_skeleton",
+    "mms_dungeons:icy_zombie",
+    "mms_dungeons:miner_skeleton",
+    "mms_dungeons:miner_zombie",
+    "mms_dungeons:revenant_skeleton",
+    "mms_dungeons:savanna_skeleton",
+    "mms_dungeons:savanna_zombie",
+    "mms_dungeons:sunken_skeleton",
+    "mms_dungeons:swamp_skeleton",
+    "mms_dungeons:swamp_zombie",
+    "mms_dungeons:silver_skeleton",
+    "mms_dungeons:skeleton_horse",
+    "mms_dungeons:zombie_horse",
+    "mms_dungeons:nightmare_horse",
+    "mms_dungeons:ghost",
+    "mms_dungeons:fire_ghost",
+    "mms_dungeons:eld_knight",
+    "mms_dungeons:fallen_knight",
+    "mms_dungeons:ghosty",
+    "mms_dungeons:samhain",
+    "mms_dungeons:wisp",
+    "mms_dungeons:wraith",
+    {
+      "id": "mutantmonsters:mutant_skeleton",
+      "required": false
+    },
+    {
+      "id": "mutantmonsters:mutant_zombie",
+      "required": false
+    },
+    {
+      "id": "mutantmonsters:skull_spirit",
+      "required": false
+    },
+    {
+      "id": "aerialhell:fat_phantom",
+      "required": false
+    },
+    {
+      "id": "aerialhell:mummy",
+      "required": false
+    },
+    {
+      "id": "aerialhell:verdigris_zombie",
+      "required": false
+    },
+    {
+      "id": "aerialhell:shadow_flying_skull",
+      "required": false
+    },
+    {
+      "id": "alexscaves:forsaken",
+      "required": false
+    },
+    {
+      "id": "undergroundworlds:frozen_zombie",
+      "required": false
+    },
+    {
+      "id": "undergroundworlds:glow_bogged",
+      "required": false
+    },
+    {
+      "id": "undergroundworlds:jungle_zombie",
+      "required": false
+    },
+    {
+      "id": "undergroundworlds:wrapped",
+      "required": false
+    },
+    "mms_dungeons:kobold_skeleton",
+    "mms_dungeons:kobold_zombie",
+    "mms_dungeons:witherbold"
+  ]
+}

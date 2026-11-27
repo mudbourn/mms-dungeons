@@ -4,6 +4,8 @@ import info.mudbourn.mmsdungeons.dungeon.DddPlacement;
 import info.mudbourn.mmsdungeons.dungeon.DddPruning;
 import info.mudbourn.mmsdungeons.dungeon.DddRuin;
 import info.mudbourn.mmsdungeons.dungeon.DungeonDimension;
+import info.mudbourn.mmsdungeons.dungeon.DungeonOverlaps;
+import info.mudbourn.mmsdungeons.dungeon.LabyrinthLinks;
 import info.mudbourn.mmsdungeons.dungeon.ReachableStructures;
 import java.util.List;
 import java.util.function.Predicate;
@@ -29,7 +31,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-// Prunes dead ends from Deadly Deadly Dungeon starts in the dungeon and drops any structure there with no way in.
+// Prunes dead ends from Deadly Deadly Dungeon starts in the dungeon and drops any other structure there with no way in or that would overlap a labyrinth.
 @Mixin(Structure.class)
 public abstract class DddPruneMixin {
 
@@ -59,7 +61,9 @@ public abstract class DddPruneMixin {
             return;
         }
         if (!ReachableStructures.exempt(id)) {
-            if (!ReachableStructures.touchesCaveAir(start.getBoundingBox(), generator, randomState, heights)) {
+            boolean refused = DungeonOverlaps.clashes(id, start.getBoundingBox())
+                || !ReachableStructures.touchesCaveAir(start.getBoundingBox(), generator, randomState, heights);
+            if (refused) {
                 cir.setReturnValue(StructureStart.INVALID_START);
             }
             return;
@@ -76,6 +80,7 @@ public abstract class DddPruneMixin {
             cir.setReturnValue(StructureStart.INVALID_START);
             return;
         }
+        kept.addAll(LabyrinthLinks.corridors(kept, ruin, seed, templates));
         cir.setReturnValue(new StructureStart(start.getStructure(), chunkPos, references, new PiecesContainer(kept)));
     }
 }

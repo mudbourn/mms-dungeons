@@ -49,6 +49,11 @@ public final class NetherInfectionCore implements Feature {
         "periculum_nether_gold_ore",
         "periculum_magma"
     );
+    // The same ores for the Deep Region, run from the core feature so the real Nether never gets them.
+    private static final List<ResourceKey<PlacedFeature>> DEEP_ORES = Stream.of(
+        "deep_quartz_ore",
+        "deep_nether_gold_ore"
+    ).map(name -> ResourceKey.create(Registries.PLACED_FEATURE, MmsDungeons.id(name))).toList();
     private static final ResourceKey<PlacedFeature> PLACED = ResourceKey.create(
         Registries.PLACED_FEATURE,
         MmsDungeons.id("nether_infection_core")
@@ -116,7 +121,7 @@ public final class NetherInfectionCore implements Feature {
         }
         int minX = origin.getX() & ~15;
         int minZ = origin.getZ() & ~15;
-        long hash = level.getSeed() ^ (minX >> 4) * 341873128712L ^ (minZ >> 4) * 132897987541L;
+        long hash = DungeonGeneration.layoutSeed(level.getSeed()) ^ (minX >> 4) * 341873128712L ^ (minZ >> 4) * 132897987541L;
         boolean placed = waterToLava(level, minX, minZ);
         RandomSource coreRandom = RandomSource.create(mix(hash, CORE_SALT));
         if (coreRandom.nextInt(CORE_ONE_IN) == 0) {
@@ -125,6 +130,11 @@ public final class NetherInfectionCore implements Feature {
         RandomSource debrisRandom = RandomSource.create(mix(hash, DEBRIS_SALT));
         if (debrisRandom.nextInt(DEBRIS_ONE_IN) == 0) {
             placed |= placeDebris(level, debrisRandom, minX, minZ);
+        }
+        BlockPos chunkOrigin = new BlockPos(minX, level.getMinY(), minZ);
+        for (ResourceKey<PlacedFeature> ore : DEEP_ORES) {
+            level.registryAccess().lookupOrThrow(Registries.PLACED_FEATURE).get(ore)
+                .ifPresent(feature -> feature.value().place(level, generator, random, chunkOrigin));
         }
         return placed;
     }
@@ -135,7 +145,7 @@ public final class NetherInfectionCore implements Feature {
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
         for (int x = minX; x < minX + 16; x++) {
             for (int z = minZ; z < minZ + 16; z++) {
-                for (int y = level.getMinY(); y <= DungeonDimension.PERICULUM_TOP; y++) {
+                for (int y = level.getMinY(); y < DungeonDimension.SANCTUARY_BOTTOM; y++) {
                     pos.set(x, y, z);
                     BlockState state = level.getBlockState(pos);
                     boolean water = state.getFluidState().is(FluidTags.WATER);
@@ -219,8 +229,8 @@ public final class NetherInfectionCore implements Feature {
 
     private static List<BlockPos> floorsIn(WorldGenLevel level, int x, int z, int headroom) {
         List<BlockPos> floors = new ArrayList<>();
-        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos(x, DungeonDimension.PERICULUM_TOP, z);
-        for (int y = DungeonDimension.PERICULUM_TOP; y >= level.getMinY() + BEDROCK_CLEARANCE; y--) {
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos(x, DungeonDimension.SANCTUARY_BOTTOM - 1, z);
+        for (int y = DungeonDimension.SANCTUARY_BOTTOM - 1; y >= level.getMinY() + BEDROCK_CLEARANCE; y--) {
             pos.setY(y);
             if (isFloor(level, pos, headroom) && level.getBiome(pos).is(NETHER_INFESTATION)) {
                 floors.add(pos.immutable());

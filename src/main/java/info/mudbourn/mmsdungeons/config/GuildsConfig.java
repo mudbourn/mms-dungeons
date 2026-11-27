@@ -30,6 +30,7 @@ public final class GuildsConfig {
     public int boardReach = 8;
     public int maxNameLength = 24;
     public int maxCharterLength = 600;
+    public int guildClaims = 80;
 
     public static GuildsConfig get() {
         return INSTANCE;
@@ -73,6 +74,7 @@ public final class GuildsConfig {
         boardReach = Math.max(2, boardReach);
         maxNameLength = Math.max(3, maxNameLength);
         maxCharterLength = Math.max(0, maxCharterLength);
+        guildClaims = Math.max(0, guildClaims);
     }
 
     private static int clampPercent(int value) {

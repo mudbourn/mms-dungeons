@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "cookingtime": 200,
+  "experience": 0.1,
+  "ingredient": "mms_dungeons:vile_fat",
+  "result": {"id": "minecraft:slime_ball"}
+}

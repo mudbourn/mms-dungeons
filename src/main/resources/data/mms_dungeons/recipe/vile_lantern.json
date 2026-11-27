@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": ["minecraft:lantern", "mms_dungeons:vile_fat"],
+  "result": {
+    "id": "mms_dungeons:vile_lantern"
+  }
+}

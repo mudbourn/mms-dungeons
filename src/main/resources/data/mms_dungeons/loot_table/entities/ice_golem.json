@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:entity",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "mms_dungeons:totem_of_frost"
+        }
+      ]
+    }
+  ],
+  "random_sequence": "mms_dungeons:entities/ice_golem"
+}

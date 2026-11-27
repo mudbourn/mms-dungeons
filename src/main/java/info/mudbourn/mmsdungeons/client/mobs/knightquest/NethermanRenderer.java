@@ -87,6 +87,8 @@ public class NethermanRenderer extends GeoEntityRenderer<Netherman> {
             base.death(),
             base.heldItems(),
             base.attachments(),
+            base.restRotations(),
+            base.armorBones(),
             new GeoAnimationSpec(Optional.of(form.animations()), spec.idle(), spec.states(), spec.driver(), spec.transitionTicks())
         );
     }

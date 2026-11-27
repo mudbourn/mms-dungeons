@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": ["minecraft:iron_axe", "mms_dungeons:giant_feather"],
+  "result": {
+    "id": "mms_dungeons:tomahawk"
+  }
+}

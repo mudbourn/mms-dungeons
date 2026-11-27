@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "L": "mms_dungeons:long_fang",
+    "I": "minecraft:iron_ingot",
+    "S": "minecraft:stone_pressure_plate"
+  },
+  "pattern": [
+    "LIL",
+    "LSL",
+    "LIL"
+  ],
+  "result": {
+    "id": "mms_dungeons:bear_trap",
+    "count": 6
+  }
+}

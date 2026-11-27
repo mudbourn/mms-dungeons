@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": ["I", "B", "G"],
+  "key": {
+    "I": "minecraft:iron_nugget",
+    "B": "minecraft:bone",
+    "G": "mms_dungeons:giant_feather"
+  },
+  "result": {"id": "mms_dungeons:velocity_arrow", "count": 4}
+}

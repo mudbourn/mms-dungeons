@@ -1,0 +1,10 @@
+{
+  "geo": "fangs_n_claws:geo/purple_worm.geo.json",
+  "texture": "fangs_n_claws:textures/entity/purple_worm.png",
+  "emissive_texture": "fangs_n_claws:textures/entity/glowing_eyes/purple_worm_eyes.png",
+  "shadow_radius": 2.0,
+  "animations": "fangs_n_claws:animations/purple_worm.animation.json",
+  "idle": "idle",
+  "death": "death",
+  "transition_ticks": 4
+}

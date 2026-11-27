@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [" L", "S "],
+  "key": {
+    "L": "mms_dungeons:long_fang",
+    "S": "minecraft:stick"
+  },
+  "result": {
+    "id": "mms_dungeons:fang_dagger"
+  }
+}

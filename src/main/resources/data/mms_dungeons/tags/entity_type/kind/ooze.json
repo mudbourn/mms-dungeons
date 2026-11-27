@@ -1,0 +1,18 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:slime",
+    "minecraft:magma_cube",
+    "minecraft:sulfur_cube",
+    "mms_dungeons:tar_cube",
+    "mms_dungeons:sap",
+    {"id": "alexscaves:caramel_cube", "required": false},
+    {"id": "alexscaves:ferrouslime", "required": false},
+    {"id": "alexscaves:gum_worm", "required": false},
+    {"id": "aerialhell:crystal_slime", "required": false},
+    {"id": "aerialhell:ghost_slime_pirate", "required": false},
+    {"id": "aerialhell:ghost_slime_ninja_pirate", "required": false},
+    {"id": "aerialhell:slime_pirate", "required": false},
+    {"id": "aerialhell:slime_ninja_pirate", "required": false}
+  ]
+}

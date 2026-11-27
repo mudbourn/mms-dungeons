@@ -1,0 +1,16 @@
+{
+  "geo": "fangs_n_claws:geo/dart_goblin.geo.json",
+  "texture": "fangs_n_claws:textures/entity/dart_goblin.png",
+  "shadow_radius": 0.3,
+  "head_bone": "Head",
+  "animations": "fangs_n_claws:animations/dart_goblin.animation.json",
+  "idle": "idle",
+  "walk": "walk",
+  "states": [
+    {
+      "when": "q.ground_speed > 3.6",
+      "animation": "run"
+    }
+  ],
+  "transition_ticks": 5
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "mms_dungeons:item/luminous/savanna_skeleton_spawn_egg"
+  }
+}

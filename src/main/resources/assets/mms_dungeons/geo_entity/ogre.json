@@ -1,0 +1,13 @@
+{
+  "geo": "fangs_n_claws:geo/ogre.geo.json",
+  "texture": "fangs_n_claws:textures/entity/ogre.png",
+  "emissive_texture": "fangs_n_claws:textures/entity/glowing_eyes/ogre_eyes.png",
+  "scale": 1.1,
+  "shadow_radius": 0.9,
+  "head_bone": "Head",
+  "animations": "fangs_n_claws:animations/ogre.animation.json",
+  "idle": "idle",
+  "walk": "walk",
+  "driver": "mms_dungeons:ogre",
+  "transition_ticks": 4
+}

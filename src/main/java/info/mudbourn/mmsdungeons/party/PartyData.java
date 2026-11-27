@@ -118,6 +118,16 @@ public final class PartyData extends SavedData {
         return names.getOrDefault(player.toString(), player.toString());
     }
 
+    // The player last seen under this name, or null when none is known.
+    public UUID findKnown(String name) {
+        for (Map.Entry<String, String> entry : names.entrySet()) {
+            if (entry.getValue().equalsIgnoreCase(name)) {
+                return UUID.fromString(entry.getKey());
+            }
+        }
+        return null;
+    }
+
     public UUID findByName(Party party, String name) {
         for (UUID member : party.members) {
             if (nameOf(member).equalsIgnoreCase(name)) {

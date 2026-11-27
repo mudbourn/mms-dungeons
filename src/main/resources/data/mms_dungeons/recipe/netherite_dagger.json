@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": "minecraft:netherite_ingot",
+  "base": "mms_dungeons:fang_dagger",
+  "result": {
+    "id": "mms_dungeons:netherite_dagger"
+  },
+  "template": "minecraft:netherite_upgrade_smithing_template"
+}

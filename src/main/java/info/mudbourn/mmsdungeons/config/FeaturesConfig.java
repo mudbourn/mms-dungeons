@@ -9,7 +9,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// The JSON config for parties, corpses and the Aerial Hell portal blast, loaded once and re-saved to backfill new defaults.
+// The JSON config for parties, corpses, the Aerial Hell portal blast, faction cover, the Deep Region rebuild and Better Combat mob swings, loaded once and re-saved to backfill new defaults.
 public final class FeaturesConfig {
 
     private static final Logger LOG = LoggerFactory.getLogger("mms_dungeons");
@@ -28,6 +28,12 @@ public final class FeaturesConfig {
     public int alertCooldownTicks = 40;
     public double portalWarningRadius = 64.0;
     public float portalBlastPower = 6.0F;
+    public double deepRebuildDays = 3.0;
+    public double deepRebuildForceHours = 6.0;
+    public int deepRebuildCountdownSeconds = 300;
+    public int deepRebuildUnloadSeconds = 30;
+    public float mercenaryCoverChance = 0.3F;
+    public boolean betterCombatMobSwings = true;
 
     public static FeaturesConfig get() {
         return INSTANCE;
@@ -64,6 +70,11 @@ public final class FeaturesConfig {
         alertCooldownTicks = Math.max(0, alertCooldownTicks);
         portalWarningRadius = Math.max(0.0, portalWarningRadius);
         portalBlastPower = Math.max(1.0F, portalBlastPower);
+        deepRebuildDays = Math.max(0.01, deepRebuildDays);
+        deepRebuildForceHours = Math.max(0.0, deepRebuildForceHours);
+        deepRebuildCountdownSeconds = Math.max(10, deepRebuildCountdownSeconds);
+        deepRebuildUnloadSeconds = Math.max(1, deepRebuildUnloadSeconds);
+        mercenaryCoverChance = Math.clamp(mercenaryCoverChance, 0.0F, 1.0F);
         if (hudHorizontal == null || !hudHorizontal.equals("right")) {
             hudHorizontal = "left";
         }

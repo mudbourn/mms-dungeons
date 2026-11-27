@@ -16,7 +16,7 @@ public final class DungeonCommands {
         "home", "back", "spawn", "rtp", "top", "warp", "bed",
         "tpa", "tpahere", "tpaccept", "tpr", "dimension", "jump",
         // Fake players that draw aggro or hold chunks.
-        "afk:summon", "afk:ready", "player", "peek",
+        "player", "peek",
         // Combat and survival cheats.
         "fly", "invuln", "god", "heal", "feed", "repair", "enderchest", "echest", "invsee", "near"
     );

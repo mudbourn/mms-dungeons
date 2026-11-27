@@ -1,0 +1,13 @@
+{
+  "geo": "fangs_n_claws:geo/golem.geo.json",
+  "texture": "fangs_n_claws:textures/entity/golem.png",
+  "emissive_texture": "fangs_n_claws:textures/entity/glowing_eyes/golem_eyes.png",
+  "shadow_radius": 1.6,
+  "head_bone": "Head",
+  "animations": "fangs_n_claws:animations/golem.animation.json",
+  "idle": "idle",
+  "walk": "walk",
+  "death": "death",
+  "driver": "mms_dungeons:golem",
+  "transition_ticks": 4
+}

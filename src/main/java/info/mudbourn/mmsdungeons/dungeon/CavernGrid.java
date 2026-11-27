@@ -39,6 +39,15 @@ public final class CavernGrid {
         ServerLifecycleEvents.SERVER_STOPPED.register(server -> placement = null);
     }
 
+    public static boolean isCavernPlacement(RandomSpreadStructurePlacement candidate) {
+        return candidate == placement;
+    }
+
+    // Drops the cached cavern centers after a Deep Region rebuild.
+    public static void reset() {
+        centers = new ConcurrentHashMap<>();
+    }
+
     // Horizontal distance in blocks to the nearest cavern center, or infinity before the dungeon has loaded.
     public static double distanceToCenter(int x, int z) {
         long center = nearestCenter(x, z);
@@ -91,7 +100,7 @@ public final class CavernGrid {
 
     // A stable per-cavern number mixing the world seed with the center.
     public static long hash(long center) {
-        long h = center ^ seed * 0x9E3779B97F4A7C15L;
+        long h = center ^ DungeonGeneration.layoutSeed(seed) * 0x9E3779B97F4A7C15L;
         h = (h ^ (h >>> 30)) * 0xBF58476D1CE4E5B9L;
         h = (h ^ (h >>> 27)) * 0x94D049BB133111EBL;
         return h ^ (h >>> 31);

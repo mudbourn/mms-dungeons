@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "mms_dungeons:goblin",
+    "mms_dungeons:dart_goblin",
+    "mms_dungeons:gremlin",
+    "mms_dungeons:imp"
+  ]
+}

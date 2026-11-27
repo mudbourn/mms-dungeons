@@ -1,0 +1,12 @@
+{
+  "geo": "fangs_n_claws:geo/wild_wolf.geo.json",
+  "texture": "fangs_n_claws:textures/entity/wild_wolf.png",
+  "emissive_texture": "fangs_n_claws:textures/entity/glowing_eyes/wild_wolf_eyes.png",
+  "scale": 1.1,
+  "shadow_radius": 0.5,
+  "head_bone": "Head",
+  "animations": "fangs_n_claws:animations/wild_wolf.animation.json",
+  "idle": "idle",
+  "walk": "walk",
+  "transition_ticks": 4
+}

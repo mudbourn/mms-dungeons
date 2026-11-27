@@ -4,11 +4,11 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import info.mudbourn.mmsdungeons.MmsDungeons;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.datafix.DataFixTypes;
@@ -16,11 +16,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.saveddata.SavedDataType;
 
-// Each player's saved corpse: the items taken at death and where the marker stands, kept apart from any chunk.
+// Every saved corpse, one record per death: the items taken, where the marker stands and when they fell, kept apart from any chunk.
 public final class CorpseData extends SavedData {
 
     public static final Codec<CorpseData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-        Codec.unboundedMap(Codec.STRING, Corpse.CODEC).fieldOf("corpses").forGetter(data -> data.corpses)
+        Corpse.CODEC.listOf().optionalFieldOf("records", List.of()).forGetter(data -> data.records),
+        Codec.unboundedMap(Codec.STRING, Corpse.LEGACY_CODEC).optionalFieldOf("corpses", Map.of()).forGetter(data -> Map.of())
     ).apply(instance, CorpseData::new));
 
     public static final SavedDataType<CorpseData> TYPE = new SavedDataType<>(
@@ -29,55 +30,108 @@ public final class CorpseData extends SavedData {
         CODEC,
         DataFixTypes.LEVEL);
 
-    private final Map<String, Corpse> corpses = new HashMap<>();
+    private final List<Corpse> records = new ArrayList<>();
 
     public CorpseData() {
     }
 
-    private CorpseData(Map<String, Corpse> loaded) {
-        corpses.putAll(loaded);
+    private CorpseData(List<Corpse> loaded, Map<String, Corpse> legacy) {
+        records.addAll(loaded);
+        for (Map.Entry<String, Corpse> entry : legacy.entrySet()) {
+            try {
+                UUID owner = UUID.fromString(entry.getKey());
+                Corpse corpse = entry.getValue();
+                corpse.owner = owner;
+                records.add(corpse);
+            } catch (IllegalArgumentException ignored) {
+            }
+        }
     }
 
-    // The items, marker entity and dimension of one player's corpse.
+    // One death's items, marker entity, dimension, spot and time.
     public static final class Corpse {
 
         public static final Codec<Corpse> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            UUIDUtil.CODEC.fieldOf("id").forGetter(corpse -> corpse.id),
+            UUIDUtil.CODEC.fieldOf("owner").forGetter(corpse -> corpse.owner),
+            ItemStack.CODEC.listOf().fieldOf("items").forGetter(corpse -> corpse.items),
+            UUIDUtil.CODEC.optionalFieldOf("marker").forGetter(corpse -> Optional.ofNullable(corpse.marker)),
+            Identifier.CODEC.fieldOf("dimension").forGetter(corpse -> corpse.dimension),
+            BlockPos.CODEC.optionalFieldOf("pos").forGetter(corpse -> Optional.ofNullable(corpse.pos)),
+            Codec.LONG.optionalFieldOf("time", 0L).forGetter(corpse -> corpse.time)
+        ).apply(instance, (id, owner, items, marker, dimension, pos, time) ->
+            new Corpse(id, owner, items, marker.orElse(null), dimension, pos.orElse(null), time)));
+
+        public static final Codec<Corpse> LEGACY_CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ItemStack.CODEC.listOf().fieldOf("items").forGetter(corpse -> corpse.items),
             UUIDUtil.CODEC.optionalFieldOf("marker").forGetter(corpse -> Optional.ofNullable(corpse.marker)),
             Identifier.CODEC.fieldOf("dimension").forGetter(corpse -> corpse.dimension)
-        ).apply(instance, (items, marker, dimension) -> new Corpse(items, marker.orElse(null), dimension)));
+        ).apply(instance, (items, marker, dimension) ->
+            new Corpse(UUID.randomUUID(), null, items, marker.orElse(null), dimension, null, 0L)));
 
+        public final UUID id;
+        public UUID owner;
         public final List<ItemStack> items;
         public UUID marker;
         public Identifier dimension;
+        public BlockPos pos;
+        public long time;
 
-        private Corpse(List<ItemStack> items, UUID marker, Identifier dimension) {
+        private Corpse(UUID id, UUID owner, List<ItemStack> items, UUID marker, Identifier dimension, BlockPos pos, long time) {
+            this.id = id;
+            this.owner = owner;
             this.items = new ArrayList<>(items);
             this.marker = marker;
             this.dimension = dimension;
+            this.pos = pos;
+            this.time = time;
         }
     }
 
-    public Corpse get(UUID owner) {
-        return corpses.get(owner.toString());
-    }
-
-    public Corpse getOrCreate(UUID owner, Identifier dimension) {
+    public Corpse add(UUID owner, List<ItemStack> items, Identifier dimension, BlockPos pos, long time) {
+        Corpse corpse = new Corpse(UUID.randomUUID(), owner, items, null, dimension, pos, time);
+        records.add(corpse);
         setDirty();
-        return corpses.computeIfAbsent(owner.toString(), key -> new Corpse(List.of(), null, dimension));
-    }
-
-    public Corpse take(UUID owner) {
-        Corpse corpse = corpses.remove(owner.toString());
-        if (corpse != null) {
-            setDirty();
-        }
         return corpse;
     }
 
-    // Whether a marker entity still belongs to a live record.
-    public boolean ownsMarker(UUID owner, UUID marker) {
-        Corpse corpse = corpses.get(owner.toString());
-        return corpse != null && marker.equals(corpse.marker);
+    // The owner's corpses, newest first.
+    public List<Corpse> of(UUID owner) {
+        List<Corpse> found = new ArrayList<>();
+        for (Corpse corpse : records) {
+            if (owner.equals(corpse.owner)) {
+                found.add(corpse);
+            }
+        }
+        found.sort((a, b) -> Long.compare(b.time, a.time));
+        return found;
+    }
+
+    public Corpse byId(UUID id) {
+        for (Corpse corpse : records) {
+            if (corpse.id.equals(id)) {
+                return corpse;
+            }
+        }
+        return null;
+    }
+
+    public Corpse byMarker(UUID marker) {
+        for (Corpse corpse : records) {
+            if (marker.equals(corpse.marker)) {
+                return corpse;
+            }
+        }
+        return null;
+    }
+
+    public void remove(Corpse corpse) {
+        if (records.remove(corpse)) {
+            setDirty();
+        }
+    }
+
+    public void touch() {
+        setDirty();
     }
 }

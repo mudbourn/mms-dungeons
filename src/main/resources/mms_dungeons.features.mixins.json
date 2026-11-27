@@ -6,9 +6,14 @@
     "AerialHellPortalDestinationMixin",
     "BodyTypeNameMixin",
     "CarryOnCorpseMixin",
+    "CorrodedArmorWearMixin",
+    "LivingEntityEffectMixin",
+    "LivingEntityRelationsMixin",
     "MannequinAccessor",
     "MobAccessor",
     "MobShriekerMixin",
+    "PowderSnowFurMixin",
+    "SpikePathingMixin",
     "StellarLighterMixin"
   ],
   "client": [
@@ -17,6 +22,8 @@
     "CorpseRotationsMixin",
     "CorpseStateMixin",
     "EntityOutlineMixin",
+    "LocatorAttackMixin",
+    "PitchforkSpecialModelMixin",
     "PossessedInputMixin",
     "SkullBlockRendererMixin"
   ],

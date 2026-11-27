@@ -1,0 +1,8 @@
+{
+  "geo": "fangs_n_claws:geo/purple_worm_arm.geo.json",
+  "texture": "fangs_n_claws:textures/entity/purple_worm_arm.png",
+  "shadow_radius": 0.6,
+  "animations": "fangs_n_claws:animations/purple_worm_arm.animation.json",
+  "driver": "mms_dungeons:purple_worm_arm",
+  "transition_ticks": 4
+}

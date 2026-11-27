@@ -1,0 +1,18 @@
+{
+  "description": {
+    "translate": "enchantment.mms_dungeons.scratch"
+  },
+  "supported_items": "#mms_dungeons:enchantable/catching_claw",
+  "slots": ["mainhand"],
+  "weight": 5,
+  "anvil_cost": 2,
+  "max_level": 5,
+  "min_cost": {
+    "base": 1,
+    "per_level_above_first": 8
+  },
+  "max_cost": {
+    "base": 25,
+    "per_level_above_first": 8
+  }
+}

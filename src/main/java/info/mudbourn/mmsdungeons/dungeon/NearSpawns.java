@@ -9,6 +9,7 @@ import java.util.Set;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.SectionPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
@@ -28,10 +29,13 @@ import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.biome.MobSpawnSettings;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import org.jspecify.annotations.Nullable;
 
 // Brings dungeon monsters to roomy spots near each player that can walk to them, out of sight: full strength in ruins, half in caves, plus drowned and guardians in ruin pools.
 public final class NearSpawns {
@@ -172,7 +176,7 @@ public final class NearSpawns {
 
     // A one-block step either way needs headroom over the lower cell.
     private static boolean canStep(ServerLevel level, BlockPos from, BlockPos to, int dy) {
-        if (!level.isLoaded(to) || !standable(level, to)) {
+        if (!standable(level, to)) {
             return false;
         }
         if (dy > 0) {
@@ -184,8 +188,11 @@ public final class NearSpawns {
     // Two open blocks over a solid floor.
     private static boolean standable(ServerLevel level, BlockPos feet) {
         BlockPos floor = feet.below();
-        return open(level, feet) && open(level, feet.above())
-            && level.getBlockState(floor).isFaceSturdy(level, floor, Direction.UP);
+        if (!open(level, feet) || !open(level, feet.above())) {
+            return false;
+        }
+        BlockState below = stateNow(level, floor);
+        return below != null && below.isFaceSturdy(level, floor, Direction.UP);
     }
 
     // Three blocks tall and two wide.
@@ -202,9 +209,22 @@ public final class NearSpawns {
         return false;
     }
 
-    // Unloaded counts as closed so the search never loads chunks.
+    private static boolean water(ServerLevel level, BlockPos pos) {
+        BlockState state = stateNow(level, pos);
+        return state != null && state.getFluidState().is(FluidTags.WATER);
+    }
+
+    // A chunk that is not fully loaded counts as closed, so the search never waits on one.
     private static boolean open(ServerLevel level, BlockPos pos) {
-        return level.isLoaded(pos) && level.getBlockState(pos).getCollisionShape(level, pos).isEmpty() && level.getFluidState(pos).isEmpty();
+        BlockState state = stateNow(level, pos);
+        return state != null && state.getCollisionShape(level, pos).isEmpty() && state.getFluidState().isEmpty();
+    }
+
+    // The block at pos, or null when its chunk is not fully loaded. Level.getBlockState would wait for that chunk
+    // to finish generating on the server thread, which froze the game for seconds at a time.
+    private static @Nullable BlockState stateNow(ServerLevel level, BlockPos pos) {
+        LevelChunk chunk = level.getChunkSource().getChunkNow(SectionPos.blockToSectionCoord(pos.getX()), SectionPos.blockToSectionCoord(pos.getZ()));
+        return chunk == null ? null : chunk.getBlockState(pos);
     }
 
     // Whether any player nearby has a clear line to the spot's feet or head.
@@ -311,7 +331,7 @@ public final class NearSpawns {
                 Math.round(Mth.cos(angle) * distance),
                 Mth.nextInt(random, -RUIN_VERTICAL_RANGE, RUIN_VERTICAL_RANGE),
                 Math.round(Mth.sin(angle) * distance));
-            if (level.isLoaded(pos) && bigPool(level, pos) && !watched(level, pos)) {
+            if (bigPool(level, pos) && !watched(level, pos)) {
                 EntityType<? extends Mob> type = random.nextInt(DROWNED_WEIGHT + 1) == 0 ? EntityTypes.GUARDIAN : EntityTypes.DROWNED;
                 Mob mob = type.create(level, EntitySpawnReason.NATURAL);
                 if (mob == null) {
@@ -327,12 +347,12 @@ public final class NearSpawns {
 
     // Water here and above, with enough water around to count as a pool rather than a puddle.
     private static boolean bigPool(ServerLevel level, BlockPos pos) {
-        if (!level.getFluidState(pos).is(FluidTags.WATER) || !level.getFluidState(pos.above()).is(FluidTags.WATER)) {
+        if (!water(level, pos) || !water(level, pos.above())) {
             return false;
         }
         int water = 0;
         for (BlockPos near : BlockPos.betweenClosed(pos.offset(-POOL_REACH, -1, -POOL_REACH), pos.offset(POOL_REACH, 1, POOL_REACH))) {
-            if (level.isLoaded(near) && level.getFluidState(near).is(FluidTags.WATER)) {
+            if (water(level, near)) {
                 water++;
             }
         }

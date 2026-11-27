@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "hanging=false": {
+      "model": "mms_dungeons:block/fangsnclaws/vile_lantern"
+    },
+    "hanging=true": {
+      "model": "mms_dungeons:block/fangsnclaws/vile_lantern_hanging"
+    }
+  }
+}

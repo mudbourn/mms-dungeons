@@ -2,8 +2,12 @@ package info.mudbourn.mmsdungeons.client;
 
 import info.mudbourn.mmsdungeons.MmsDungeons;
 import info.mudbourn.mmsdungeons.client.guild.GuildsClient;
+import info.mudbourn.mmsdungeons.client.locator.LocatorClient;
+import info.mudbourn.mmsdungeons.client.mobs.factions.FactionsClient;
+import info.mudbourn.mmsdungeons.client.mobs.fangsnclaws.FangsNClawsClient;
 import info.mudbourn.mmsdungeons.client.mobs.knightquest.KnightQuestClient;
 import info.mudbourn.mmsdungeons.client.mobs.kobolds.KoboldsClient;
+import info.mudbourn.mmsdungeons.client.mobs.luminous.LuminousClient;
 import info.mudbourn.mmsdungeons.client.mobs.orpiment.OrpimentClient;
 import info.mudbourn.mmsdungeons.config.FeaturesConfig;
 import info.mudbourn.mmsdungeons.dungeon.DungeonBlocks;
@@ -36,9 +40,13 @@ public final class MmsDungeonsClient implements ClientModInitializer {
             RegionBanner.clear();
         });
         GuildsClient.register();
+        LocatorClient.register();
         KoboldsClient.register();
         OrpimentClient.register();
         KnightQuestClient.register();
+        LuminousClient.register();
+        FangsNClawsClient.register();
+        FactionsClient.register();
 
         HudElementRegistry.attachElementAfter(
             VanillaHudElements.HOTBAR,

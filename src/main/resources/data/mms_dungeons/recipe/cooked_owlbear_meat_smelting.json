@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:smelting",
+  "category": "food",
+  "cookingtime": 200,
+  "experience": 0.35,
+  "ingredient": "mms_dungeons:owlbear_meat",
+  "result": {"id": "mms_dungeons:cooked_owlbear_meat"}
+}

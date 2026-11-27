@@ -1,0 +1,29 @@
+{
+  "sources": [
+    {
+      "type": "minecraft:single",
+      "resource": "fangs_n_claws:mob_effect/venom",
+      "sprite": "mms_dungeons:mob_effect/venom"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "fangs_n_claws:mob_effect/flamebrand",
+      "sprite": "mms_dungeons:mob_effect/flamebrand"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "fangs_n_claws:mob_effect/hellfire_flamebrand",
+      "sprite": "mms_dungeons:mob_effect/hellfire_flamebrand"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "fangs_n_claws:mob_effect/mithridatic",
+      "sprite": "mms_dungeons:mob_effect/mithridatic"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "fangs_n_claws:mob_effect/acid",
+      "sprite": "mms_dungeons:mob_effect/corroded"
+    }
+  ]
+}

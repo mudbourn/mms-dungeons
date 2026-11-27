@@ -29,9 +29,10 @@ public final class DddEntranceTunnel extends StructurePiece {
     public DddEntranceTunnel(List<BlockPos> path, List<BoundingBox> ruinBoxes) {
         super(TYPE, 0, boundsOf(path));
         this.path = path.stream().mapToLong(BlockPos::asLong).toArray();
-        this.ruinBoxes = new int[ruinBoxes.size() * 6];
-        for (int i = 0; i < ruinBoxes.size(); i++) {
-            BoundingBox box = ruinBoxes.get(i);
+        List<BoundingBox> near = ruinBoxes.stream().filter(box -> box.intersects(this.boundingBox)).toList();
+        this.ruinBoxes = new int[near.size() * 6];
+        for (int i = 0; i < near.size(); i++) {
+            BoundingBox box = near.get(i);
             int[] values = {box.minX(), box.minY(), box.minZ(), box.maxX(), box.maxY(), box.maxZ()};
             System.arraycopy(values, 0, this.ruinBoxes, i * 6, 6);
         }
@@ -86,6 +87,9 @@ public final class DddEntranceTunnel extends StructurePiece {
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
         for (long packed : this.path) {
             BlockPos center = BlockPos.of(packed);
+            if (!chunkBB.intersects(center.getX() - 1, center.getZ() - 1, center.getX() + 1, center.getZ() + 1)) {
+                continue;
+            }
             for (int dx = -1; dx <= 1; dx++) {
                 for (int dz = -1; dz <= 1; dz++) {
                     for (int dy = 0; dy <= 2; dy++) {

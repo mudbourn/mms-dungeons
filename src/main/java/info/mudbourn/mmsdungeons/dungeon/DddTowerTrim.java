@@ -1,6 +1,5 @@
 package info.mudbourn.mmsdungeons.dungeon;
 
-import java.util.List;
 import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.levelgen.RandomState;
 import net.minecraft.world.level.levelgen.densityfunction.DensityFunction;
@@ -18,7 +17,7 @@ public final class DddTowerTrim {
     }
 
     // The top block height to keep, or TowerPiece.UNSET when the tower never meets cave air.
-    public static int trimTop(BoundingBox tower, List<BoundingBox> reachBoxes, RandomState randomState, LevelHeightAccessor heights) {
+    public static int trimTop(BoundingBox tower, BoxIndex reachBoxes, RandomState randomState, LevelHeightAccessor heights) {
         DensityFunction density = TerrainAir.finalDensity(randomState);
         int last = Math.min(tower.maxY(), heights.getMaxY() - 2);
         for (int y = Math.max(tower.minY(), heights.getMinY()); y <= last; y++) {
@@ -29,11 +28,11 @@ public final class DddTowerTrim {
         return TowerPiece.UNSET;
     }
 
-    private static int openColumns(BoundingBox tower, int y, List<BoundingBox> reachBoxes, RandomState randomState, DensityFunction density) {
+    private static int openColumns(BoundingBox tower, int y, BoxIndex reachBoxes, RandomState randomState, DensityFunction density) {
         int open = 0;
         for (int x = tower.minX(); x <= tower.maxX(); x += COLUMN_STEP) {
             for (int z = tower.minZ(); z <= tower.maxZ(); z += COLUMN_STEP) {
-                boolean air = !DddPruning.insideAny(reachBoxes, x, y, z)
+                boolean air = !reachBoxes.contains(x, y, z)
                     && TerrainAir.isAir(randomState, density, x, y, z)
                     && TerrainAir.isAir(randomState, density, x, y + 1, z);
                 if (air) {

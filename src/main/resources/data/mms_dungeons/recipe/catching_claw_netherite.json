@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": "minecraft:netherite_ingot",
+  "base": "mms_dungeons:catching_claw",
+  "result": {
+    "id": "mms_dungeons:catching_claw_netherite"
+  },
+  "template": "minecraft:netherite_upgrade_smithing_template"
+}

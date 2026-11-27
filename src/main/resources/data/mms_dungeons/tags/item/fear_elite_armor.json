@@ -1,0 +1,116 @@
+{
+  "values": [
+    {
+      "id": "aerialhell:arsonist_helmet",
+      "required": false
+    },
+    {
+      "id": "aerialhell:arsonist_chestplate",
+      "required": false
+    },
+    {
+      "id": "aerialhell:arsonist_leggings",
+      "required": false
+    },
+    {
+      "id": "aerialhell:arsonist_boots",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:heavy_phoenix_helmet",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:heavy_phoenix_chestplate",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:heavy_phoenix_leggings",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:heavy_phoenix_boots",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:phoenix_arcane_robe_head",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:phoenix_arcane_robe_chest",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:phoenix_arcane_robe_legs",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:phoenix_arcane_robe_feet",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:phoenix_fire_robe_head",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:phoenix_fire_robe_chest",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:phoenix_fire_robe_legs",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:phoenix_fire_robe_feet",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:phoenix_frost_robe_head",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:phoenix_frost_robe_chest",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:phoenix_frost_robe_legs",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:phoenix_frost_robe_feet",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:phoenix_bishop_robe_head",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:phoenix_bishop_robe_chest",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:phoenix_bishop_robe_legs",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:phoenix_bishop_robe_feet",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:phoenix_templar_armor_head",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:phoenix_templar_armor_chest",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:phoenix_templar_armor_legs",
+      "required": false
+    },
+    {
+      "id": "mms_weapons:phoenix_templar_armor_feet",
+      "required": false
+    }
+  ]
+}

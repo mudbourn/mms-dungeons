@@ -1,0 +1,5 @@
+{
+  "geo": "fangs_n_claws:geo/baby_scorpion.json",
+  "texture": "fangs_n_claws:textures/entity/baby_scorpion.png",
+  "shadow_radius": 0.3
+}

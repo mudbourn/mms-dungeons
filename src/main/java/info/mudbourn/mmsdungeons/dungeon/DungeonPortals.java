@@ -1,5 +1,6 @@
 package info.mudbourn.mmsdungeons.dungeon;
 
+import info.mudbourn.mmsdungeons.guild.GuildPortals;
 import java.util.ArrayDeque;
 import java.util.HashSet;
 import java.util.Set;
@@ -23,7 +24,6 @@ public final class DungeonPortals {
     private static final int ARRIVAL_SEARCH = 32;
     // Spacing of the columns checked in that search.
     private static final int ARRIVAL_STEP = 4;
-    private static final Component GATEKEEPER_LAUGHS = Component.literal("The gatekeeper notices your effort, and laughs.");
     // Flood fill cap when finding a portal's anchor block.
     private static final int MAX_PORTAL_BLOCKS = 256;
     // The roof's lowest bedrock layer.
@@ -40,7 +40,7 @@ public final class DungeonPortals {
     private static final int OPENING = 3;
     // How far from the dungeon's centre a new exit portal may be placed.
     private static final int SITE_RADIUS = 4096;
-    // Random spots tried before carving a chamber at the last one.
+    // Columns tried inside the chosen chunk before carving a chamber at the last one.
     private static final int SITE_ATTEMPTS = 24;
     // Open floor kept on every side of an exit portal's frame.
     private static final int ROOM_MARGIN = 2;
@@ -58,8 +58,12 @@ public final class DungeonPortals {
         return PORTAL_MOVES.remove(player.getUUID());
     }
 
-    // Where a player forced into the dungeon at this column lands: the open Sanctuary floor an exit portal would
-    // use, or a carved chamber with an exit portal when the column has no room.
+    // Marks a player as moved by the dungeon itself, so the arrival handling leaves their destination alone.
+    static void markPortalMove(ServerPlayer player) {
+        PORTAL_MOVES.add(player.getUUID());
+    }
+
+    // Where a player forced into the dungeon at this column lands.
     static Vec3 arrivalSpot(ServerLevel dungeon, int x, int z) {
         for (int ring = 0; ring <= ARRIVAL_SEARCH; ring += ARRIVAL_STEP) {
             for (int dx = -ring; dx <= ring; dx += ARRIVAL_STEP) {
@@ -104,11 +108,16 @@ public final class DungeonPortals {
     }
 
     private static TeleportTransition enterDungeon(ServerPlayer player, ServerLevel level, BlockPos anchor) {
-        if (!GateCheck.passes(player)) {
-            player.sendSystemMessage(GATEKEEPER_LAUGHS, true);
-            Vec3 spot = Vec3.atBottomCenterOf(standingSpotNear(level, anchor));
-            player.teleportTo(spot.x, spot.y, spot.z);
+        if (DeepRebuild.isClosed()) {
+            player.sendSystemMessage(DeepRebuild.CLOSED, true);
             return null;
+        }
+        Component refusal = GuildPortals.refusal(player, GlobalPos.of(level.dimension(), anchor));
+        if (refusal != null) {
+            return turnBack(player, level, anchor, refusal);
+        }
+        if (!GateCheck.passes(player)) {
+            return turnBack(player, level, anchor, GateCheck.shortfall(player, false));
         }
         ServerLevel dungeon = level.getServer().getLevel(DungeonDimension.LEVEL);
         if (dungeon == null) {
@@ -122,6 +131,13 @@ public final class DungeonPortals {
             links.link(surface, exit);
         }
         return transition(player, dungeon, Vec3.atBottomCenterOf(standingSpotNear(dungeon, exit)));
+    }
+
+    private static TeleportTransition turnBack(ServerPlayer player, ServerLevel level, BlockPos anchor, Component message) {
+        player.sendSystemMessage(message);
+        Vec3 spot = Vec3.atBottomCenterOf(standingSpotNear(level, anchor));
+        player.teleportTo(spot.x, spot.y, spot.z);
+        return null;
     }
 
     private static TeleportTransition leaveDungeon(ServerPlayer player, BlockPos anchor) {
@@ -147,7 +163,7 @@ public final class DungeonPortals {
     }
 
     // The lowest, then most north-west portal block connected to this one, which names the whole portal.
-    private static BlockPos anchorOf(ServerLevel level, BlockPos start) {
+    public static BlockPos anchorOf(ServerLevel level, BlockPos start) {
         BlockPos anchor = start;
         Set<BlockPos> seen = new HashSet<>();
         ArrayDeque<BlockPos> queue = new ArrayDeque<>();
@@ -169,14 +185,20 @@ public final class DungeonPortals {
         return anchor;
     }
 
-    // A random open spot in the Sanctuary Region with room for an exit portal, or a spot to carve one when none is found.
+    // An open spot in the Sanctuary Region with room for an exit portal, or a spot to carve one when none is found.
     private static BlockPos findExitSite(ServerLevel dungeon) {
         RandomSource random = dungeon.getRandom();
+        int chunkX = random.nextIntBetweenInclusive(-SITE_RADIUS, SITE_RADIUS) >> 4;
+        int chunkZ = random.nextIntBetweenInclusive(-SITE_RADIUS, SITE_RADIUS) >> 4;
+        dungeon.getChunk(chunkX, chunkZ);
+        int minX = (chunkX << 4) + 1 + ROOM_MARGIN;
+        int maxX = (chunkX << 4) + 15 - OPENING - ROOM_MARGIN;
+        int minZ = (chunkZ << 4) + ROOM_MARGIN;
+        int maxZ = (chunkZ << 4) + 15 - ROOM_MARGIN;
         BlockPos site = null;
         for (int attempt = 0; attempt < SITE_ATTEMPTS; attempt++) {
-            int x = random.nextIntBetweenInclusive(-SITE_RADIUS, SITE_RADIUS);
-            int z = random.nextIntBetweenInclusive(-SITE_RADIUS, SITE_RADIUS);
-            dungeon.getChunk(x >> 4, z >> 4);
+            int x = random.nextIntBetweenInclusive(minX, maxX);
+            int z = random.nextIntBetweenInclusive(minZ, maxZ);
             site = new BlockPos(x, highestOpenFloor(dungeon, x, z), z);
             if (roomIsSafe(dungeon, site)) {
                 return site;

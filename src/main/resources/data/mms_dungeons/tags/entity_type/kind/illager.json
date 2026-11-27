@@ -1,0 +1,19 @@
+{
+  "replace": false,
+  "values": [
+    "#minecraft:illager",
+    "minecraft:pillager",
+    "minecraft:vindicator",
+    "minecraft:evoker",
+    "minecraft:illusioner",
+    "minecraft:witch",
+    "minecraft:ravager",
+    {"id": "friendsandfoes:iceologer", "required": false},
+    {"id": "friendsandfoes:illusioner", "required": false},
+    {"id": "frostiful:chillager", "required": false},
+    {"id": "frostiful:frostologer", "required": false},
+    {"id": "takesapillage:archer", "required": false},
+    {"id": "takesapillage:legioner", "required": false},
+    {"id": "takesapillage:skirmisher", "required": false}
+  ]
+}

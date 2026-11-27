@@ -140,7 +140,7 @@ public final class KoboldMobs {
         );
     }
 
-    // Living kobolds settle the Deep Region above the Periculum Region, a few to an area.
+    // Living kobolds settle the Deep and Periculum Regions, a few to an area.
     private static boolean checkLivingSpawn(
         EntityType<? extends AbstractKobold> type,
         ServerLevelAccessor level,
@@ -155,11 +155,11 @@ public final class KoboldMobs {
             return true;
         }
         boolean inDungeon = DungeonDimension.isDungeon(level.getLevel());
-        boolean deep = inDungeon && pos.getY() > DungeonDimension.PERICULUM_TOP && pos.getY() < DungeonDimension.SANCTUARY_BOTTOM;
-        return deep && level.getEntitiesOfClass(AbstractKobold.class, new AABB(pos).inflate(CROWD_RANGE)).size() < CROWD_LIMIT;
+        boolean below = inDungeon && pos.getY() < DungeonDimension.SANCTUARY_BOTTOM;
+        return below && level.getEntitiesOfClass(AbstractKobold.class, new AABB(pos).inflate(CROWD_RANGE)).size() < CROWD_LIMIT;
     }
 
-    // The undead kobolds rise only in the Periculum Region.
+    // The undead kobolds rise in the Deep and Periculum Regions.
     private static boolean checkUndeadSpawn(
         EntityType<? extends Monster> type,
         ServerLevelAccessor level,
@@ -170,7 +170,7 @@ public final class KoboldMobs {
         if (!Monster.checkMonsterSpawnRules(type, level, reason, pos, random)) {
             return false;
         }
-        return !isWorldSpawn(reason) || DungeonDimension.isDungeon(level.getLevel()) && pos.getY() <= DungeonDimension.PERICULUM_TOP;
+        return !isWorldSpawn(reason) || DungeonDimension.isDungeon(level.getLevel()) && pos.getY() < DungeonDimension.SANCTUARY_BOTTOM;
     }
 
     private static boolean isWorldSpawn(EntitySpawnReason reason) {

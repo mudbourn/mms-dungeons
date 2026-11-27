@@ -1,0 +1,29 @@
+{
+  "geo": "fangs_n_claws:geo/silver_skeleton.geo.json",
+  "texture": "fangs_n_claws:textures/entity/silver_skeleton.png",
+  "emissive_texture": "fangs_n_claws:textures/entity/glowing_eyes/silver_skeleton_eyes.png",
+  "shadow_radius": 0.5,
+  "head_bone": "head",
+  "animations": "fangs_n_claws:animations/silver_skeleton.animation.json",
+  "idle": "idle",
+  "walk": "walk",
+  "transition_ticks": 5,
+  "held_items": {
+    "rightItem": {
+      "slot": "mainhand",
+      "rotation": [
+        -90.0,
+        0.0,
+        0.0
+      ]
+    },
+    "leftItem": {
+      "slot": "offhand",
+      "rotation": [
+        -90.0,
+        0.0,
+        0.0
+      ]
+    }
+  }
+}

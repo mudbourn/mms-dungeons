@@ -1,0 +1,37 @@
+{
+  "geo": "fangs_n_claws:geo/goblin.geo.json",
+  "texture": "fangs_n_claws:textures/entity/goblin.png",
+  "emissive_texture": "fangs_n_claws:textures/entity/glowing_eyes/goblin_eyes.png",
+  "shadow_radius": 0.3,
+  "head_bone": "Head",
+  "animations": "fangs_n_claws:animations/goblin.animation.json",
+  "idle": "idle",
+  "walk": "walk",
+  "states": [
+    {
+      "when": "q.ground_speed > 3.6",
+      "animation": "run"
+    }
+  ],
+  "transition_ticks": 5,
+  "held_items": {
+    "rightItem": {
+      "slot": "mainhand",
+      "rotation": [
+        -180.0,
+        0.0,
+        0.0
+      ],
+      "scale": 0.7
+    },
+    "leftItem": {
+      "slot": "offhand",
+      "rotation": [
+        -180.0,
+        0.0,
+        0.0
+      ],
+      "scale": 0.7
+    }
+  }
+}

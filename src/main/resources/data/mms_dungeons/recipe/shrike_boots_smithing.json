@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": "mms_dungeons:snow_duvet",
+  "base": "mms_dungeons:owl_boots",
+  "result": {
+    "id": "mms_dungeons:shrike_boots"
+  },
+  "template": "mms_dungeons:shrike_upgrade_smithing_template"
+}

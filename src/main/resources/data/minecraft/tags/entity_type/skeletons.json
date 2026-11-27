@@ -2,6 +2,15 @@
   "replace": false,
   "values": [
     "mms_dungeons:kobold_skeleton",
-    "mms_dungeons:witherbold"
+    "mms_dungeons:witherbold",
+    "mms_dungeons:miner_skeleton",
+    "mms_dungeons:icy_skeleton",
+    "mms_dungeons:swamp_skeleton",
+    "mms_dungeons:dark_oak_skeleton",
+    "mms_dungeons:hollow_skeleton",
+    "mms_dungeons:cherry_skeleton",
+    "mms_dungeons:savanna_skeleton",
+    "mms_dungeons:sunken_skeleton",
+    "mms_dungeons:revenant_skeleton"
   ]
 }

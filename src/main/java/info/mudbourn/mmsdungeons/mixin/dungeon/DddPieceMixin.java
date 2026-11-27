@@ -7,8 +7,10 @@ import info.mudbourn.mmsdungeons.dungeon.DddLoot;
 import info.mudbourn.mmsdungeons.dungeon.DddMaterial;
 import info.mudbourn.mmsdungeons.dungeon.DddPlacement;
 import info.mudbourn.mmsdungeons.dungeon.DddRuin;
+import info.mudbourn.mmsdungeons.dungeon.DddTrialBoss;
 import info.mudbourn.mmsdungeons.dungeon.DungeonDimension;
 import info.mudbourn.mmsdungeons.dungeon.OpenDoorways;
+import info.mudbourn.mmsdungeons.dungeon.RemovedBlocks;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.levelgen.structure.pools.SinglePoolElement;
@@ -38,13 +40,22 @@ public abstract class DddPieceMixin {
         boolean ddd = template.left().map(DddPlacement::isDddTemplate).orElse(false);
         if (ddd && DungeonDimension.isDungeon(level.getLevel())) {
             settings.addProcessor(DddPlacement.NO_SPAWNERS);
+            settings.addProcessor(DddTrialBoss.INSTANCE);
             settings.getProcessors().add(0, OpenDoorways.INSTANCE);
             DddRuin ruin = DddRuin.placing();
             if (ruin != null) {
-                settings.addProcessor(DddMaterial.of(ruin));
-                if (ruin == DddRuin.DEEPSLATE) {
+                DddMaterial material = DddRuin.placingMaterial();
+                DddMaterial used = material != null ? material : DddMaterial.of(ruin);
+                settings.addProcessor(used);
+                if (used.accent() != null) {
+                    settings.addProcessor(used.accent());
+                }
+                if (ruin.richLoot()) {
                     settings.addProcessor(DddLoot.INSTANCE);
                 }
+                settings.addProcessor(new RemovedBlocks(used));
+            } else {
+                settings.addProcessor(new RemovedBlocks(null));
             }
         }
         return settings;

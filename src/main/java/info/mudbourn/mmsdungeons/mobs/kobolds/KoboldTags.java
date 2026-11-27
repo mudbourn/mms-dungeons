@@ -11,8 +11,6 @@ import net.minecraft.world.level.block.entity.BannerPattern;
 public final class KoboldTags {
 
     public static final TagKey<EntityType<?>> TRADERS = entity("kobold_traders");
-    public static final TagKey<EntityType<?>> TARGETS = entity("kobold_targets");
-    public static final TagKey<EntityType<?>> WARRIOR_TARGETS = entity("kobold_warrior_targets");
     public static final TagKey<BannerPattern> BANNER_PATTERN = TagKey.create(
         Registries.BANNER_PATTERN,
         MmsDungeons.id("pattern_for_kobold")

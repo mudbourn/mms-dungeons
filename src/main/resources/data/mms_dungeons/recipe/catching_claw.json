@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": ["HH", "HF"],
+  "key": {
+    "H": "mms_dungeons:heavy_claw",
+    "F": "minecraft:fishing_rod"
+  },
+  "result": {
+    "id": "mms_dungeons:catching_claw"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [" I ", "BSB", " G "],
+  "key": {
+    "I": "minecraft:iron_nugget",
+    "S": "mms_dungeons:scorpion_sting",
+    "B": "minecraft:bamboo",
+    "G": "mms_dungeons:giant_feather"
+  },
+  "result": {"id": "mms_dungeons:poisonous_dart", "count": 8}
+}

@@ -1,12 +1,16 @@
 package info.mudbourn.mmsdungeons.guild;
 
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import info.mudbourn.mmsdungeons.config.GuildsConfig;
+import info.mudbourn.mmsdungeons.dungeon.DungeonBlocks;
+import info.mudbourn.mmsdungeons.dungeon.DungeonDimension;
+import info.mudbourn.mmsdungeons.dungeon.DungeonPortals;
+import info.mudbourn.mmsdungeons.party.Parties;
+import info.mudbourn.mmsdungeons.party.PartyData;
 import info.mudbourn.mmseconomy.deal.Spot;
 import info.mudbourn.mmseconomy.economy.Billing;
 import info.mudbourn.mmseconomy.economy.Currency;
@@ -21,8 +25,11 @@ import java.util.UUID;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.GlobalPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -51,6 +58,13 @@ final class GuildCommands {
                 .then(Commands.argument("player", StringArgumentType.word())
                     .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(memberNames(ctx), builder))
                     .executes(ctx -> kick(ctx, StringArgumentType.getString(ctx, "player")))))
+            .then(Commands.literal("banish")
+                .then(Commands.argument("player", StringArgumentType.word())
+                    .executes(ctx -> banish(ctx, StringArgumentType.getString(ctx, "player")))))
+            .then(Commands.literal("pardon")
+                .then(Commands.argument("player", StringArgumentType.word())
+                    .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(banishedNames(ctx), builder))
+                    .executes(ctx -> pardon(ctx, StringArgumentType.getString(ctx, "player")))))
             .then(Commands.literal("charter")
                 .then(Commands.argument("text", StringArgumentType.greedyString())
                     .executes(ctx -> charter(ctx, StringArgumentType.getString(ctx, "text")))))
@@ -83,12 +97,10 @@ final class GuildCommands {
                 .then(Commands.literal("portal")
                     .then(Commands.argument("guild", StringArgumentType.string())
                         .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(guildNames(), builder))
-                        .then(Commands.argument("installed", BoolArgumentType.bool())
-                            .executes(ctx -> portal(
-                                ctx,
-                                StringArgumentType.getString(ctx, "guild"),
-                                BoolArgumentType.getBool(ctx, "installed")
-                            )))))
+                        .then(Commands.literal("set")
+                            .executes(ctx -> portalSet(ctx, StringArgumentType.getString(ctx, "guild"))))
+                        .then(Commands.literal("clear")
+                            .executes(ctx -> portalClear(ctx, StringArgumentType.getString(ctx, "guild"))))))
                 .then(Commands.literal("bind")
                     .then(Commands.argument("guild", StringArgumentType.string())
                         .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(guildNames(), builder))
@@ -107,6 +119,12 @@ final class GuildCommands {
         ServerPlayer player = ctx.getSource().getPlayer();
         Guild guild = player == null ? null : Guilds.data().guildOf(player.getUUID());
         return guild == null ? List.of() : guild.members.stream().map(Guilds::nameOf).toList();
+    }
+
+    private static Iterable<String> banishedNames(CommandContext<CommandSourceStack> ctx) {
+        ServerPlayer player = ctx.getSource().getPlayer();
+        Guild guild = player == null ? null : managed(player);
+        return guild == null ? List.of() : guild.banished.stream().map(Guilds::nameOf).toList();
     }
 
     private static int found(CommandContext<CommandSourceStack> ctx, String name) throws CommandSyntaxException {
@@ -143,6 +161,11 @@ final class GuildCommands {
         Guild guild = new Guild(UUID.randomUUID(), name, false, player.getUUID(), config.contractCommissionPercent);
         guild.depot = depot;
         guild.opacParty = party;
+        String claimProblem = GuildClaims.setUp(server, guild, player);
+        if (claimProblem != null) {
+            GuildOpac.drop(server, party);
+            return fail(ctx, claimProblem);
+        }
         if (cost > 0) {
             Tax.Settlement settlement = Tax.settleTaxedOffline(player, cost, TaxKind.PAY);
             guild.treasury += settlement.net();
@@ -159,7 +182,9 @@ final class GuildCommands {
         }
         data.guilds.add(guild);
         data.setDirty();
-        return ok(ctx, "You founded " + name + ".");
+        GuildPortals.announceNeeded(server, guild);
+        return ok(ctx, "You founded " + name + ". An operator will assign its dungeon portal. Claim your "
+            + config.guildClaims + " guild chunks with the claim sub-config named guild.");
     }
 
     private static int join(CommandContext<CommandSourceStack> ctx, String name, boolean confirm) throws CommandSyntaxException {
@@ -172,6 +197,9 @@ final class GuildCommands {
         }
         if (data.guildOf(player.getUUID()) != null) {
             return fail(ctx, "You already belong to a guild. Leave it first.");
+        }
+        if (guild.banished.contains(player.getUUID())) {
+            return fail(ctx, "You are banished from " + guild.name + ".");
         }
         if (!confirm) {
             String charter = guild.charter.isEmpty() ? "(no charter set)" : guild.charter;
@@ -216,9 +244,7 @@ final class GuildCommands {
         if (player.getUUID().equals(guild.master)) {
             return fail(ctx, "Transfer the guild to someone else before leaving.");
         }
-        guild.members.remove(player.getUUID());
-        GuildOpac.remove(ctx.getSource().getServer(), guild, player.getUUID());
-        data.setDirty();
+        removeMember(ctx.getSource().getServer(), guild, player.getUUID());
         return ok(ctx, "You left " + guild.name + ".");
     }
 
@@ -235,14 +261,82 @@ final class GuildCommands {
         if (target.equals(guild.master)) {
             return fail(ctx, "The guildmaster cannot be kicked.");
         }
-        guild.members.remove(target);
-        GuildOpac.remove(ctx.getSource().getServer(), guild, target);
-        Guilds.data().setDirty();
+        removeMember(ctx.getSource().getServer(), guild, target);
         ServerPlayer online = ctx.getSource().getServer().getPlayerList().getPlayer(target);
         if (online != null) {
             online.sendSystemMessage(Component.literal("You were removed from " + guild.name + "."));
         }
         return ok(ctx, "Removed " + name + " from " + guild.name + ".");
+    }
+
+    // Takes a member out of the guild and its party, then moves them off guild land now or at their next login.
+    private static void removeMember(MinecraftServer server, Guild guild, UUID member) {
+        guild.members.remove(member);
+        GuildOpac.remove(server, guild, member);
+        ServerPlayer online = server.getPlayerList().getPlayer(member);
+        if (online == null) {
+            if (!guild.moveOut.contains(member)) {
+                guild.moveOut.add(member);
+            }
+        } else {
+            GuildClaims.moveOut(online, guild);
+        }
+        Guilds.data().setDirty();
+    }
+
+    private static int banish(CommandContext<CommandSourceStack> ctx, String name) throws CommandSyntaxException {
+        ServerPlayer player = ctx.getSource().getPlayerOrException();
+        MinecraftServer server = ctx.getSource().getServer();
+        Guild guild = managed(player);
+        if (guild == null) {
+            return fail(ctx, "Only a guildmaster can do that.");
+        }
+        UUID target = resolve(server, guild, name);
+        if (target == null) {
+            return fail(ctx, "No player called " + name + " is known.");
+        }
+        if (target.equals(guild.master) || target.equals(player.getUUID())) {
+            return fail(ctx, "The guildmaster cannot be banished.");
+        }
+        if (guild.banished.contains(target)) {
+            return fail(ctx, name + " is already banished.");
+        }
+        guild.banished.add(target);
+        if (guild.has(target)) {
+            removeMember(server, guild, target);
+        }
+        Guilds.data().setDirty();
+        ServerPlayer online = server.getPlayerList().getPlayer(target);
+        if (online != null) {
+            online.sendSystemMessage(Component.literal("You were banished from " + guild.name + ". Its land is hostile to you."));
+        }
+        return ok(ctx, name + " is banished from " + guild.name + ".");
+    }
+
+    private static int pardon(CommandContext<CommandSourceStack> ctx, String name) throws CommandSyntaxException {
+        Guild guild = managed(ctx.getSource().getPlayerOrException());
+        if (guild == null) {
+            return fail(ctx, "Only a guildmaster can do that.");
+        }
+        UUID target = resolve(ctx.getSource().getServer(), guild, name);
+        if (target == null || !guild.banished.remove(target)) {
+            return fail(ctx, name + " is not banished.");
+        }
+        Guilds.data().setDirty();
+        return ok(ctx, name + " is no longer banished from " + guild.name + ".");
+    }
+
+    private static UUID resolve(MinecraftServer server, Guild guild, String name) {
+        ServerPlayer online = server.getPlayerList().getPlayerByName(name);
+        if (online != null) {
+            return online.getUUID();
+        }
+        UUID member = memberByName(guild, name);
+        if (member != null) {
+            return member;
+        }
+        PartyData parties = Parties.data();
+        return parties == null ? null : parties.findKnown(name);
     }
 
     private static int charter(CommandContext<CommandSourceStack> ctx, String text) throws CommandSyntaxException {
@@ -294,10 +388,15 @@ final class GuildCommands {
         if (next == null || target.equals(player.getUUID())) {
             return fail(ctx, "Name another guild member who is online.");
         }
+        String claimProblem = GuildClaims.transfer(server, guild, player.getUUID(), next);
+        if (claimProblem != null) {
+            return fail(ctx, claimProblem);
+        }
         UUID party = GuildOpac.transfer(server, guild, next);
         if (party == null) {
+            guild.master = target;
             Guilds.data().setDirty();
-            return fail(ctx, "The Open Parties and Claims party could not pass to " + name + ". The guild has no party now.");
+            return fail(ctx, "The guild land passed to " + name + ", but the Open Parties and Claims party could not. The guild has no party now.");
         }
         guild.opacParty = party;
         guild.master = target;
@@ -379,7 +478,7 @@ final class GuildCommands {
         text.append("\nMembers: ").append(guild.members.size());
         text.append("\nJoin fee: ").append(Currency.format(guild.joinFee));
         text.append("\nContract commission: ").append(guild.commissionPercent).append("%");
-        text.append("\nPortal: ").append(guild.portalInstalled ? "installed" : "not installed");
+        text.append("\nPortal: ").append(guild.portal == null ? "not assigned" : "assigned");
         text.append("\nOpen postings: ").append(data.bountiesOf(guild.id).stream().filter(Bounty::open).count());
         if (member) {
             text.append("\nTreasury: ").append(Currency.format(guild.treasury));
@@ -423,14 +522,50 @@ final class GuildCommands {
         return ok(ctx, "Created the public guild " + name + ".");
     }
 
-    private static int portal(CommandContext<CommandSourceStack> ctx, String name, boolean installed) {
+    private static int portalSet(CommandContext<CommandSourceStack> ctx, String name) throws CommandSyntaxException {
+        ServerPlayer player = ctx.getSource().getPlayerOrException();
         Guild guild = Guilds.data().byName(name);
         if (guild == null) {
             return fail(ctx, "No guild is called " + name + ".");
         }
-        guild.portalInstalled = installed;
+        ServerLevel level = (ServerLevel) player.level();
+        if (DungeonDimension.isDungeon(level)) {
+            return fail(ctx, "Assign the portal on the surface, not in the dungeon.");
+        }
+        BlockPos block = portalBlock(player, level);
+        if (block == null) {
+            return fail(ctx, "Stand in a dungeon portal or look at one.");
+        }
+        GlobalPos portal = GlobalPos.of(level.dimension(), DungeonPortals.anchorOf(level, block));
+        Guild owner = GuildPortals.ownerOf(portal);
+        if (owner != null && owner != guild) {
+            return fail(ctx, "That portal already belongs to " + owner.name + ".");
+        }
+        guild.portal = portal;
         Guilds.data().setDirty();
-        return ok(ctx, guild.name + " portal installed: " + installed + ".");
+        return ok(ctx, guild.name + " now owns the portal at " + portal.pos().toShortString() + ".");
+    }
+
+    private static int portalClear(CommandContext<CommandSourceStack> ctx, String name) {
+        Guild guild = Guilds.data().byName(name);
+        if (guild == null) {
+            return fail(ctx, "No guild is called " + name + ".");
+        }
+        guild.portal = null;
+        Guilds.data().setDirty();
+        return ok(ctx, guild.name + " has no portal now.");
+    }
+
+    private static BlockPos portalBlock(ServerPlayer player, ServerLevel level) {
+        HitResult hit = player.pick(LOOK_REACH, 1.0f, false);
+        if (hit.getType() == HitResult.Type.BLOCK) {
+            BlockPos looked = ((BlockHitResult) hit).getBlockPos();
+            if (level.getBlockState(looked).is(DungeonBlocks.DUNGEON_PORTAL)) {
+                return looked;
+            }
+        }
+        BlockPos feet = player.blockPosition();
+        return level.getBlockState(feet).is(DungeonBlocks.DUNGEON_PORTAL) ? feet : null;
     }
 
     // The guild the player runs: their own as guildmaster, or the public guild for an admin.

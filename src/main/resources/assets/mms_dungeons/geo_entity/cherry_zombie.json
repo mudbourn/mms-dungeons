@@ -1,0 +1,22 @@
+{
+  "geo": "luminous_monsters:net/mcreator/luminousmonsters/client/renderer/modelcherryzombie.class",
+  "texture": "luminous_monsters:textures/entities/cherryzombie.png",
+  "shadow_radius": 0.5,
+  "head_bone": "head",
+  "animations": "luminous_monsters:animations/cherryzombie.animation.json",
+  "idle": "idle",
+  "walk": "walk",
+  "attack": "attack",
+  "driver": "mms_dungeons:luminous_zombie",
+  "transition_ticks": 3,
+  "rest_rotations": {
+    "left_arm": [-60.0, 0.0, 0.0],
+    "right_arm": [-60.0, 0.0, 0.0]
+  },
+  "held_items": {
+    "right_arm": {
+      "slot": "mainhand",
+      "offset": [-1.0, -10.0, 0.0]
+    }
+  }
+}

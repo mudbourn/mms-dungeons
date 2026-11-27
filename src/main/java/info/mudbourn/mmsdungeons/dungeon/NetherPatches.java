@@ -3,7 +3,7 @@ package info.mudbourn.mmsdungeons.dungeon;
 import java.util.OptionalLong;
 import net.minecraft.util.Mth;
 
-// Splits the Periculum into warped cells that each hold one pair of Nether Infection biomes, spaced apart by their leading biome.
+// Splits the Deep and Periculum Regions into warped cells that each hold one pair of Nether Infection biomes, spaced apart by their leading biome.
 public final class NetherPatches {
 
     // Cell side in quarts.
@@ -12,6 +12,8 @@ public final class NetherPatches {
     public static final int MARGIN = 4;
     // Least distance between two patches led by the same biome, in quarts.
     public static final int SPACING = 128;
+    // One cell in this many keeps its patch; the rest stay in the surrounding biome.
+    private static final int KEEP_ONE_IN = 3;
     // Lattice spacing of the edge warp, in quarts.
     private static final int WARP_GRID = 8;
     // Largest edge warp, in quarts.
@@ -32,7 +34,7 @@ public final class NetherPatches {
             return OptionalLong.empty();
         }
         long hash = hash(cellX, cellZ);
-        return yields(cellX, cellZ, hash, leaders) ? OptionalLong.empty() : OptionalLong.of(hash);
+        return !kept(hash) || yields(cellX, cellZ, hash, leaders) ? OptionalLong.empty() : OptionalLong.of(hash);
     }
 
     // Index of the biome that leads a cell.
@@ -49,7 +51,7 @@ public final class NetherPatches {
                     continue;
                 }
                 long other = hash(cellX + dx, cellZ + dz);
-                if (leader(other, leaders) == leader && (other < hash || other == hash && (dx < 0 || dx == 0 && dz < 0))) {
+                if (kept(other) && leader(other, leaders) == leader && (other < hash || other == hash && (dx < 0 || dx == 0 && dz < 0))) {
                     return true;
                 }
             }
@@ -57,8 +59,12 @@ public final class NetherPatches {
         return false;
     }
 
+    private static boolean kept(long hash) {
+        return Math.floorMod(hash >>> 20, (long) KEEP_ONE_IN) == 0;
+    }
+
     private static long hash(int cellX, int cellZ) {
-        return mix(cellX * 0x9E3779B97F4A7C15L ^ cellZ * 0xC2B2AE3D27D4EB4FL);
+        return mix(cellX * 0x9E3779B97F4A7C15L ^ cellZ * 0xC2B2AE3D27D4EB4FL ^ DungeonGeneration.current() * 0xD1B54A32D192ED03L);
     }
 
     private static float warp(int quartX, int quartZ, long salt) {

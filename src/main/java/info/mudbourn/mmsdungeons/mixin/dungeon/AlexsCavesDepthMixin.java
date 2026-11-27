@@ -30,11 +30,13 @@ public abstract class AlexsCavesDepthMixin {
     @Inject(method = "ac_rareBiomeAt", at = @At("HEAD"), remap = false)
     private void mmsDungeons$markDepth(int x, int y, int z, Climate.Sampler sampler, CallbackInfoReturnable<Holder<Biome>> cir) {
         PericulumBiomes.sampling(mmsDungeons$isDungeon() && QuartPos.toBlock(y) <= DungeonDimension.PERICULUM_TOP);
+        PericulumBiomes.inDungeon(mmsDungeons$isDungeon());
     }
 
     @Inject(method = "ac_rareBiomeAt", at = @At("RETURN"), remap = false)
     private void mmsDungeons$clearDepth(int x, int y, int z, Climate.Sampler sampler, CallbackInfoReturnable<Holder<Biome>> cir) {
         PericulumBiomes.sampling(false);
+        PericulumBiomes.inDungeon(false);
     }
 
     @Unique

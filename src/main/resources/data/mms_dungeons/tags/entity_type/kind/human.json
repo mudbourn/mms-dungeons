@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "mms_dungeons:bandit",
+    "mms_dungeons:mercenary",
+    "mms_dungeons:dark_guildsman",
+    {"id": "aerialhell:lunatic_priest", "required": false}
+  ]
+}

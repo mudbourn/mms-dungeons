@@ -1,0 +1,22 @@
+{
+  "replace": false,
+  "values": [
+    {"id": "uselessreptile:wyvern", "required": false},
+    {"id": "uselessreptile:lightning_chaser", "required": false},
+    {"id": "uselessreptile:magmamuncher", "required": false},
+    {"id": "uselessreptile:river_pikehorn", "required": false},
+    {"id": "uselessreptile:moleclaw", "required": false},
+    "mms_dungeons:lizzy",
+    "mms_dungeons:momma_lizzy",
+    {"id": "alexscaves:atlatitan", "required": false},
+    {"id": "alexscaves:grottoceratops", "required": false},
+    {"id": "alexscaves:luxtructosaurus", "required": false},
+    {"id": "alexscaves:relicheirus", "required": false},
+    {"id": "alexscaves:subterranodon", "required": false},
+    {"id": "alexscaves:tremorsaurus", "required": false},
+    {"id": "alexscaves:tremorzilla", "required": false},
+    {"id": "alexscaves:vallumraptor", "required": false},
+    {"id": "aerialhell:venomous_snake", "required": false},
+    {"id": "wizards:fire_hydra", "required": false}
+  ]
+}

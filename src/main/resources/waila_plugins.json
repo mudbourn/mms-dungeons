@@ -1,0 +1,9 @@
+{
+  "mms_dungeons:mimic_disguise": {
+    "entrypoints": {
+      "client": "info.mudbourn.mmsdungeons.client.compat.wthit.MimicDisguisePlugin"
+    },
+    "side": "client",
+    "required": []
+  }
+}

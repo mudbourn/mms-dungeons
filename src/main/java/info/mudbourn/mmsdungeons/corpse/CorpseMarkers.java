@@ -10,6 +10,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.ResourceKey;
@@ -56,11 +57,20 @@ public final class CorpseMarkers {
             .buildAndRegister(MmsDungeons.id("corpse_facing"));
     }
 
-    // Builds the marker on the ground under the owner, not yet in the world.
-    static Mannequin create(ServerPlayer owner, ServerLevel level) {
-        CompoundTag tag = new CompoundTag();
+    // Builds the marker on the ground under the given spot, not yet in the world.
+    static Mannequin create(ServerPlayer owner, ServerLevel level, Vec3 at, float facing) {
         ResolvableProfile profile = ResolvableProfile.createResolved(owner.getGameProfile());
-        tag.put("profile", ResolvableProfile.CODEC.encodeStart(NbtOps.INSTANCE, profile).getOrThrow());
+        Tag profileTag = ResolvableProfile.CODEC.encodeStart(NbtOps.INSTANCE, profile).getOrThrow();
+        Mannequin body = body(level, at, facing, profileTag, Component.literal(owner.getGameProfile().name()), CollisionContext.of(owner));
+        body.addTag(TAG);
+        body.addTag(OWNER_TAG_PREFIX + owner.getUUID());
+        return body;
+    }
+
+    // A downed mannequin wearing the given profile, lying on the floor under the spot.
+    static Mannequin body(ServerLevel level, Vec3 at, float facing, Tag profile, Component name, CollisionContext context) {
+        CompoundTag tag = new CompoundTag();
+        tag.put("profile", profile);
         tag.putString("pose", "sleeping");
         tag.putBoolean("immovable", true);
         tag.put("description", ComponentSerialization.CODEC.encodeStart(NbtOps.INSTANCE, Component.literal("Corpse")).getOrThrow());
@@ -69,17 +79,14 @@ public final class CorpseMarkers {
 
         Mannequin body = new Mannequin(EntityTypes.MANNEQUIN, level);
         body.load(TagValueInput.create(ProblemReporter.DISCARDING, level.registryAccess(), tag));
-        Vec3 spot = groundBelow(level, owner);
-        float facing = owner.yBodyRot;
+        Vec3 spot = new Vec3(at.x, floorUnder(level, at, context), at.z);
         body.snapTo(spot.x, spot.y, spot.z, facing, 0.0F);
         body.setYBodyRot(facing);
         body.setYHeadRot(facing);
         body.setAttached(FACING, facing);
-        body.setCustomName(Component.literal(owner.getGameProfile().name()));
+        body.setCustomName(name);
         body.setCustomNameVisible(true);
-        body.addTag(TAG);
         body.addTag(SIZE_IGNORE_TAG);
-        body.addTag(OWNER_TAG_PREFIX + owner.getUUID());
         return body;
     }
 
@@ -111,7 +118,6 @@ public final class CorpseMarkers {
             if (Math.abs(floor - at.y) > SETTLE_TOLERANCE) {
                 marker.setPos(at.x, floor, at.z);
             }
-            // Undoes resizing applied before the ignore tag existed.
             AttributeInstance scale = marker.getAttribute(Attributes.SCALE);
             if (scale != null && scale.getBaseValue() != 1.0) {
                 scale.setBaseValue(1.0);
@@ -120,14 +126,8 @@ public final class CorpseMarkers {
         }
     }
 
-    // Finds the floor under the owner, judged by what the owner collides with so plants they stand in are passed through.
-    private static Vec3 groundBelow(Level level, Entity owner) {
-        Vec3 from = owner.position();
-        return new Vec3(from.x, floorUnder(level, from, CollisionContext.of(owner)), from.z);
-    }
-
     // Height of the highest surface at most half a block above the given point, searching down from there.
-    private static double floorUnder(Level level, Vec3 from, CollisionContext context) {
+    static double floorUnder(Level level, Vec3 from, CollisionContext context) {
         double ceiling = from.y + STEP;
         BlockPos pos = BlockPos.containing(from.x, ceiling, from.z);
         for (int i = 0; i < MAX_DROP && pos.getY() >= level.getMinY(); i++) {
