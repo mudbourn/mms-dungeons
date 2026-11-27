@@ -1,7 +1,7 @@
 package info.mudbourn.mmsdungeons.client.mobs.factions;
 
 import info.mudbourn.mmsdungeons.mobs.factions.FactionOrigin;
-import info.mudbourn.mmsorigins.MmsOriginsPowers;
+import info.mudbourn.mmsdungeons.mobs.factions.entity.FactionMember;
 import info.mudbourn.mmsorigins.client.LeafFormState;
 import info.mudbourn.mmsorigins.client.LeafTrail;
 import info.mudbourn.mmsorigins.client.beastfolk.BeastfolkFeatureRenderer;
@@ -21,7 +21,6 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.entity.LivingEntity;
 import org.jspecify.annotations.Nullable;
 
 // Draws MMS Origins' origin furs on faction members. Only touched when MMS Origins is loaded, so the class never resolves without it.
@@ -81,8 +80,8 @@ public final class FactionFurs {
     }
 
     // Draws a floran in leaf form as MMS Origins draws a floran player: as a bush trailing its tail, once the morph is complete.
-    public static void leafForm(AvatarRenderState state, LivingEntity mob, float partialTick) {
-        boolean leafForm = MmsOriginsPowers.leafFormComplete(mob);
+    public static void leafForm(AvatarRenderState state, FactionMember mob, float partialTick) {
+        boolean leafForm = mob.leafFormShown();
         ((LeafFormState) state).mmsOrigins$setLeafForm(leafForm);
         if (leafForm) {
             ((LeafFormState) state).mmsOrigins$setLeafTail(LeafTrail.offset(mob, partialTick));

@@ -5,7 +5,9 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import info.mudbourn.mmseconomy.deal.Spot;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.UUIDUtil;
@@ -49,7 +51,7 @@ public final class Guild {
 
     public Guild(UUID id, String name, boolean isPublic, UUID master, int commissionPercent) {
         this.id = id;
-        this.name = name;
+        this.name = displayName(name);
         this.isPublic = isPublic;
         this.master = master;
         this.members = new ArrayList<>();
@@ -68,7 +70,7 @@ public final class Guild {
                   Optional<UUID> opacParty, int commissionPercent, List<UUID> banished, List<UUID> moveOut,
                   int claimSub) {
         this.id = id;
-        this.name = name;
+        this.name = displayName(name);
         this.isPublic = isPublic;
         this.master = master.orElse(null);
         this.members = new ArrayList<>(members);
@@ -86,5 +88,66 @@ public final class Guild {
 
     public boolean has(UUID player) {
         return members.contains(player);
+    }
+
+    // Short articles, conjunctions and prepositions that title case leaves in lower case.
+    private static final Set<String> MINOR_WORDS = Set.of(
+        "a",
+        "an",
+        "the",
+        "and",
+        "but",
+        "or",
+        "nor",
+        "for",
+        "so",
+        "yet",
+        "of",
+        "in",
+        "on",
+        "at",
+        "to",
+        "by",
+        "up",
+        "as",
+        "from",
+        "with",
+        "into",
+        "over"
+    );
+
+    // A typed name made readable: underscores and dashes become spaces, a capital inside a word starts a new one, and it is title-cased.
+    public static String displayName(String typed) {
+        String split = typed.replaceAll("(?<=[\\p{Ll}0-9])(?=\\p{Lu})", " ");
+        List<String> words = new ArrayList<>();
+        for (String word : split.replaceAll("[_-]", " ").trim().split("\\s+")) {
+            if (!word.isEmpty()) {
+                words.add(word);
+            }
+        }
+        StringBuilder name = new StringBuilder();
+        for (int i = 0; i < words.size(); i++) {
+            String word = words.get(i);
+            String lower = word.toLowerCase(Locale.ROOT);
+            if (i > 0) {
+                name.append(' ');
+            }
+            if (i > 0 && i < words.size() - 1 && MINOR_WORDS.contains(lower)) {
+                name.append(lower);
+            } else {
+                name.append(word.substring(0, 1).toUpperCase(Locale.ROOT)).append(word.substring(1));
+            }
+        }
+        return name.toString();
+    }
+
+    // The name as a command argument: spaces as underscores, so it can be typed without quotes.
+    public String commandName() {
+        return this.name.replace(' ', '_');
+    }
+
+    // The same for every spelling of a name: case, spaces, underscores and dashes ignored.
+    static String lookupKey(String name) {
+        return name.toLowerCase(Locale.ROOT).replaceAll("[\\s_-]", "");
     }
 }

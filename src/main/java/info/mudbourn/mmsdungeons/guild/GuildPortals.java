@@ -37,8 +37,8 @@ public final class GuildPortals {
 
     private static void tell(ServerPlayer operator, Guild guild) {
         operator.sendSystemMessage(Component.literal(
-            guild.name + " needs a dungeon portal. Stand in or look at its portal and run /guild admin portal \""
-                + guild.name + "\" set."));
+            guild.name + " needs a dungeon portal. Stand in or look at its portal and run /guild admin portal "
+                + guild.commandName() + " set."));
     }
 
     public static Guild ownerOf(GlobalPos portal) {

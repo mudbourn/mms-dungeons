@@ -51,8 +51,9 @@ public final class GuildData extends SavedData {
     }
 
     public Guild byName(String name) {
+        String key = Guild.lookupKey(name);
         for (Guild guild : guilds) {
-            if (guild.name.equalsIgnoreCase(name)) {
+            if (Guild.lookupKey(guild.name).equals(key)) {
                 return guild;
             }
         }

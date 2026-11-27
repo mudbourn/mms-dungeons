@@ -116,6 +116,7 @@ public class FactionMember extends Monster implements RangedAttackMob, FeudAware
     private static final EntityDataAccessor<String> DATA_ORIGIN = SynchedEntityData.defineId(FactionMember.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<Boolean> DATA_FLYING = SynchedEntityData.defineId(FactionMember.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> DATA_DOWNED = SynchedEntityData.defineId(FactionMember.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> DATA_LEAF_FORM = SynchedEntityData.defineId(FactionMember.class, EntityDataSerializers.BOOLEAN);
     private static final ResourceKey<Biome> AERIAL_HELL_CAVERN = ResourceKey.create(Registries.BIOME, MmsDungeons.id("aerial_hell_cavern"));
     private static final float LUNAR_CHANCE = 0.4f;
     private static final double RALLY_RANGE = 24.0;
@@ -136,6 +137,7 @@ public class FactionMember extends Monster implements RangedAttackMob, FeudAware
     static final boolean ORIGINS = FabricLoader.getInstance().isModLoaded("mms_origins");
     public static final int CRAWL_LOOKAHEAD = 3;
     public static final EntityDimensions CRAWL_SIZE = EntityDimensions.scalable(0.6f, 0.6f).withEyeHeight(0.4f);
+    private static final EntityDimensions CROUCH_SIZE = EntityDimensions.scalable(0.6f, 1.5f).withEyeHeight(1.27f);
     private static final float[] DROP_CHANCE = {0.06f, 0.08f, 0.1f};
     private static final int TARGET_INTERVAL = 10;
     private static final float BONUS_LOOT_CHANCE = 0.25f;
@@ -163,6 +165,7 @@ public class FactionMember extends Monster implements RangedAttackMob, FeudAware
     private final FactionPowers powers = new FactionPowers(this);
     private final FactionClimate climate = new FactionClimate(this);
     private ItemStack sidearm = ItemStack.EMPTY;
+    private @Nullable Pose forcedPose;
     private ItemStack stowedMelee = ItemStack.EMPTY;
     private int tier = 1;
     private boolean classChosen;
@@ -259,6 +262,7 @@ public class FactionMember extends Monster implements RangedAttackMob, FeudAware
         builder.define(DATA_ROLL, 0);
         builder.define(DATA_FLYING, false);
         builder.define(DATA_DOWNED, false);
+        builder.define(DATA_LEAF_FORM, false);
         builder.define(DATA_SWING, "");
         builder.define(DATA_SWING_SEQ, 0);
         builder.define(DATA_SWING_TICKS, 0);
@@ -437,7 +441,7 @@ public class FactionMember extends Monster implements RangedAttackMob, FeudAware
         for (int i = 0; i < this.supplies.size(); i++) {
             ItemStack stack = this.supplies.get(i);
             FoodProperties food = stack.get(DataComponents.FOOD);
-            if (food != null && food.nutrition() > 0) {
+            if (food != null && food.nutrition() > 0 && !this.forbids(stack)) {
                 stack.shrink(1);
                 if (stack.isEmpty()) {
                     this.supplies.remove(i);
@@ -451,7 +455,7 @@ public class FactionMember extends Monster implements RangedAttackMob, FeudAware
     private int findSupply(boolean quick) {
         for (int i = 0; i < this.supplies.size(); i++) {
             ItemStack stack = this.supplies.get(i);
-            if (!stack.isEmpty() && !FactionSupplies.water(stack) && FactionSupplies.quick(stack) == quick && (quick || FactionSupplies.meal(stack))) {
+            if (!stack.isEmpty() && !FactionSupplies.water(stack) && FactionSupplies.quick(stack) == quick && (quick || FactionSupplies.meal(stack)) && !this.forbids(stack)) {
                 return i;
             }
         }
@@ -513,8 +517,8 @@ public class FactionMember extends Monster implements RangedAttackMob, FeudAware
         ItemStack eaten = this.getUseItem().copy();
         this.consumed = true;
         super.completeUsingItem();
-        if (eaten.is(Items.POTION) && this.origin() == FactionOrigin.FLORAN) {
-            this.powers.floran().drink();
+        if (FactionOrigin.POWERS && this.origin() != FactionOrigin.NONE) {
+            FactionOriginPowers.finishUsing(this, eaten, this.getOffhandItem());
         }
         this.climate.drank(eaten);
         FoodProperties food = eaten.get(DataComponents.FOOD);
@@ -544,6 +548,22 @@ public class FactionMember extends Monster implements RangedAttackMob, FeudAware
 
     public boolean crawling() {
         return this.getPose() == Pose.SWIMMING;
+    }
+
+    // Holds the pose an origin power forces, as MMS Origins does for a player, and stands back up once the power lets go.
+    private void tickForcedPose() {
+        Pose forced = FactionOrigin.POWERS && this.origin() != FactionOrigin.NONE && !this.downed() ? FactionOriginPowers.forcedPose(this) : null;
+        if (forced != null) {
+            if (this.getPose() != forced) {
+                this.setPose(forced);
+            }
+            this.forcedPose = forced;
+        } else if (this.forcedPose != null) {
+            if (this.getPose() == this.forcedPose && !this.downed() && !this.armless()) {
+                this.setCrawling(!this.roomToStand());
+            }
+            this.forcedPose = null;
+        }
     }
 
     public void setCrawling(boolean crawling) {
@@ -584,6 +604,9 @@ public class FactionMember extends Monster implements RangedAttackMob, FeudAware
     protected EntityDimensions getDefaultDimensions(Pose pose) {
         if (pose == Pose.SWIMMING) {
             return CRAWL_SIZE;
+        }
+        if (pose == Pose.CROUCHING) {
+            return CROUCH_SIZE;
         }
         return super.getDefaultDimensions(pose);
     }
@@ -646,6 +669,15 @@ public class FactionMember extends Monster implements RangedAttackMob, FeudAware
 
     public void setFlying(boolean flying) {
         this.entityData.set(DATA_FLYING, flying);
+    }
+
+    // A floran folded fully into leaf form, synced so the renderer draws it as a bush.
+    public boolean leafFormShown() {
+        return this.entityData.get(DATA_LEAF_FORM);
+    }
+
+    void setLeafFormShown(boolean shown) {
+        this.entityData.set(DATA_LEAF_FORM, shown);
     }
 
     // On its way to revive a downed crewmate, which it hurries to do.
@@ -778,6 +810,11 @@ public class FactionMember extends Monster implements RangedAttackMob, FeudAware
             case LEGS -> DATA_COVER_LEGS;
             default -> DATA_COVER_FEET;
         };
+    }
+
+    // Whether its origin's restrictions keep it from using the item, as they would a player of the origin.
+    boolean forbids(ItemStack stack) {
+        return FactionOrigin.POWERS && this.origin() != FactionOrigin.NONE && FactionOriginPowers.forbids(this, stack);
     }
 
     // In or folding into a floran's leaf form, which leaves no hands for items or weapons.
@@ -1032,6 +1069,7 @@ public class FactionMember extends Monster implements RangedAttackMob, FeudAware
         } else if (!this.downed() && !this.armless() && this.crawling() && this.roomToStand() && (this.getNavigation().getPath() == null || !this.lowGapAhead(this.getNavigation().getPath(), CRAWL_LOOKAHEAD))) {
             this.setCrawling(false);
         }
+        this.tickForcedPose();
         if (this.getTarget() == null && !this.downed() && !this.isUsingItem() && this.tickCount % IDLE_EAT_TICKS == 0 && this.getHealth() < this.getMaxHealth() * IDLE_EAT_HEALTH) {
             this.startConsuming(false);
         }
@@ -1058,6 +1096,16 @@ public class FactionMember extends Monster implements RangedAttackMob, FeudAware
     // Whether this player has attacked its crew.
     boolean provokedBy(Player player) {
         return player.getUUID().equals(this.provoker);
+    }
+
+    // Lets go of a grudge against a player who made peace with it, and stops fighting them.
+    void forgive(Player player) {
+        if (this.provokedBy(player)) {
+            this.provoker = null;
+        }
+        if (this.getTarget() == player) {
+            this.setTarget(null);
+        }
     }
 
     // Hands an offering to a human that is waiting on one after a peace sign.
@@ -1120,6 +1168,9 @@ public class FactionMember extends Monster implements RangedAttackMob, FeudAware
             this.supplies.add(FactionSupplies.water(FLORAN_WATER));
             this.powers.floran().spawn(random);
         }
+        if (FactionOrigin.POWERS && origin != FactionOrigin.NONE) {
+            FactionOriginPowers.obey(this, this.supplies);
+        }
         FactionCover.apply(this, random);
         for (EquipmentSlot slot : EquipmentSlot.values()) {
             this.setDropChance(slot, DROP_CHANCE[this.faction.ordinal()]);
@@ -1161,8 +1212,6 @@ public class FactionMember extends Monster implements RangedAttackMob, FeudAware
         output.putInt("DownedTicks", this.downedState.downedTicks());
         output.putBoolean("SelfRevived", this.downedState.selfRevived());
         output.putInt("ShellPotions", this.powers.shellPotions());
-        output.putInt("SunPower", this.powers.floran().sun());
-        output.putBoolean("SunlitFury", this.powers.floran().fury());
         output.store("Sidearm", ItemStack.OPTIONAL_CODEC, this.sidearm);
         output.store("StowedMelee", ItemStack.OPTIONAL_CODEC, this.stowedMelee);
     }
@@ -1193,7 +1242,6 @@ public class FactionMember extends Monster implements RangedAttackMob, FeudAware
             this.softLanding = true;
         }
         this.powers.setShellPotions(input.getIntOr("ShellPotions", 0));
-        this.powers.floran().load(input.getIntOr("SunPower", 0), input.getBooleanOr("SunlitFury", false));
         this.sidearm = input.read("Sidearm", ItemStack.OPTIONAL_CODEC).orElse(ItemStack.EMPTY);
         this.stowedMelee = input.read("StowedMelee", ItemStack.OPTIONAL_CODEC).orElse(ItemStack.EMPTY);
         this.downedState.load(input.getBooleanOr("Downed", false), input.getIntOr("DownedTicks", 0), input.getBooleanOr("SelfRevived", false));

@@ -112,7 +112,7 @@ final class GuildCommands {
     }
 
     private static Iterable<String> guildNames() {
-        return Guilds.data().guilds.stream().map(guild -> guild.name).toList();
+        return Guilds.data().guilds.stream().map(Guild::commandName).toList();
     }
 
     private static Iterable<String> memberNames(CommandContext<CommandSourceStack> ctx) {
@@ -205,7 +205,7 @@ final class GuildCommands {
             String charter = guild.charter.isEmpty() ? "(no charter set)" : guild.charter;
             ctx.getSource().sendSuccess(() -> Component.literal(
                 guild.name + " charter: " + charter + "\nJoin fee: " + Currency.format(guild.joinFee)
-                    + "\nType /guild join \"" + guild.name + "\" confirm to accept the charter and pay."), false);
+                    + "\nType /guild join " + guild.commandName() + " confirm to accept the charter and pay."), false);
             return 1;
         }
         if (GuildOpac.inOtherParty(server, player.getUUID(), guild.opacParty)) {
@@ -592,7 +592,7 @@ final class GuildCommands {
 
     private static String checkName(GuildData data, String name) {
         int max = GuildsConfig.get().maxNameLength;
-        if (name.length() < 3 || name.length() > max || !name.matches("[A-Za-z0-9 '_-]+")) {
+        if (name.length() > max || !name.matches("[A-Za-z0-9 '_-]+") || Guild.displayName(name).length() < 3) {
             return "A guild name is 3 to " + max + " letters, digits, spaces, apostrophes, dashes or underscores.";
         }
         if (data.byName(name) != null) {

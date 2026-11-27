@@ -1,13 +1,15 @@
 package info.mudbourn.mmsdungeons.client.guild;
 
+import java.util.List;
 import java.util.function.Consumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.components.ObjectSelectionList;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -50,7 +52,7 @@ final class ItemSelectionScreen extends Screen {
         graphics.centeredText(font, title, width / 2, 12, 0xFFFFFFFF);
     }
 
-    private final class ItemList extends ObjectSelectionList<ItemList.Entry> {
+    private final class ItemList extends ContainerObjectSelectionList<ItemList.Entry> {
 
         ItemList(Minecraft minecraft, int width, int height, int y) {
             super(minecraft, width, height, y, 24);
@@ -75,27 +77,28 @@ final class ItemSelectionScreen extends Screen {
             setScrollAmount(0.0);
         }
 
-        final class Entry extends ObjectSelectionList.Entry<Entry> {
+        // One row: a button across the row that picks the item, drawn with the item and its name.
+        final class Entry extends ContainerObjectSelectionList.Entry<Entry> {
 
             private final ItemStack stack;
+            private final Button button;
 
             Entry(ItemStack stack) {
                 this.stack = stack;
+                this.button = Button.builder(Component.empty(), pressed -> {
+                    picked.accept(stack);
+                    onClose();
+                }).build();
             }
 
             @Override
-            public Component getNarration() {
-                return stack.getHoverName();
+            public List<? extends GuiEventListener> children() {
+                return List.of(button);
             }
 
             @Override
-            public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
-                if (event.button() != 0) {
-                    return false;
-                }
-                picked.accept(stack);
-                onClose();
-                return true;
+            public List<? extends NarratableEntry> narratables() {
+                return List.of(button);
             }
 
             @Override
@@ -106,6 +109,8 @@ final class ItemSelectionScreen extends Screen {
                 boolean hovered,
                 float partialTick
             ) {
+                button.setRectangle(getContentWidth(), getContentHeight(), getContentX(), getContentY());
+                button.extractRenderState(graphics, mouseX, mouseY, partialTick);
                 graphics.item(stack, getContentX() + 4, getContentY() + 2);
                 graphics.text(
                     font,

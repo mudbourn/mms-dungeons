@@ -37,6 +37,7 @@ public final class FactionPeace {
     private static final int FRIENDLY_TICKS = 6000;
     private static final int OFFERING_WAIT_TICKS = 600;
     private static final int MAX_GIFTS = 2;
+    private static final int REVIVED_PEACE_TICKS = 100;
     // Things of value a human takes as an offering.
     private static final TagKey<Item> OFFERINGS = TagKey.create(Registries.ITEM, MmsDungeons.id("faction_offerings"));
     private static final double FOLLOW_FAR = 8.0;
@@ -86,11 +87,19 @@ public final class FactionPeace {
         }
         ServerLevel level = player.level();
         for (FactionMember member : level.getEntitiesOfClass(FactionMember.class, player.getBoundingBox().inflate(RANGE), member -> answers(member, player))) {
-            member.peace().answer(player, !member.cowedBy(player));
+            if (member.peace().revivedBy(player)) {
+                member.forgive(player);
+                member.peace().answer(player, false);
+            } else {
+                member.peace().answer(player, !member.cowedBy(player));
+            }
         }
     }
 
     private static boolean answers(FactionMember member, Player player) {
+        if (member.peace().revivedBy(player)) {
+            return member.isAlive() && !member.downed() && member.hasLineOfSight(player);
+        }
         return member.isAlive()
             && member.isNeutral()
             && !member.downed()
@@ -113,6 +122,8 @@ public final class FactionPeace {
     private @Nullable UUID friend;
     private long friendUntil;
     private boolean hired;
+    private @Nullable UUID reviver;
+    private long reviverUntil;
 
     // Answers a peace sign: befriends the player at once, or, when it wants an offering first, waits a while for one or two gifts.
     void answer(Player player, boolean wantsOffering) {
@@ -143,8 +154,10 @@ public final class FactionPeace {
         return true;
     }
 
-    // Thanks a player who got it back on its feet: a crouch back and the same friendship a peace sign earns. A follower its payer revives keeps following.
+    // Thanks a player who got it back on its feet: a crouch back and the same friendship a peace sign earns, and a peace sign from them in the next 5 seconds is answered even after a fight. A follower its payer revives keeps following.
     void thank(Player player) {
+        this.reviver = player.getUUID();
+        this.reviverUntil = player.level().getGameTime() + REVIVED_PEACE_TICKS;
         boolean paid = this.hired && player.getUUID().equals(this.friend);
         this.crouchBack(player);
         this.befriend(player);
@@ -188,6 +201,11 @@ public final class FactionPeace {
             }
         }
         return MIN_PRESSES;
+    }
+
+    // Whether this player got it back on its feet in the last 5 seconds, which earns their peace sign an answer even after a fight.
+    boolean revivedBy(Player player) {
+        return player.getUUID().equals(this.reviver) && player.level().getGameTime() < this.reviverUntil;
     }
 
     // Whether the peace with this player still holds.
