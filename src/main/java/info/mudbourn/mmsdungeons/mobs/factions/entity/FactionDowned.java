@@ -17,7 +17,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
-// Going down instead of dying: a downed member lies on the ground until a crewmate within 64 blocks, or any player it has no quarrel with crouching within 3 blocks, revives it, gets itself up once when no crewmate is near, and bleeds out the next time. Any damage while downed kills it.
+// Going down instead of dying: a downed member lies on the ground until a crewmate within 64 blocks, or any player crouching within 3 blocks, revives it, gets itself up once when no crewmate is near, and bleeds out the next time. Any damage while downed kills it.
 final class FactionDowned {
 
     private static final double HELP_RANGE = 64.0;
@@ -122,13 +122,12 @@ final class FactionDowned {
         }
     }
 
-    // A player crouching over it, as players revive each other, who has not attacked its crew.
+    // A player crouching over it, as players revive each other, even one who downed it.
     private @Nullable Player crouchingPlayer(ServerLevel level) {
         for (Player player : level.players()) {
             if (player.isShiftKeyDown()
                 && player.isAlive()
                 && !player.isSpectator()
-                && !this.mob.provokedBy(player)
                 && player.distanceToSqr(this.mob) <= PLAYER_REVIVE_REACH * PLAYER_REVIVE_REACH) {
                 return player;
             }
