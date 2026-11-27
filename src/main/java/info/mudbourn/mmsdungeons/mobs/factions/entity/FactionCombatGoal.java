@@ -5,7 +5,6 @@ import info.mudbourn.mmsdungeons.mobs.factions.FactionWeapons;
 import info.mudbourn.mmsdungeons.mobs.swing.MobStrike;
 import java.util.EnumSet;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -14,6 +13,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -66,6 +66,9 @@ public class FactionCombatGoal extends Goal {
     private static final int BARRAGE_SHOTS = 5;
     private static final int BARRAGE_GAP = 4;
     private static final int CROSSBOW_AIM_TICKS = 15;
+    private static final double PILOT_REACH = 3.0;
+    private static final double PILOT_RUN_DISTANCE = 8.0;
+    private static final int PILOT_STRIKE_TICKS = 20;
     private static final int CROSSBOW_RELOAD_TICKS = 10;
     private static final float BOW_VELOCITY = 1.6f;
     private static final float CROSSBOW_VELOCITY = 3.15f;
@@ -81,7 +84,6 @@ public class FactionCombatGoal extends Goal {
     private static final int SIDEARM_CALM_TICKS = 40;
 
     private final FactionMember mob;
-    private final FactionTactics tactics;
     private int attackCooldown;
     private int combo;
     private Skill skill = Skill.NONE;
@@ -99,7 +101,6 @@ public class FactionCombatGoal extends Goal {
 
     public FactionCombatGoal(FactionMember mob) {
         this.mob = mob;
-        this.tactics = new FactionTactics(mob);
         this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
     }
 
@@ -122,6 +123,7 @@ public class FactionCombatGoal extends Goal {
     @Override
     public void stop() {
         this.mob.setAggressive(false);
+        this.mob.setSprinting(false);
         this.mob.holsterSidearm();
         this.mob.stopUsingItem();
         this.mob.caster().stop();
@@ -135,7 +137,7 @@ public class FactionCombatGoal extends Goal {
         this.guardTicks = 0;
         this.guardRest = 0;
         this.calmTicks = 0;
-        this.tactics.reset();
+        this.mob.tactics().reset();
     }
 
     @Override
@@ -146,7 +148,7 @@ public class FactionCombatGoal extends Goal {
         }
         this.attackCooldown--;
         this.skillCooldown--;
-        if (!this.tactics.rolling()) {
+        if (!this.mob.tactics().rolling()) {
             this.look(target);
         }
         if (this.hitDelay > 0 && --this.hitDelay == 0) {
@@ -160,7 +162,15 @@ public class FactionCombatGoal extends Goal {
             this.tickSkill(level, target);
             return;
         }
-        if (this.tactics.tick(level, target)) {
+        if (this.mob.piloting()) {
+            this.tickPilot(level, target);
+            return;
+        }
+        if (this.mob.armless()) {
+            this.mob.powers().tick(level, target);
+            return;
+        }
+        if (this.mob.tactics().tick(level, target)) {
             return;
         }
         this.mob.powers().tick(level, target);
@@ -246,16 +256,40 @@ public class FactionCombatGoal extends Goal {
         this.mob.getLookControl().setLookAt(next.x, this.mob.getEyeY(), next.z, 30.0f, 30.0f);
     }
 
+    // Piloting a Grovekeeper: steers it at the target, runs it over open ground, and strikes through it.
+    private void tickPilot(ServerLevel level, LivingEntity target) {
+        this.mob.powers().tick(level, target);
+        Entity golem = this.mob.getVehicle();
+        if (golem == null) {
+            return;
+        }
+        double distance = golem.distanceTo(target);
+        double reach = (golem.getBbWidth() + target.getBbWidth()) * 0.5 + PILOT_REACH;
+        this.mob.setSprinting(distance > PILOT_RUN_DISTANCE);
+        if (distance > reach * 0.8) {
+            this.mob.getNavigation().moveTo(target, 1.0);
+        } else {
+            this.mob.getNavigation().stop();
+        }
+        if (distance <= reach && this.attackCooldown <= 0) {
+            FactionGrovekeeper.strike(this.mob, target);
+            this.attackCooldown = PILOT_STRIKE_TICKS;
+        }
+    }
+
     private void tickMelee(ServerLevel level, LivingEntity target) {
+        if (this.mob.flight().lancer() && this.mob.flight().airborne()) {
+            return;
+        }
         double distance = this.mob.distanceTo(target);
         ItemStack main = this.mob.getMainHandItem();
         double reach = FactionWeapons.reach(main) + target.getBbWidth() * 0.5;
         if (distance > reach * 0.8) {
-            Vec3 approach = this.tactics.approachPoint(level, target);
+            Vec3 approach = this.mob.tactics().approachPoint(level, target);
             this.mob.getNavigation().moveTo(approach.x, approach.y, approach.z, 1.1);
         } else if (this.attackCooldown > 4) {
             this.mob.getNavigation().stop();
-            this.mob.getMoveControl().strafe(-0.2f, 0.45f * this.tactics.flankSide());
+            this.mob.getMoveControl().strafe(-0.2f, 0.45f * this.mob.tactics().flankSide());
         } else {
             this.mob.getNavigation().stop();
         }
@@ -539,7 +573,6 @@ public class FactionCombatGoal extends Goal {
             target.knockback(1.6, -push.x, -push.z, source, damage);
             target.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 40, 1), this.mob);
         }
-        level.playSound(null, this.mob.blockPosition(), SoundEvents.SHIELD_BLOCK.value(), this.mob.getSoundSource(), 1.0f, 0.8f);
     }
 
     private void throwWeapon(ServerLevel level, LivingEntity target) {
@@ -557,7 +590,6 @@ public class FactionCombatGoal extends Goal {
         level.addFreshEntity(thrown);
         this.mob.swing(InteractionHand.MAIN_HAND, this.mob.getItemInHand(InteractionHand.MAIN_HAND).getAttackAnimation(), true);
         this.mob.throwWeapon(WEAPON_AWAY_TICKS);
-        level.playSound(null, this.mob.blockPosition(), SoundEvents.TRIDENT_THROW.value(), this.mob.getSoundSource(), 1.0f, 1.0f);
     }
 
     // A heavy weapon slam hurts and lifts every enemy around the fighter.
@@ -574,8 +606,6 @@ public class FactionCombatGoal extends Goal {
                 victim.push(0.0, 0.5, 0.0);
             }
         }
-        level.sendParticles(ParticleTypes.EXPLOSION, this.mob.getX(), this.mob.getY(), this.mob.getZ(), 3, 1.0, 0.1, 1.0, 0.0);
-        level.playSound(null, this.mob.blockPosition(), SoundEvents.MACE_SMASH_GROUND_HEAVY, this.mob.getSoundSource(), 1.0f, 1.0f);
     }
 
     // A focus barrage looses a quick volley after its long draw.

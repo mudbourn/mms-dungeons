@@ -2,9 +2,8 @@ package info.mudbourn.mmsdungeons.mobs.factions.entity;
 
 import java.util.Comparator;
 import java.util.EnumSet;
-import net.minecraft.core.particles.ParticleTypes;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
@@ -17,7 +16,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
-// Going down instead of dying: a downed member lies on the ground until a crewmate within 64 blocks revives it, gets itself up once when no crewmate is near, and bleeds out the next time.
+// Going down instead of dying: a downed member lies on the ground until a crewmate within 64 blocks, or any player it has no quarrel with, crouches over it to revive it, gets itself up once when no crewmate is near, and bleeds out the next time. Any damage while downed kills it.
 final class FactionDowned {
 
     private static final double HELP_RANGE = 64.0;
@@ -33,6 +32,9 @@ final class FactionDowned {
     private static final double CRAWL_SPEED = 0.5;
     private static final double MEET_RANGE = 16.0;
     private static final double FLEE_RANGE = 6.0;
+
+    // AbsolutRevive lays a downed player still on its back, so members lie still beside it rather than crawl.
+    private static final boolean LIE_STILL = FabricLoader.getInstance().isModLoaded("absolutrevive");
 
     private final FactionMember mob;
     private int downedTicks;
@@ -59,6 +61,7 @@ final class FactionDowned {
         this.mob.setHealth(this.mob.getMaxHealth() * DOWNED_HEALTH);
         this.mob.stopUsingItem();
         this.mob.caster().stop();
+        this.mob.powers().floran().stop();
         this.mob.setAction(FactionMember.ACTION_NONE);
         this.mob.setRollTicks(0);
         this.mob.flight().land();
@@ -67,7 +70,6 @@ final class FactionDowned {
         this.mob.setAggressive(false);
         this.mob.setDowned(true);
         this.mob.setCrawling(true);
-        level.sendParticles(ParticleTypes.DAMAGE_INDICATOR, this.mob.getX(), this.mob.getY(0.5), this.mob.getZ(), 8, 0.3, 0.2, 0.3, 0.1);
         return true;
     }
 
@@ -79,6 +81,12 @@ final class FactionDowned {
         this.downedTicks++;
         if (!this.mob.crawling()) {
             this.mob.setCrawling(true);
+        }
+        Player player = this.crouchingPlayer(level);
+        if (player != null) {
+            this.aloneTicks = 0;
+            this.helpedBy(level, player);
+            return;
         }
         if (this.mob.tickCount % SEARCH_TICKS == 0 && !this.canHelp(this.helper)) {
             this.helper = this.findHelper(level);
@@ -93,19 +101,38 @@ final class FactionDowned {
             this.bleedOut(level);
             return;
         }
-        if (this.mob.tickCount % 20 == 0) {
-            level.sendParticles(ParticleTypes.DAMAGE_INDICATOR, this.mob.getX(), this.mob.getY(0.3), this.mob.getZ(), 2, 0.3, 0.1, 0.3, 0.05);
-        }
     }
 
     // One tick of a crewmate's help; the member stands once the help is done.
     void help(ServerLevel level, FactionMember reviver) {
         if (++this.reviveProgress % 10 == 0) {
-            level.sendParticles(ParticleTypes.HAPPY_VILLAGER, this.mob.getX(), this.mob.getY(0.4), this.mob.getZ(), 3, 0.3, 0.2, 0.3, 0.0);
             reviver.swing(InteractionHand.MAIN_HAND, reviver.getMainHandItem().getAttackAnimation(), true);
         }
         if (this.reviveProgress >= REVIVE_TICKS) {
             this.revive(level);
+        }
+    }
+
+    // A player crouching over it, as players revive each other, who has not attacked its crew.
+    private @Nullable Player crouchingPlayer(ServerLevel level) {
+        for (Player player : level.players()) {
+            if (player.isShiftKeyDown()
+                && player.isAlive()
+                && !player.isSpectator()
+                && !this.mob.provokedBy(player)
+                && player.distanceToSqr(this.mob) <= REVIVE_REACH * REVIVE_REACH) {
+                return player;
+            }
+        }
+        return null;
+    }
+
+    // One tick of a player's help; once it stands, it thanks them with a crouch and stays friendly with them.
+    private void helpedBy(ServerLevel level, Player player) {
+        this.reviveProgress++;
+        if (this.reviveProgress >= REVIVE_TICKS) {
+            this.revive(level);
+            this.mob.peace().thank(player);
         }
     }
 
@@ -143,8 +170,12 @@ final class FactionDowned {
         this.reviveProgress = 0;
         this.downedTicks = 0;
         this.aloneTicks = 0;
-        level.sendParticles(ParticleTypes.HEART, this.mob.getX(), this.mob.getY(1.0), this.mob.getZ(), 5, 0.4, 0.3, 0.4, 0.0);
-        this.mob.playSound(SoundEvents.PLAYER_LEVELUP, 0.6f, 1.5f);
+    }
+
+    // Any damage at all finishes a downed member, credited to whoever dealt it.
+    void finish(ServerLevel level, DamageSource source) {
+        this.cause = source;
+        this.bleedOut(level);
     }
 
     // Dies of its wounds, credited to whoever downed it.
@@ -174,7 +205,7 @@ final class FactionDowned {
             && other.distanceToSqr(this.mob) <= HELP_RANGE * HELP_RANGE;
     }
 
-    // Holds a downed member on the ground: it crawls to meet its helper, or away from whatever downed it.
+    // Holds a downed member on the ground: it lies still with AbsolutRevive, and otherwise crawls to meet its helper or away from whatever downed it.
     static final class DownedGoal extends Goal {
 
         private final FactionMember mob;
@@ -203,7 +234,12 @@ final class FactionDowned {
         public void tick() {
             FactionMember helper = this.mob.downedState().helper();
             LivingEntity threat = this.mob.getTarget();
-            if (helper != null && this.mob.distanceTo(helper) < MEET_RANGE) {
+            if (LIE_STILL) {
+                this.mob.getNavigation().stop();
+                if (helper != null) {
+                    this.mob.getLookControl().setLookAt(helper);
+                }
+            } else if (helper != null && this.mob.distanceTo(helper) < MEET_RANGE) {
                 this.mob.getLookControl().setLookAt(helper);
                 if (this.mob.distanceTo(helper) > REVIVE_REACH) {
                     this.mob.getNavigation().moveTo(helper, CRAWL_SPEED);
@@ -263,10 +299,12 @@ final class FactionDowned {
             this.mob.stopUsingItem();
             this.mob.caster().stop();
             this.mob.setAction(FactionMember.ACTION_NONE);
+            this.mob.setReviving(true);
         }
 
         @Override
         public void stop() {
+            this.mob.setReviving(false);
             this.patient = null;
             this.mob.getNavigation().stop();
             if (this.mob.getPose() == Pose.CROUCHING) {

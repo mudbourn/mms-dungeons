@@ -2,41 +2,36 @@ package info.mudbourn.mmsdungeons.mobs.factions;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleTypes;
+import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import org.jspecify.annotations.Nullable;
 
-// The Origins origin a faction member may be born with, and which powers the mob version of it has.
+// The Origins origin a faction member may be born with; it carries the origin's real powers, so origins exist only with Origins and MMS Origins installed.
 public enum FactionOrigin {
-    NONE("none", false, false, null, List.of()),
-    ARACHNID("arachnid", false, false, null, List.of(FactionClass.ARCHER, FactionClass.KNIGHT)),
-    AVIAN("avian", true, false, ParticleTypes.CLOUD, List.of(FactionClass.ARCHER, FactionClass.MAGE)),
-    BLAZEBORN("blazeborn", false, true, ParticleTypes.FLAME, List.of(FactionClass.KNIGHT, FactionClass.PALADIN)),
-    ENDERIAN("enderian", false, true, ParticleTypes.PORTAL, List.of(FactionClass.MAGE)),
-    BEASTFOLK("beastfolk", true, false, null, List.of(FactionClass.ARCHER, FactionClass.KNIGHT, FactionClass.KNIGHT)),
-    FISHMAN("fishman", false, false, ParticleTypes.BUBBLE, List.of(FactionClass.PRIEST, FactionClass.MAGE, FactionClass.KNIGHT)),
-    PHANTOM("phantom", false, false, ParticleTypes.SMOKE, List.of(FactionClass.MAGE, FactionClass.ARCHER)),
-    SHULK("shulk", false, false, null, List.of(FactionClass.PALADIN, FactionClass.KNIGHT, FactionClass.CLERIC)),
-    FLORAN("floran", false, false, ParticleTypes.SPORE_BLOSSOM_AIR, List.of(FactionClass.PRIEST, FactionClass.ARCHER, FactionClass.MAGE, FactionClass.KNIGHT)),
-    TRUFFLE("truffle", false, false, ParticleTypes.MYCELIUM, List.of(FactionClass.MAGE, FactionClass.CLERIC, FactionClass.KNIGHT)),
-    PIGLIN("piglin", false, false, null, List.of(FactionClass.KNIGHT, FactionClass.PALADIN)),
-    FAIRY("fairy", true, false, null, List.of(FactionClass.CLERIC, FactionClass.CLERIC, FactionClass.CLERIC, FactionClass.MAGE));
+    NONE("none", List.of()),
+    ARACHNID("arachnid", List.of(FactionClass.ARCHER, FactionClass.KNIGHT)),
+    AVIAN("avian", List.of(FactionClass.ARCHER, FactionClass.KNIGHT, FactionClass.MAGE)),
+    BLAZEBORN("blazeborn", List.of(FactionClass.KNIGHT, FactionClass.PALADIN)),
+    ENDERIAN("enderian", List.of(FactionClass.MAGE)),
+    BEASTFOLK("beastfolk", List.of(FactionClass.ARCHER, FactionClass.KNIGHT, FactionClass.KNIGHT)),
+    FISHMAN("fishman", List.of(FactionClass.PRIEST, FactionClass.MAGE, FactionClass.KNIGHT)),
+    PHANTOM("phantom", List.of(FactionClass.MAGE, FactionClass.ARCHER)),
+    SHULK("shulk", List.of(FactionClass.PALADIN, FactionClass.KNIGHT, FactionClass.CLERIC)),
+    FLORAN("floran", List.of(FactionClass.PRIEST, FactionClass.ARCHER, FactionClass.MAGE, FactionClass.KNIGHT)),
+    TRUFFLE("truffle", List.of(FactionClass.MAGE, FactionClass.CLERIC, FactionClass.KNIGHT)),
+    PIGLIN("piglin", List.of(FactionClass.KNIGHT, FactionClass.PALADIN)),
+    FAIRY("fairy", List.of(FactionClass.CLERIC, FactionClass.CLERIC, FactionClass.CLERIC, FactionClass.MAGE));
 
+    public static final boolean POWERS = FabricLoader.getInstance().isModLoaded("origins") && FabricLoader.getInstance().isModLoaded("mms_origins");
     private static final float ORIGIN_CHANCE = 0.65f;
     private static final int FAVORED_WEIGHT = 3;
 
     private final String id;
-    private final boolean noFallDamage;
-    private final boolean hurtByWater;
-    private final @Nullable ParticleOptions aura;
     private final List<FactionClass> roles;
 
-    FactionOrigin(String id, boolean noFallDamage, boolean hurtByWater, @Nullable ParticleOptions aura, List<FactionClass> roles) {
+    FactionOrigin(String id, List<FactionClass> roles) {
         this.id = id;
-        this.noFallDamage = noFallDamage;
-        this.hurtByWater = hurtByWater;
-        this.aura = aura;
         this.roles = roles;
     }
 
@@ -44,25 +39,13 @@ public enum FactionOrigin {
         return this.id;
     }
 
-    public boolean noFallDamage() {
-        return this.noFallDamage;
-    }
-
-    public boolean hurtByWater() {
-        return this.hurtByWater;
-    }
-
-    public @Nullable ParticleOptions aura() {
-        return this.aura;
-    }
-
-    // The namespace of the origin in the MMS Origins pack: the fairy, floran, truffle and piglin are MMS Origins' own, the fishman is Origins', the rest come from Origins Tweaks.
+    // The namespace of the origin: every origin is MMS Origins'.
     public String namespace() {
-        return switch (this) {
-            case FAIRY, FLORAN, TRUFFLE, PIGLIN -> "mms_origins";
-            case FISHMAN, NONE -> "origins";
-            default -> "originstweaks";
-        };
+        return "mms_origins";
+    }
+
+    public Identifier originId() {
+        return Identifier.fromNamespaceAndPath(namespace(), this.id);
     }
 
     // The translation key of the origin's name, as MMS Origins names it.
@@ -90,7 +73,7 @@ public enum FactionOrigin {
 
     // Rolls the faction's origin chance, then any origin that fits the class when it is already set, with the faction's own favorites three times as likely.
     public static FactionOrigin roll(Faction faction, @Nullable FactionClass fixedClass, RandomSource random) {
-        if (random.nextFloat() >= ORIGIN_CHANCE) {
+        if (!POWERS || random.nextFloat() >= ORIGIN_CHANCE) {
             return NONE;
         }
         List<FactionOrigin> favored = switch (faction) {

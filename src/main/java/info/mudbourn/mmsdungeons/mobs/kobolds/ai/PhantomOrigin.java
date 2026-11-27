@@ -15,7 +15,7 @@ public final class PhantomOrigin {
 
     private static final boolean ORIGINS = FabricLoader.getInstance().isModLoaded("origins");
     private static final Identifier ORIGIN_LAYER = Identifier.fromNamespaceAndPath("origins", "origin");
-    private static final Identifier PHANTOM = Identifier.fromNamespaceAndPath("originstweaks", "phantom");
+    private static final Identifier PHANTOM = Identifier.fromNamespaceAndPath("mms_origins", "phantom");
 
     private PhantomOrigin() {
     }

@@ -8,7 +8,7 @@
     "minecraft:ender_dragon",
     "mms_dungeons:mimic",
     "mms_dungeons:purple_worm",
-    "mms_dungeons:the_architect_of_chaos",
+    "mms_dungeons:netherman",
     {"id": "alexscaves:brainiac", "required": false},
     {"id": "alexscaves:deep_one", "required": false},
     {"id": "alexscaves:deep_one_knight", "required": false},

@@ -42,7 +42,7 @@ import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
-// The Architect of Chaos: a boss that changes form at two-thirds and one-third health, casting a new set of attacks in each.
+// The Netherman: a boss that changes form at two-thirds and one-third health, casting a new set of attacks in each.
 public class Netherman extends Monster {
 
     public static final int SWITCH_2_TICKS = 130;

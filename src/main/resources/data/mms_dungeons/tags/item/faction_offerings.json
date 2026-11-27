@@ -1,0 +1,23 @@
+{
+  "values": [
+    "minecraft:diamond",
+    "minecraft:emerald",
+    "minecraft:gold_ingot",
+    "minecraft:netherite_ingot",
+    "minecraft:netherite_scrap",
+    "minecraft:amethyst_shard",
+    "minecraft:lapis_lazuli",
+    "minecraft:golden_apple",
+    "minecraft:enchanted_golden_apple",
+    "minecraft:diamond_block",
+    "minecraft:emerald_block",
+    "minecraft:gold_block",
+    "minecraft:raw_gold",
+    "minecraft:ender_pearl",
+    "minecraft:heart_of_the_sea",
+    "minecraft:nautilus_shell",
+    "minecraft:totem_of_undying",
+    "minecraft:echo_shard",
+    {"id": "#c:ingots/gold", "required": false}
+  ]
+}

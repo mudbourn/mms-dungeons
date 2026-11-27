@@ -34,6 +34,6 @@
     {"id": "friendsandfoes:tuff_golem", "required": false},
     {"id": "mutantmonsters:mutant_snow_golem", "required": false},
     {"id": "takesapillage:clay_golem", "required": false},
-    "mms_dungeons:the_architect_of_chaos"
+    "mms_dungeons:netherman"
   ]
 }

@@ -5,9 +5,7 @@ import info.mudbourn.mmsdungeons.mobs.factions.FactionOrigin;
 import info.mudbourn.mmsdungeons.relations.MobRelations;
 import info.mudbourn.mmsdungeons.relations.Relation;
 import net.minecraft.core.Holder;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -153,7 +151,6 @@ public final class FactionCleric {
         }
         this.mob.getLookControl().setLookAt(ally, 30.0f, 30.0f);
         this.mob.swing(InteractionHand.MAIN_HAND, this.mob.getMainHandItem().getAttackAnimation(), true);
-        this.mob.playSound(SoundEvents.WITCH_THROW, 1.0f, 0.8f + this.mob.getRandom().nextFloat() * 0.4f);
     }
 
     // Throws one healing bottle at an ally, as a shulk does with the spare potions its shell carries.
@@ -176,9 +173,6 @@ public final class FactionCleric {
         if (--this.lingerTicks <= 0) {
             this.lingerAt = null;
             return;
-        }
-        if (this.lingerTicks % 5 == 0) {
-            level.sendParticles(ParticleTypes.HAPPY_VILLAGER, this.lingerAt.x, this.lingerAt.y + 0.2, this.lingerAt.z, 4, LINGER_RADIUS * 0.5, 0.1, LINGER_RADIUS * 0.5, 0.0);
         }
         if (this.lingerTicks % 20 != 0) {
             return;

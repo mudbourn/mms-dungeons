@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "info.mudbourn.mmsdungeons.mixin.origins",
+  "plugin": "info.mudbourn.mmsdungeons.mixin.origins.OriginsMixinPlugin",
+  "compatibilityLevel": "JAVA_25",
+  "mixins": [
+    "FlyingMobMixin",
+    "HungerConditionMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

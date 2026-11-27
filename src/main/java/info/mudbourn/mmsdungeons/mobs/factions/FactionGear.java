@@ -50,7 +50,7 @@ public final class FactionGear {
         RegistryAccess access = mob.level().registryAccess();
         Faction faction = mob.faction();
         int tier = mob.tier();
-        boolean lunarWeapon = tier == LUNAR_TIER && mob.factionClass().melee() && random.nextBoolean();
+        boolean lunarWeapon = tier == LUNAR_TIER && mob.factionClass().melee() && !lancer(mob) && random.nextBoolean();
         equipArmor(mob, faction, tier, lunarWeapon, random, access);
         equipHands(mob, faction, tier, lunarWeapon, random, access);
     }
@@ -144,8 +144,10 @@ public final class FactionGear {
         ItemStack off = ItemStack.EMPTY;
         switch (type) {
             case KNIGHT, PALADIN -> {
-                main = lunarWeapon ? lunarWeapon(random) : meleeWeapon(type, faction, random);
-                if (random.nextFloat() < DUAL_WIELD_CHANCE) {
+                main = lunarWeapon ? lunarWeapon(random) : lancer(mob) ? spear(faction) : meleeWeapon(type, faction, random);
+                if (lancer(mob)) {
+                    off = ItemStack.EMPTY;
+                } else if (random.nextFloat() < DUAL_WIELD_CHANCE) {
                     off = meleeWeapon(type, faction, random);
                 } else {
                     off = shield(type, faction);
@@ -161,9 +163,19 @@ public final class FactionGear {
         }
         mob.setItemSlot(EquipmentSlot.MAINHAND, main);
         mob.setItemSlot(EquipmentSlot.OFFHAND, off);
-        if (type != FactionClass.ARCHER && type != FactionClass.MAGE) {
+        if (type != FactionClass.ARCHER && type != FactionClass.MAGE && !lancer(mob)) {
             mob.setSidearm(sidearm(faction, random));
         }
+    }
+
+    // An avian knight is a lancer that jousts from the air.
+    private static boolean lancer(FactionMember mob) {
+        return mob.origin() == FactionOrigin.AVIAN && mob.factionClass() == FactionClass.KNIGHT;
+    }
+
+    // The faction's spear, in the material its other weapons use.
+    private static ItemStack spear(Faction faction) {
+        return stack("minecraft:" + upperMaterial(faction) + "_spear", "minecraft:iron_spear");
     }
 
     private static ItemStack meleeWeapon(FactionClass type, Faction faction, RandomSource random) {

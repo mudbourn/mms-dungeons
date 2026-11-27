@@ -7,8 +7,26 @@ import net.minecraft.world.entity.ai.control.MoveControl;
 // Walks a path the way a player fights: facing where it looks and stepping forward, back or sideways along the path. Flying and downed members leave movement to their own code.
 final class FactionMoveControl extends MoveControl<FactionMember> {
 
+    private static final float MAX_TURN = 25.0f;
+    private static final float TURN_EASE = 0.45f;
+    private static final float MIN_TURN = 3.0f;
+    // The sprint boost as it shows in a mob's speed attribute: the square root of a player's 30 percent, see FactionMember.
+    private static final float SPRINT_BOOST = (float) Math.sqrt(1.3);
+
     FactionMoveControl(FactionMember mob) {
         super(mob);
+    }
+
+    // Turns the body toward its heading the way a walker leans into a turn: most of the way quickly, easing out at the end, and never snapping more than 25 degrees a tick.
+    @Override
+    protected float rotlerp(float from, float to, float max) {
+        float diff = Mth.wrapDegrees(to - from);
+        float limit = Math.min(max, MAX_TURN);
+        float step = Math.abs(diff) <= MIN_TURN ? diff : Mth.clamp(diff * TURN_EASE, -limit, limit);
+        if (Math.abs(step) < MIN_TURN && Math.abs(diff) > MIN_TURN) {
+            step = Math.copySign(MIN_TURN, diff);
+        }
+        return from + step;
     }
 
     @Override
@@ -41,6 +59,10 @@ final class FactionMoveControl extends MoveControl<FactionMember> {
         double yaw = facing * Mth.DEG_TO_RAD;
         double forward = (dz * Mth.cos(yaw) - dx * Mth.sin(yaw)) / length;
         double right = (dx * Mth.cos(yaw) + dz * Mth.sin(yaw)) / length;
+        // A player only keeps the sprint boost while moving at least partly forward; stepping back or sideways it moves at a walk.
+        if (this.mob.isSprinting() && forward <= 0.0) {
+            speed /= SPRINT_BOOST;
+        }
         this.mob.setSpeed(speed);
         this.mob.setZza((float) (forward * speed));
         this.mob.setXxa((float) (right * speed));

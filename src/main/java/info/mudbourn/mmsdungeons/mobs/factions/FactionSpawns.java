@@ -1,6 +1,8 @@
 package info.mudbourn.mmsdungeons.mobs.factions;
 
 import info.mudbourn.mmsdungeons.mobs.factions.entity.FactionMember;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import java.util.function.Predicate;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
@@ -10,6 +12,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.SectionPos;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntitySpawnReason;
@@ -20,6 +23,7 @@ import net.minecraft.world.entity.SpawnPlacementTypes;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
@@ -38,6 +42,9 @@ public final class FactionSpawns {
     }
 
     private static final int CLAIM_CHUNKS = 15;
+    private static final int CLAIM_CACHE_TICKS = 600;
+    private static final int CLAIM_CACHE_MAX = 4096;
+    private static final Map<ResourceKey<Level>, Map<Long, Long>> CLAIM_CACHE = new HashMap<>();
     private static final int OVERWORLD_ODDS = 4;
     private static final double CROWD_RANGE = 48.0;
     private static final int CROWD_LIMIT = 8;
@@ -85,14 +92,31 @@ public final class FactionSpawns {
         if (server.dimension() == Level.OVERWORLD && random.nextInt(OVERWORLD_ODDS) != 0) {
             return false;
         }
-        if (level.getEntitiesOfClass(FactionMember.class, new AABB(pos).inflate(CROWD_RANGE)).size() >= CROWD_LIMIT) {
+        // Counts the whole group this would bring, not only its founder.
+        if (level.getEntitiesOfClass(FactionMember.class, new AABB(pos).inflate(CROWD_RANGE)).size() + HumanFactions.factionOf(type).maxGroup() > CROWD_LIMIT) {
             return false;
         }
         return !nearClaim(server, pos);
     }
 
-    // Whether any Open Parties and Claims claim, guild claims included, lies within 15 chunks.
+    // Whether any Open Parties and Claims claim, guild claims included, lies within 15 chunks. Spawn attempts bunch up around players, so an answer is kept for half a minute per chunk.
     private static boolean nearClaim(ServerLevel level, BlockPos pos) {
+        long key = ChunkPos.pack(SectionPos.blockToSectionCoord(pos.getX()), SectionPos.blockToSectionCoord(pos.getZ()));
+        Map<Long, Long> cache = CLAIM_CACHE.computeIfAbsent(level.dimension(), dimension -> new HashMap<>());
+        long now = level.getGameTime();
+        Long cached = cache.get(key);
+        if (cached != null && now - (cached >> 1) < CLAIM_CACHE_TICKS) {
+            return (cached & 1L) != 0L;
+        }
+        if (cache.size() > CLAIM_CACHE_MAX) {
+            cache.clear();
+        }
+        boolean near = scanClaims(level, pos);
+        cache.put(key, now << 1 | (near ? 1L : 0L));
+        return near;
+    }
+
+    private static boolean scanClaims(ServerLevel level, BlockPos pos) {
         IServerClaimsManagerAPI claims = OpenPACServerAPI.get(level.getServer()).getServerClaimsManager();
         Identifier dimension = level.dimension().identifier();
         int centerX = SectionPos.blockToSectionCoord(pos.getX());

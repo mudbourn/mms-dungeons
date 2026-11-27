@@ -7,12 +7,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.SectionPos;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
@@ -59,10 +55,9 @@ final class FactionTactics {
     private static final int RETHINK_TICKS = 40;
     private static final double TARGET_RANGE = 16.0;
     private static final double FLANK_OFFSET = 3.0;
-    private static final Identifier COMBAT_ROLL_SOUND = Identifier.fromNamespaceAndPath("combat_roll", "roll");
 
     private final FactionMember mob;
-    private int rollCooldown = 40;
+    private int rollReady = 40;
     private Vec3 rollDirection = Vec3.ZERO;
     private int turnTicks;
     private int unseenTicks;
@@ -90,7 +85,6 @@ final class FactionTactics {
 
     // Runs before the class behavior; true when a tactic took over this tick.
     boolean tick(ServerLevel level, LivingEntity target) {
-        this.rollCooldown--;
         if (this.mob.flight().airborne()) {
             return this.mob.consuming() || this.trySupply(target, this.mob.getSensing().hasLineOfSight(target));
         }
@@ -126,7 +120,7 @@ final class FactionTactics {
 
     // A combat roll, mirroring Combat Roll's 8 tick roll: away when hurt, crowded or kiting, toward when closing in.
     private boolean tryRoll(LivingEntity target, boolean sees) {
-        if (this.rollCooldown > 0 || !this.mob.onGround() || this.mob.crawling() || !sees) {
+        if (this.mob.tickCount < this.rollReady || !this.mob.onGround() || this.mob.crawling() || !sees) {
             return false;
         }
         double distance = this.mob.distanceTo(target);
@@ -144,6 +138,14 @@ final class FactionTactics {
         return closing && this.startRoll(away.scale(-1.0));
     }
 
+    // A roll along a flat direction while travelling, when its cooldown is up and the landing is safe.
+    boolean travelRoll(Vec3 direction) {
+        if (this.mob.tickCount < this.rollReady || !this.mob.onGround() || this.mob.crawling()) {
+            return false;
+        }
+        return this.startRoll(direction.multiply(1.0, 0.0, 1.0).normalize());
+    }
+
     // Turns to face the way it will roll; the roll itself starts once the turn is done.
     private boolean startRoll(Vec3 direction) {
         if (!this.safeLanding(direction)) {
@@ -156,7 +158,7 @@ final class FactionTactics {
         this.mob.caster().stop();
         this.mob.setAction(FactionMember.ACTION_NONE);
         this.face(direction);
-        this.rollCooldown = ROLL_COOLDOWN + this.mob.getRandom().nextInt(40);
+        this.rollReady = this.mob.tickCount + ROLL_COOLDOWN + this.mob.getRandom().nextInt(40);
         return true;
     }
 
@@ -168,10 +170,6 @@ final class FactionTactics {
         }
         this.mob.setRollTicks(FactionMember.ROLL_TICKS);
         this.mob.setAction(FactionMember.ACTION_ROLL);
-        this.mob.playSound(rollSound(), 1.0f, 1.0f);
-        if (this.mob.level() instanceof ServerLevel level) {
-            level.sendParticles(ParticleTypes.POOF, this.mob.getX(), this.mob.getY(0.2), this.mob.getZ(), 15, 0.4, 0.2, 0.4, 0.02);
-        }
     }
 
     // Points body, head and eyes along a flat direction.
@@ -181,11 +179,6 @@ final class FactionTactics {
         this.mob.setYHeadRot(yaw);
         this.mob.setYBodyRot(yaw);
         this.mob.setXRot(0.0f);
-    }
-
-    // Combat Roll's own roll sound when the mod is present.
-    private static SoundEvent rollSound() {
-        return BuiltInRegistries.SOUND_EVENT.getOptional(COMBAT_ROLL_SOUND).orElse(SoundEvents.PLAYER_ATTACK_NODAMAGE);
     }
 
     // Never rolls off a ledge or into fire, lava or a wall.
@@ -404,7 +397,11 @@ final class FactionTactics {
         List<Player> players = level.getEntitiesOfClass(
             Player.class,
             this.mob.getBoundingBox().inflate(TARGET_RANGE),
-            player -> player.isAlive() && !player.isCreative() && !player.isSpectator() && this.mob.getSensing().hasLineOfSight(player)
+            player -> player.isAlive()
+                && !player.isCreative()
+                && !player.isSpectator()
+                && !this.mob.cowedBy(player)
+                && this.mob.getSensing().hasLineOfSight(player)
         );
         Player best = null;
         double bestScore = this.score(level, current);

@@ -7,6 +7,7 @@
     "BodyTypeNameMixin",
     "CarryOnCorpseMixin",
     "CorrodedArmorWearMixin",
+    "DownedPlayerOneShotMixin",
     "LivingEntityEffectMixin",
     "LivingEntityRelationsMixin",
     "MannequinAccessor",

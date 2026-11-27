@@ -70,7 +70,7 @@ public final class FactionFurs {
         }
         ((FurState) state).mmsOrigins$setFurOrigin(fur);
         boolean beastfolk = origin == FactionOrigin.BEASTFOLK;
-        ((FurState) state).mmsOrigins$setTailOption(beastfolk ? Identifier.fromNamespaceAndPath("originstweaks", BEASTFOLK_TAILS.get(Math.floorMod(id.hashCode(), BEASTFOLK_TAILS.size()))) : null);
+        ((FurState) state).mmsOrigins$setTailOption(beastfolk ? Identifier.fromNamespaceAndPath("mms_origins", BEASTFOLK_TAILS.get(Math.floorMod(id.hashCode(), BEASTFOLK_TAILS.size()))) : null);
         ((FurState) state).mmsOrigins$setClawsOut(beastfolk && fighting);
         ((WingState) state).mmsOrigins$setWingOption(wing);
         ((WingState) state).mmsOrigins$setWingFlapDegrees(ButterflyFlap.idleDegrees(state.ageInTicks));
@@ -86,18 +86,11 @@ public final class FactionFurs {
         if (options.isEmpty()) {
             return null;
         }
-        String namespace = origin == FactionOrigin.FAIRY ? "mms_origins" : "originstweaks";
-        return Identifier.fromNamespaceAndPath(namespace, options.get(Math.floorMod(id.hashCode(), options.size())));
+        return Identifier.fromNamespaceAndPath("mms_origins", options.get(Math.floorMod(id.hashCode(), options.size())));
     }
 
     // The MMS Origins fur for each origin.
     private static @Nullable Identifier furFor(FactionOrigin origin) {
-        return switch (origin) {
-            case ARACHNID, AVIAN, BLAZEBORN, ENDERIAN, PHANTOM, SHULK -> Identifier.fromNamespaceAndPath("origins", origin.id());
-            case BEASTFOLK -> Identifier.fromNamespaceAndPath("origins", "beastfolk");
-            case FISHMAN -> Identifier.fromNamespaceAndPath("origins", "fishman");
-            case FAIRY, FLORAN, TRUFFLE, PIGLIN -> Identifier.fromNamespaceAndPath("mms_origins", origin.id());
-            case NONE -> null;
-        };
+        return origin == FactionOrigin.NONE ? null : Identifier.fromNamespaceAndPath("mms_origins", origin.id());
     }
 }
