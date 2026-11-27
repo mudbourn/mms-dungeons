@@ -50,4 +50,14 @@ public final class DungeonDimension {
     public static boolean isPericulum(Level level, BlockPos pos) {
         return isDungeon(level) && pos.getY() <= PERICULUM_TOP;
     }
+
+    // Whether a position is in the Sanctuary, the dungeon's safe top band.
+    public static boolean isSanctuary(Level level, BlockPos pos) {
+        return isDungeon(level) && pos.getY() >= SANCTUARY_BOTTOM;
+    }
+
+    // Whether a position is in the Deep, between the Sanctuary and the Periculum.
+    public static boolean isDeep(Level level, BlockPos pos) {
+        return isDungeon(level) && pos.getY() < SANCTUARY_BOTTOM && pos.getY() > PERICULUM_TOP;
+    }
 }

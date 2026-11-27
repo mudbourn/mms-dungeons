@@ -1,5 +1,6 @@
 package info.mudbourn.mmsdungeons.dungeon;
 
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import info.mudbourn.mmsdungeons.MmsDungeons;
@@ -13,22 +14,27 @@ import net.minecraft.world.level.levelgen.structure.placement.AbstractSpreadingS
 import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement;
 import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadType;
 
-// One start per labyrinth cell, on a chunk near the cell's middle; caves cells get none.
+// One start per labyrinth cell of the Deep or, when sanctuary is set, the Sanctuary Region, on a chunk near the cell's middle; other cells get none.
 public final class LabyrinthPlacement extends RandomSpreadStructurePlacement {
 
     public static final MapCodec<LabyrinthPlacement> CODEC = RecordCodecBuilder.mapCodec(
-        instance -> placementCodec(instance).apply(instance, LabyrinthPlacement::new)
+        instance -> placementCodec(instance)
+            .and(Codec.BOOL.optionalFieldOf("sanctuary", false).forGetter(placement -> placement.sanctuary))
+            .apply(instance, LabyrinthPlacement::new)
     );
 
     private static final int JITTER = 4;
     private static final int INSET = (LabyrinthCells.CELL_CHUNKS - JITTER) / 2;
+
+    private final boolean sanctuary;
 
     public LabyrinthPlacement(
         Vec3i locateOffset,
         AbstractSpreadingStructurePlacement.FrequencyReductionMethod frequencyReductionMethod,
         float frequency,
         int salt,
-        Optional<AbstractSpreadingStructurePlacement.ExclusionZone> exclusionZone
+        Optional<AbstractSpreadingStructurePlacement.ExclusionZone> exclusionZone,
+        boolean sanctuary
     ) {
         super(
             locateOffset,
@@ -40,6 +46,7 @@ public final class LabyrinthPlacement extends RandomSpreadStructurePlacement {
             LabyrinthCells.CELL_CHUNKS - JITTER,
             RandomSpreadType.LINEAR
         );
+        this.sanctuary = sanctuary;
     }
 
     public static void register() {
@@ -60,7 +67,11 @@ public final class LabyrinthPlacement extends RandomSpreadStructurePlacement {
 
     @Override
     protected boolean isPlacementChunk(ChunkGeneratorStructureState state, int chunkX, int chunkZ) {
-        return super.isPlacementChunk(state, chunkX, chunkZ)
-            && LabyrinthCells.isLabyrinth(state.getLevelSeed(), LabyrinthCells.cellOfChunk(chunkX), LabyrinthCells.cellOfChunk(chunkZ));
+        int cellX = LabyrinthCells.cellOfChunk(chunkX);
+        int cellZ = LabyrinthCells.cellOfChunk(chunkZ);
+        boolean cell = sanctuary
+            ? LabyrinthCells.isSanctuaryLabyrinth(state.getLevelSeed(), cellX, cellZ)
+            : LabyrinthCells.isLabyrinth(state.getLevelSeed(), cellX, cellZ);
+        return super.isPlacementChunk(state, chunkX, chunkZ) && cell;
     }
 }

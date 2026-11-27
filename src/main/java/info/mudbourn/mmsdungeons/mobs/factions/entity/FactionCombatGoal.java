@@ -281,7 +281,7 @@ public class FactionCombatGoal extends Goal {
         double reach = FactionWeapons.reach(main) + target.getBbWidth() * 0.5;
         if (distance > reach * 0.8) {
             Vec3 approach = this.mob.tactics().approachPoint(level, target);
-            this.mob.getNavigation().moveTo(approach.x, approach.y, approach.z, 1.1);
+            this.mob.getNavigation().moveTo(approach.x, approach.y, approach.z, 1.0);
         } else if (this.attackCooldown > 4) {
             this.mob.getNavigation().stop();
             this.mob.getMoveControl().strafe(-0.2f, 0.45f * this.mob.tactics().flankSide());

@@ -123,8 +123,8 @@ public final class HumanFactions {
 
     // A player's 20 health for every faction, so the origin's real powers raise or lower it from the same baseline they do a player's.
     private static final double PLAYER_HEALTH = 20.0;
-    // A mob's speed counts twice in its stride (once as its push, once as its pace), so this is the square root of a player's 0.098 walking stride: the same walking speed as a player.
-    private static final double PLAYER_WALK = Math.sqrt(0.098);
+    // A player's walking speed; FactionMember moves on it as a player does, so sprinting and origin speed changes act on it as they do on a player.
+    public static final double PLAYER_WALK = 0.1;
 
     private static AttributeSupplier attributes() {
         return Mob.createMobAttributes()

@@ -1,5 +1,6 @@
 package info.mudbourn.mmsdungeons.mobs.fangsnclaws.entity;
 
+import info.mudbourn.mmsdungeons.dungeon.BossBarAggro;
 import info.mudbourn.mmsdungeons.mobs.fangsnclaws.FangsNClawsEffects;
 import info.mudbourn.mmsdungeons.mobs.fangsnclaws.FangsNClawsMobs;
 import info.mudbourn.mmsdungeons.mobs.fangsnclaws.FangsNClawsSounds;
@@ -138,6 +139,7 @@ public class PurpleWorm extends Monster {
     private static final double MIN_CLEARANCE = 1.0;
 
     private final ServerBossEvent bossEvent;
+    private final Set<UUID> fought = new HashSet<>();
     private final int[] cooldowns = new int[Attack.values().length];
     private final Set<UUID> bitten = new HashSet<>();
     private PurpleWormPart[] parts;
@@ -216,6 +218,7 @@ public class PurpleWorm extends Monster {
         }
         this.syncParts(level);
         this.bossEvent.setProgress(this.getHealth() / this.getMaxHealth());
+        BossBarAggro.sync(this.bossEvent, this, this.fought, player -> true);
         this.bossEvent.setVisible(this.isBodyShown());
         for (int i = 0; i < this.cooldowns.length; i++) {
             if (this.cooldowns[i] > 0) {
@@ -700,12 +703,6 @@ public class PurpleWorm extends Monster {
     public void setCustomName(@Nullable Component name) {
         super.setCustomName(name);
         this.bossEvent.setName(this.getDisplayName());
-    }
-
-    @Override
-    public void startSeenByPlayer(ServerPlayer player) {
-        super.startSeenByPlayer(player);
-        this.bossEvent.addPlayer(player);
     }
 
     @Override

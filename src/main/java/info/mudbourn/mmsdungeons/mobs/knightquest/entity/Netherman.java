@@ -1,5 +1,8 @@
 package info.mudbourn.mmsdungeons.mobs.knightquest.entity;
 
+import info.mudbourn.mmsdungeons.dungeon.BossBarAggro;
+import java.util.Set;
+import java.util.HashSet;
 import info.mudbourn.mmsdungeons.mobs.knightquest.entity.netherman.NethermanBarrageGoal;
 import info.mudbourn.mmsdungeons.mobs.knightquest.entity.netherman.NethermanCastGoal;
 import info.mudbourn.mmsdungeons.mobs.knightquest.entity.netherman.NethermanPullGoal;
@@ -82,6 +85,7 @@ public class Netherman extends Monster {
     private static final int LAVA_TICKS = 100;
 
     private final ServerBossEvent bossEvent;
+    private final Set<UUID> fought = new HashSet<>();
     private final List<TempLava> tempLava = new ArrayList<>();
     private boolean sealed = true;
     private boolean rooted = true;
@@ -231,6 +235,7 @@ public class Netherman extends Monster {
             this.searching = true;
         }
         this.bossEvent.setProgress(this.getHealth() / this.getMaxHealth());
+        BossBarAggro.sync(this.bossEvent, this, this.fought, player -> true);
         if (this.isOnFire()) {
             this.clearFire();
         }
@@ -365,12 +370,6 @@ public class Netherman extends Monster {
     public void setCustomName(@Nullable Component name) {
         super.setCustomName(name);
         this.bossEvent.setName(this.getDisplayName());
-    }
-
-    @Override
-    public void startSeenByPlayer(ServerPlayer player) {
-        super.startSeenByPlayer(player);
-        this.bossEvent.addPlayer(player);
     }
 
     @Override

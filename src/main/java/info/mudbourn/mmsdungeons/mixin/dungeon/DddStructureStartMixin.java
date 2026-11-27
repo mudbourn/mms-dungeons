@@ -44,7 +44,9 @@ public abstract class DddStructureStartMixin {
     private static boolean fitsCell(Structure.GenerationContext context, BlockPos position, DddRuin ruin) {
         int cellX = LabyrinthCells.cellOfBlock(position.getX());
         int cellZ = LabyrinthCells.cellOfBlock(position.getZ());
-        return LabyrinthCells.isLabyrinth(context.seed(), cellX, cellZ)
-            && LabyrinthPalette.theme(context.biomeResolver(), cellX, cellZ) == ruin.theme();
+        boolean cell = ruin.sanctuary()
+            ? LabyrinthCells.isSanctuaryLabyrinth(context.seed(), cellX, cellZ)
+            : LabyrinthCells.isLabyrinth(context.seed(), cellX, cellZ);
+        return cell && LabyrinthPalette.theme(context.biomeResolver(), cellX, cellZ, ruin.sanctuary()) == ruin.theme();
     }
 }

@@ -1,12 +1,14 @@
 package info.mudbourn.mmsdungeons.mobs.factions.entity;
 
+import net.minecraft.world.entity.Mob;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.EnumSet;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.DamageTypeTags;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -17,7 +19,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
-// Going down instead of dying: a downed member lies on the ground until a crewmate within 64 blocks, or any player crouching within 3 blocks, revives it, gets itself up once when no crewmate is near, and bleeds out the next time. Any damage while downed kills it.
+// Going down instead of dying: a downed member lies on the ground until a crewmate within 64 blocks, or any player crouching within 3 blocks, revives it, gets itself up once when no crewmate is near, and bleeds out the next time. Any damage while downed kills it. Whatever hunted it holds off while it is down, and one just back up hurries to get its other downed crewmates up.
 final class FactionDowned {
 
     private static final double HELP_RANGE = 64.0;
@@ -36,6 +38,8 @@ final class FactionDowned {
     private static final double FLEE_RANGE = 6.0;
     private static final int REPATH_TICKS = 20;
     private static final int HELD_TICKS = 5;
+    private static final int URGE_TICKS = 600;
+    private static final double PAUSE_RANGE = 48.0;
 
     // AbsolutRevive lays a downed player still on its back, so members lie still beside it rather than crawl.
     private static final boolean LIE_STILL = FabricLoader.getInstance().isModLoaded("absolutrevive");
@@ -48,6 +52,8 @@ final class FactionDowned {
     private boolean selfRevived;
     private @Nullable DamageSource cause;
     private @Nullable FactionMember helper;
+    private int urgeTicks;
+    private final List<Mob> paused = new ArrayList<>();
 
     FactionDowned(FactionMember mob) {
         this.mob = mob;
@@ -81,8 +87,12 @@ final class FactionDowned {
     // Counts down while downed: waits for its helper, gets up alone once, and gives up when it already has.
     void tick(ServerLevel level) {
         if (!this.mob.downed()) {
+            if (this.urgeTicks > 0) {
+                this.urgeTicks--;
+            }
             return;
         }
+        this.pauseAggro(level);
         this.downedTicks++;
         if (this.heldTicks > 0) {
             this.heldTicks--;
@@ -114,10 +124,7 @@ final class FactionDowned {
     // One tick of a crewmate's help; the member stands once the help is done.
     void help(ServerLevel level, FactionMember reviver) {
         this.heldTicks = HELD_TICKS;
-        if (++this.reviveProgress % 10 == 0) {
-            reviver.swing(InteractionHand.MAIN_HAND, reviver.getMainHandItem().getAttackAnimation(), true);
-        }
-        if (this.reviveProgress >= REVIVE_TICKS) {
+        if (++this.reviveProgress >= REVIVE_TICKS) {
             this.revive(level);
         }
     }
@@ -185,6 +192,39 @@ final class FactionDowned {
         this.reviveProgress = 0;
         this.downedTicks = 0;
         this.aloneTicks = 0;
+        this.urgeTicks = URGE_TICKS;
+        this.resumeAggro();
+    }
+
+    // Whether, freshly back on its feet, it still feels the pull to get its downed crewmates up.
+    boolean urged() {
+        return this.urgeTicks > 0;
+    }
+
+    // An urged crewmate takes over as its helper when it has none closer that is free to come.
+    void claim(FactionMember reviver) {
+        if (!this.canHelp(this.helper) || reviver.distanceToSqr(this.mob) < this.helper.distanceToSqr(this.mob)) {
+            this.helper = reviver;
+        }
+    }
+
+    // Whatever was after it lets it be while it is down, remembered so the fight picks up again once it stands.
+    private void pauseAggro(ServerLevel level) {
+        for (Mob hunter : level.getEntitiesOfClass(Mob.class, this.mob.getBoundingBox().inflate(PAUSE_RANGE), other -> other.getTarget() == this.mob)) {
+            hunter.setTarget(null);
+            if (!this.paused.contains(hunter)) {
+                this.paused.add(hunter);
+            }
+        }
+    }
+
+    private void resumeAggro() {
+        for (Mob hunter : this.paused) {
+            if (hunter.isAlive() && hunter.getTarget() == null && hunter.level() == this.mob.level()) {
+                hunter.setTarget(this.mob);
+            }
+        }
+        this.paused.clear();
     }
 
     // Any damage at all finishes a downed member, credited to whoever dealt it.
@@ -195,6 +235,7 @@ final class FactionDowned {
 
     // Dies of its wounds, credited to whoever downed it.
     private void bleedOut(ServerLevel level) {
+        this.paused.clear();
         DamageSource source = this.cause != null ? this.cause : this.mob.damageSources().generic();
         if (source.getEntity() instanceof Player player) {
             this.mob.setLastHurtByPlayer(player, PLAYER_CREDIT_TICKS);
@@ -306,11 +347,15 @@ final class FactionDowned {
             this.patient = this.mob.level().getEntitiesOfClass(
                     FactionMember.class,
                     this.mob.getBoundingBox().inflate(HELP_RANGE),
-                    member -> member.downed() && member.isAlive() && member.downedState().helper() == this.mob
+                    member -> member.downed() && member.isAlive() && (member.downedState().helper() == this.mob
+                        || this.mob.downedState().urged() && member.faction() == this.mob.faction() && !member.downedState().beingHelped())
                 )
                 .stream()
                 .min(Comparator.comparingDouble(this.mob::distanceToSqr))
                 .orElse(null);
+            if (this.patient != null) {
+                this.patient.downedState().claim(this.mob);
+            }
             return this.patient != null;
         }
 
@@ -354,7 +399,7 @@ final class FactionDowned {
                 if (this.mob.getPose() == Pose.CROUCHING) {
                     this.mob.setPose(Pose.STANDING);
                 }
-                this.mob.getNavigation().moveTo(patient, 1.2);
+                this.mob.getNavigation().moveTo(patient, 1.0);
                 return;
             }
             this.mob.getNavigation().stop();

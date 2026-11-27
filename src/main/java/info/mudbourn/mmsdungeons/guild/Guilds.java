@@ -25,6 +25,7 @@ public final class Guilds {
     public static void register() {
         GuildBlocks.register();
         GuildNetworking.register();
+        GuildMenu.register();
         GuildClaims.register();
         GuildPortals.register();
         ServerLifecycleEvents.SERVER_STARTED.register(server ->

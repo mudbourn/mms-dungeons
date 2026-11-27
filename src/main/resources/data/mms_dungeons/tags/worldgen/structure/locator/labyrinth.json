@@ -5,6 +5,9 @@
     "mms_dungeons:ddd_labyrinth_desert",
     "mms_dungeons:ddd_labyrinth_desert_deep",
     "mms_dungeons:ddd_labyrinth_frozen",
-    "mms_dungeons:ddd_labyrinth_frozen_deep"
+    "mms_dungeons:ddd_labyrinth_frozen_deep",
+    "mms_dungeons:ddd_labyrinth_desert_sanctuary",
+    "mms_dungeons:ddd_labyrinth_frozen_sanctuary",
+    "mms_dungeons:ddd_labyrinth_sanctuary"
   ]
 }

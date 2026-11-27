@@ -12,7 +12,7 @@ import net.minecraft.world.level.levelgen.densityfunction.DensityVolume;
 import net.minecraft.world.level.levelgen.densityfunction.DfRewriteRule;
 import net.minecraft.world.level.levelgen.densityfunction.SamplerContext;
 
-// Solid density inside labyrinth cells of the Deep Region and a far negative value everywhere else.
+// Solid density inside labyrinth cells of the Deep and Sanctuary regions and a far negative value everywhere else.
 public final class LabyrinthMask implements DensityFunction {
 
     public static final LabyrinthMask INSTANCE = new LabyrinthMask();

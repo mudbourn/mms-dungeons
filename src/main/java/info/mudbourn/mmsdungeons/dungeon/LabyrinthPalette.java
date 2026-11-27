@@ -115,12 +115,15 @@ public final class LabyrinthPalette {
     private static final int SPACING = 3;
     // Height at which a cell's preferred biome is read, the same for both halves.
     private static final int SAMPLE_Y = 30;
+    private static final int SANCTUARY_SAMPLE_Y = 110;
     // Heights at which a cell is checked for Nether Infection, one per level.
     private static final int[] NETHER_SAMPLE_YS = {SAMPLE_Y, -60};
+    private static final int[] SANCTUARY_NETHER_SAMPLE_YS = {SANCTUARY_SAMPLE_Y};
     // Blocks from a cell's center to the ring where Nether Infection still counts as next to it.
     private static final int NETHER_REACH = 80;
     private static final long RANK_SALT = 0x70616C65747465L;
     private static final Map<Long, Integer> CHOICES = new ConcurrentHashMap<>();
+    private static final Map<Long, Integer> SANCTUARY_CHOICES = new ConcurrentHashMap<>();
     private static final Map<DddMaterial, DddMaterial> LUSH_MATERIALS = new ConcurrentHashMap<>();
 
     private LabyrinthPalette() {
@@ -129,7 +132,7 @@ public final class LabyrinthPalette {
     // The block set for the labyrinth in the cell holding the given core position.
     public static DddMaterial at(ServerLevel level, ChunkGenerator generator, BlockPos core, DddRuin ruin) {
         BiomeResolver resolver = generator.getBiomeSource().createUncachedResolver(level.getChunkSource().randomState());
-        int choice = choice(resolver, LabyrinthCells.cellOfBlock(core.getX()), LabyrinthCells.cellOfBlock(core.getZ()));
+        int choice = choice(resolver, LabyrinthCells.cellOfBlock(core.getX()), LabyrinthCells.cellOfBlock(core.getZ()), ruin.sanctuary());
         if (choice == DEFAULT) {
             return DddMaterial.of(ruin);
         }
@@ -139,8 +142,8 @@ public final class LabyrinthPalette {
     }
 
     // The template theme for the labyrinth in a cell: desert and tundra palettes use their own templates, everything else plains.
-    public static DddRuin.Theme theme(BiomeResolver resolver, int cellX, int cellZ) {
-        int choice = choice(resolver, cellX, cellZ);
+    public static DddRuin.Theme theme(BiomeResolver resolver, int cellX, int cellZ, boolean sanctuary) {
+        int choice = choice(resolver, cellX, cellZ, sanctuary);
         if (choice == DEFAULT) {
             return DddRuin.Theme.PLAINS;
         }
@@ -155,15 +158,22 @@ public final class LabyrinthPalette {
         CHOICES.clear();
     }
 
-    // The cell's palette: its biome's own unless a higher ranked labyrinth cell within SPACING already took it.
-    private static int choice(BiomeResolver resolver, int cellX, int cellZ) {
+    // Sanctuary palettes never change with the Deep Region, so a rebuild keeps them.
+    public static void clearAllChoices() {
+        clearChoices();
+        SANCTUARY_CHOICES.clear();
+    }
+
+    // The cell's palette: its biome's own unless a higher ranked labyrinth cell of the same layout within SPACING already took it.
+    private static int choice(BiomeResolver resolver, int cellX, int cellZ, boolean sanctuary) {
+        Map<Long, Integer> choices = sanctuary ? SANCTUARY_CHOICES : CHOICES;
         long key = ((long) cellX << 32) ^ (cellZ & 0xFFFFFFFFL);
-        Integer known = CHOICES.get(key);
+        Integer known = choices.get(key);
         if (known != null) {
             return known;
         }
         long seed = LabyrinthCells.seed();
-        long rank = rank(seed, cellX, cellZ);
+        long rank = rank(seed, cellX, cellZ, sanctuary);
         int options = FAMILIES.size() + 1;
         int[] nearest = new int[options];
         Arrays.fill(nearest, Integer.MAX_VALUE);
@@ -171,14 +181,14 @@ public final class LabyrinthPalette {
             for (int dz = -SPACING; dz <= SPACING; dz++) {
                 int otherX = cellX + dx;
                 int otherZ = cellZ + dz;
-                if ((dx == 0 && dz == 0) || rank(seed, otherX, otherZ) <= rank || !LabyrinthCells.isLabyrinth(seed, otherX, otherZ)) {
+                if ((dx == 0 && dz == 0) || rank(seed, otherX, otherZ, sanctuary) <= rank || !isCell(seed, otherX, otherZ, sanctuary)) {
                     continue;
                 }
-                int taken = choice(resolver, otherX, otherZ);
+                int taken = choice(resolver, otherX, otherZ, sanctuary);
                 nearest[taken] = Math.min(nearest[taken], Math.max(Math.abs(dx), Math.abs(dz)));
             }
         }
-        int preferred = preferred(resolver, cellX, cellZ);
+        int preferred = preferred(resolver, cellX, cellZ, sanctuary);
         int picked = preferred;
         for (int step = 0; step < options; step++) {
             int candidate = (preferred + step) % options;
@@ -190,19 +200,23 @@ public final class LabyrinthPalette {
                 picked = candidate;
             }
         }
-        CHOICES.put(key, picked);
+        choices.put(key, picked);
         return picked;
     }
 
-    private static int preferred(BiomeResolver resolver, int cellX, int cellZ) {
+    private static boolean isCell(long seed, int cellX, int cellZ, boolean sanctuary) {
+        return sanctuary ? LabyrinthCells.isSanctuaryLabyrinth(seed, cellX, cellZ) : LabyrinthCells.isLabyrinth(seed, cellX, cellZ);
+    }
+
+    private static int preferred(BiomeResolver resolver, int cellX, int cellZ, boolean sanctuary) {
         int centerX = cellX * LabyrinthCells.CELL_BLOCKS + LabyrinthCells.CELL_BLOCKS / 2;
         int centerZ = cellZ * LabyrinthCells.CELL_BLOCKS + LabyrinthCells.CELL_BLOCKS / 2;
-        if (nearNether(resolver, centerX, centerZ)) {
+        if (nearNether(resolver, centerX, centerZ, sanctuary ? SANCTUARY_NETHER_SAMPLE_YS : NETHER_SAMPLE_YS)) {
             return FAMILIES.indexOf(BY_BIOME.get(NETHER)) + 1;
         }
         Holder<Biome> biome = resolver.getNoiseBiome(
             QuartPos.fromBlock(centerX),
-            QuartPos.fromBlock(SAMPLE_Y),
+            QuartPos.fromBlock(sanctuary ? SANCTUARY_SAMPLE_Y : SAMPLE_Y),
             QuartPos.fromBlock(centerZ)
         );
         Family family = biome.unwrapKey().map(key -> BY_BIOME.get(key.identifier().toString())).orElse(null);
@@ -210,9 +224,9 @@ public final class LabyrinthPalette {
     }
 
     // Whether a Nether Infection biome sits at the cell's center or around it, at an upper or a lower height.
-    private static boolean nearNether(BiomeResolver resolver, int centerX, int centerZ) {
+    private static boolean nearNether(BiomeResolver resolver, int centerX, int centerZ, int[] sampleYs) {
         Family nether = BY_BIOME.get(NETHER);
-        for (int y : NETHER_SAMPLE_YS) {
+        for (int y : sampleYs) {
             for (int dx = -NETHER_REACH; dx <= NETHER_REACH; dx += NETHER_REACH) {
                 for (int dz = -NETHER_REACH; dz <= NETHER_REACH; dz += NETHER_REACH) {
                     Holder<Biome> biome = resolver.getNoiseBiome(
@@ -230,8 +244,9 @@ public final class LabyrinthPalette {
     }
 
     // Rank used to settle which of two nearby cells keeps a palette; ties fall to the coordinates.
-    private static long rank(long seed, int cellX, int cellZ) {
-        long hash = LabyrinthCells.mix(DungeonGeneration.layoutSeed(seed) ^ RANK_SALT ^ LabyrinthCells.mix(cellX * 0x9E3779B97F4A7C15L + cellZ));
+    private static long rank(long seed, int cellX, int cellZ, boolean sanctuary) {
+        long layout = sanctuary ? seed : DungeonGeneration.layoutSeed(seed);
+        long hash = LabyrinthCells.mix(layout ^ RANK_SALT ^ LabyrinthCells.mix(cellX * 0x9E3779B97F4A7C15L + cellZ));
         return (hash & ~0xFFFFL) | ((cellX * 31L + cellZ) & 0xFFFFL);
     }
 

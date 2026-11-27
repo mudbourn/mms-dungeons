@@ -16,7 +16,7 @@ import net.minecraft.world.level.levelgen.carver.WorldCarver;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-// Keeps carvers out of the Deep Region part of labyrinth chunks.
+// Keeps carvers out of the labyrinth rock of the Deep and Sanctuary regions.
 @Mixin(NoiseBasedChunkGenerator.class)
 public abstract class LabyrinthCarverMixin {
 
@@ -39,8 +39,10 @@ public abstract class LabyrinthCarverMixin {
         @Local(argsOnly = true) WorldGenRegion region
     ) {
         ChunkPos pos = chunk.getPos();
-        boolean labyrinth = DungeonDimension.isDungeon(region.getLevel())
-            && LabyrinthCells.isLabyrinthColumn(pos.getMinBlockX(), pos.getMinBlockZ());
-        return original.call(carver, context, random, source, target, labyrinth ? new LabyrinthCells.AboveDeepRegion(output) : output);
+        boolean dungeon = DungeonDimension.isDungeon(region.getLevel());
+        boolean deep = dungeon && LabyrinthCells.isLabyrinthColumn(pos.getMinBlockX(), pos.getMinBlockZ());
+        boolean sanctuary = dungeon && LabyrinthCells.isSanctuaryColumn(pos.getMinBlockX(), pos.getMinBlockZ());
+        CarverOutput filtered = deep || sanctuary ? new LabyrinthCells.OutsideLabyrinth(output, deep, sanctuary) : output;
+        return original.call(carver, context, random, source, target, filtered);
     }
 }

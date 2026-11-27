@@ -51,7 +51,7 @@ public abstract class DddPieceMixin {
                     settings.addProcessor(used.accent());
                 }
                 if (ruin.richLoot()) {
-                    settings.addProcessor(DddLoot.INSTANCE);
+                    settings.addProcessor(DddLoot.of(ruin));
                 }
                 settings.addProcessor(new RemovedBlocks(used));
             } else {

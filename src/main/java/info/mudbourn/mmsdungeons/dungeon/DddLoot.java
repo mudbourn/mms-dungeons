@@ -12,18 +12,29 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProc
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import org.jspecify.annotations.Nullable;
 
-// Swaps the loot of chests, barrels, vaults and trial spawners in deepslate ruins for much richer tables.
+// Swaps the loot of chests, barrels, vaults and trial spawners in Deep and Sanctuary labyrinths for the tables of their tier.
 public final class DddLoot implements StructureProcessor {
 
-    public static final DddLoot INSTANCE = new DddLoot();
+    public static final DddLoot DEEP = new DddLoot("ddd_deepslate");
+    public static final DddLoot SANCTUARY = new DddLoot("ddd_sanctuary");
 
-    private static final String CHEST = "mms_dungeons:ddd_deepslate/chest";
-    private static final String CHEST_RICH = "mms_dungeons:ddd_deepslate/chest_rich";
-    private static final String BARREL = "mms_dungeons:ddd_deepslate/barrel";
-    private static final String VAULT = "mms_dungeons:ddd_deepslate/vault";
-    private static final String TRIAL = "mms_dungeons:ddd_deepslate/trial_reward";
+    private final String chest;
+    private final String chestRich;
+    private final String barrel;
+    private final String vault;
+    private final String trial;
 
-    private DddLoot() {
+    private DddLoot(String folder) {
+        String base = "mms_dungeons:" + folder + "/";
+        this.chest = base + "chest";
+        this.chestRich = base + "chest_rich";
+        this.barrel = base + "barrel";
+        this.vault = base + "vault";
+        this.trial = base + "trial_reward";
+    }
+
+    public static DddLoot of(DddRuin ruin) {
+        return ruin.sanctuary() ? SANCTUARY : DEEP;
     }
 
     @Override
@@ -57,34 +68,34 @@ public final class DddLoot implements StructureProcessor {
         return MapCodec.unit(this);
     }
 
-    static String chestTable(String original) {
+    String chestTable(String original) {
         if (original.contains("_liv3") || original.contains("_liv4") || original.contains("/tower/")) {
-            return CHEST_RICH;
+            return chestRich;
         }
         if (original.contains("dungeon_liv") || original.contains("spider_liv")) {
-            return CHEST;
+            return chest;
         }
-        return BARREL;
+        return barrel;
     }
 
-    private static boolean swapVault(CompoundTag nbt) {
+    private boolean swapVault(CompoundTag nbt) {
         CompoundTag config = nbt.getCompoundOrEmpty("config");
         if (!config.contains("loot_table")) {
             return false;
         }
-        config.putString("loot_table", VAULT);
+        config.putString("loot_table", vault);
         nbt.put("config", config);
         return true;
     }
 
-    private static boolean swapTrial(CompoundTag nbt) {
+    private boolean swapTrial(CompoundTag nbt) {
         boolean changed = false;
         for (String key : new String[] {"normal_config", "ominous_config"}) {
             CompoundTag config = nbt.getCompoundOrEmpty(key);
             ListTag ejected = config.getListOrEmpty("loot_tables_to_eject");
             for (Tag entry : ejected) {
                 if (entry instanceof CompoundTag weighted && weighted.getStringOr("data", "").startsWith("ddd:")) {
-                    weighted.putString("data", TRIAL);
+                    weighted.putString("data", trial);
                     changed = true;
                 }
             }

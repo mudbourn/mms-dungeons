@@ -1,5 +1,6 @@
 package info.mudbourn.mmsdungeons.mobs.factions;
 
+import info.mudbourn.mmsdungeons.dungeon.DungeonDimension;
 import info.mudbourn.mmsdungeons.mobs.factions.entity.FactionMember;
 import java.util.HashMap;
 import java.util.Map;
@@ -48,6 +49,7 @@ public final class FactionSpawns {
     private static final int OVERWORLD_ODDS = 4;
     private static final double CROWD_RANGE = 48.0;
     private static final int CROWD_LIMIT = 8;
+    private static final double DEEP_SPACING = 64.0;
     private static final int PLACE_ATTEMPTS = 8;
     private static final int PLACE_SPREAD = 3;
 
@@ -82,6 +84,10 @@ public final class FactionSpawns {
         if (!Monster.checkAnyLightMonsterSpawnRules(type, level, reason, pos, random)) {
             return false;
         }
+        boolean placed = isWorldSpawn(reason) || reason == EntitySpawnReason.STRUCTURE;
+        if (placed && DungeonDimension.isSanctuary(level.getLevel(), pos)) {
+            return false;
+        }
         if (!isWorldSpawn(reason)) {
             return true;
         }
@@ -90,6 +96,10 @@ public final class FactionSpawns {
             return false;
         }
         if (server.dimension() == Level.OVERWORLD && random.nextInt(OVERWORLD_ODDS) != 0) {
+            return false;
+        }
+        // In the Deep a new group starts well clear of every other.
+        if (DungeonDimension.isDeep(server, pos) && !level.getEntitiesOfClass(FactionMember.class, new AABB(pos).inflate(DEEP_SPACING)).isEmpty()) {
             return false;
         }
         // Counts the whole group this would bring, not only its founder.

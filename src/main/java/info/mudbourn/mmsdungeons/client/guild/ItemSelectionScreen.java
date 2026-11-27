@@ -9,13 +9,20 @@ import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 
 // Lets the player pick any item as the proof of a quest or contract, with a name filter.
 final class ItemSelectionScreen extends Screen {
+
+    private static final int ROW_HEIGHT = 22;
+    private static final int BUTTON_SIZE = 20;
+    private static final int ICON_SIZE = 12;
+    private static final Identifier PICK_ICON = Identifier.withDefaultNamespace("container/beacon/confirm");
 
     private final Screen parent;
     private final Consumer<ItemStack> picked;
@@ -55,7 +62,7 @@ final class ItemSelectionScreen extends Screen {
     private final class ItemList extends ContainerObjectSelectionList<ItemList.Entry> {
 
         ItemList(Minecraft minecraft, int width, int height, int y) {
-            super(minecraft, width, height, y, 24);
+            super(minecraft, width, height, y, ROW_HEIGHT);
         }
 
         @Override
@@ -77,7 +84,7 @@ final class ItemSelectionScreen extends Screen {
             setScrollAmount(0.0);
         }
 
-        // One row: a button across the row that picks the item, drawn with the item and its name.
+        // One row: the item and its name, and a button on the right that picks it.
         final class Entry extends ContainerObjectSelectionList.Entry<Entry> {
 
             private final ItemStack stack;
@@ -88,7 +95,7 @@ final class ItemSelectionScreen extends Screen {
                 this.button = Button.builder(Component.empty(), pressed -> {
                     picked.accept(stack);
                     onClose();
-                }).build();
+                }).size(BUTTON_SIZE, BUTTON_SIZE).build();
             }
 
             @Override
@@ -109,17 +116,18 @@ final class ItemSelectionScreen extends Screen {
                 boolean hovered,
                 float partialTick
             ) {
-                button.setRectangle(getContentWidth(), getContentHeight(), getContentX(), getContentY());
+                graphics.item(stack, getContentX() + 2, getContentYMiddle() - 8);
+                graphics.text(font, stack.getHoverName(), getContentX() + 22, getContentYMiddle() - font.lineHeight / 2, 0xFFFFFFFF, true);
+                button.setX(getContentRight() - BUTTON_SIZE);
+                button.setY(getContentYMiddle() - BUTTON_SIZE / 2);
                 button.extractRenderState(graphics, mouseX, mouseY, partialTick);
-                graphics.item(stack, getContentX() + 4, getContentY() + 2);
-                graphics.text(
-                    font,
-                    stack.getHoverName(),
-                    getContentX() + 28,
-                    getContentY() + 6,
-                    0xFFFFFFFF,
-                    true
-                );
+                graphics.blitSprite(
+                    RenderPipelines.GUI_TEXTURED,
+                    PICK_ICON,
+                    button.getX() + (BUTTON_SIZE - ICON_SIZE) / 2,
+                    button.getY() + (BUTTON_SIZE - ICON_SIZE) / 2,
+                    ICON_SIZE,
+                    ICON_SIZE);
             }
         }
     }

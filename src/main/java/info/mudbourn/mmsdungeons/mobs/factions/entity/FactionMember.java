@@ -1,5 +1,6 @@
 package info.mudbourn.mmsdungeons.mobs.factions.entity;
 
+import info.mudbourn.mmsdungeons.mobs.factions.HumanFactions;
 import info.mudbourn.mmsdungeons.MmsDungeons;
 import info.mudbourn.mmsdungeons.corpse.MobCorpses;
 import info.mudbourn.mmsdungeons.dungeon.DungeonDimension;
@@ -52,7 +53,6 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
@@ -125,9 +125,6 @@ public class FactionMember extends Monster implements RangedAttackMob, FeudAware
     // Day length and the time of day monsters start to spawn: rain darkens the sky without turning day into night.
     private static final long DAY_LENGTH = 24000L;
     private static final long NIGHTFALL = 13000L;
-    // The game's own sprint boost is meant for a player's speed; a mob's speed counts twice in its stride, so this trims the boost back to a player's 30 percent.
-    private static final Identifier SPRINT_TRIM = MmsDungeons.id("sprint_trim");
-    private static final double SPRINT_TRIM_AMOUNT = Math.sqrt(1.3) / 1.3 - 1.0;
     private static final Identifier UMBRELLA = Identifier.fromNamespaceAndPath("mms_origins", "umbrella");
     private final Set<String> keysHeld = new HashSet<>();
     private final Set<String> keysBefore = new HashSet<>();
@@ -246,10 +243,14 @@ public class FactionMember extends Monster implements RangedAttackMob, FeudAware
         this.goalSelector.addGoal(3, new FactionPeace.PeaceGoal(this));
         this.goalSelector.addGoal(4, new FactionPeace.FriendGoal(this));
         this.goalSelector.addGoal(4, new FactionWary(this));
-        this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 0.8));
+        this.goalSelector.addGoal(4, new FactionTerritory.KeepApartGoal(this));
+        this.goalSelector.addGoal(5, new FactionPursuits.FarmGoal(this));
+        this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 0.8));
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this, FactionMember.class));
         this.targetSelector.addGoal(1, new FactionThreatSense(this));
         this.targetSelector.addGoal(2, new FeudTargetGoal(this, TARGET_INTERVAL, target -> false));
+        this.targetSelector.addGoal(3, new FactionTerritory.HuntRivalsGoal(this));
+        this.targetSelector.addGoal(4, new FactionPursuits.HuntMonstersGoal(this));
     }
 
     @Override
@@ -649,17 +650,11 @@ public class FactionMember extends Monster implements RangedAttackMob, FeudAware
         return !hovering && super.causeFallDamage(fallDistance, damageMultiplier, source);
     }
 
+    // Pushes with a player's full input instead of the speed itself, so its stride is its speed once, as a player's is, and sprinting and origin speed changes scale it as they do a player's.
     @Override
-    public void setSprinting(boolean sprinting) {
-        super.setSprinting(sprinting);
-        AttributeInstance speed = this.getAttribute(Attributes.MOVEMENT_SPEED);
-        if (speed == null) {
-            return;
-        }
-        speed.removeModifier(SPRINT_TRIM);
-        if (sprinting) {
-            speed.addTransientModifier(new AttributeModifier(SPRINT_TRIM, SPRINT_TRIM_AMOUNT, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
-        }
+    public void setSpeed(float speed) {
+        super.setSpeed(speed);
+        this.setZza(speed > 0.0f ? 1.0f : 0.0f);
     }
 
     // In the air on its origin's wings, synced so the renderer can let its legs hang.
@@ -855,6 +850,17 @@ public class FactionMember extends Monster implements RangedAttackMob, FeudAware
             return null;
         }
         return level.getEntity(this.leaderId) instanceof FactionMember member && member.isAlive() ? member : null;
+    }
+
+    // The crew it belongs to: its leader's id, or its own when it leads or walks alone.
+    public UUID crew() {
+        return this.leaderId != null ? this.leaderId : this.getUUID();
+    }
+
+    // Nothing picks a downed member as a fresh target; FactionDowned hands back the fights it paused once it stands.
+    @Override
+    public boolean canBeSeenAsEnemy() {
+        return !this.downed() && super.canBeSeenAsEnemy();
     }
 
     public void joinCrew(@Nullable UUID leaderId) {
@@ -1219,6 +1225,10 @@ public class FactionMember extends Monster implements RangedAttackMob, FeudAware
     @Override
     protected void readAdditionalSaveData(ValueInput input) {
         super.readAdditionalSaveData(input);
+        AttributeInstance walk = this.getAttribute(Attributes.MOVEMENT_SPEED);
+        if (walk != null) {
+            walk.setBaseValue(HumanFactions.PLAYER_WALK);
+        }
         input.getString("Class").ifPresent(id -> this.setFactionClass(FactionClass.byId(id)));
         this.entityData.set(DATA_SKIN, input.getIntOr("Skin", 0));
         this.tier = input.getIntOr("Tier", 1);

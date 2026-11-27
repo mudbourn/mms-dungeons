@@ -370,14 +370,14 @@ final class FactionTactics {
             .orElse(null);
         if (healer != null) {
             if (this.mob.distanceTo(healer) > 3.0) {
-                this.mob.getNavigation().moveTo(healer, 1.15);
+                this.mob.getNavigation().moveTo(healer, 1.0);
             }
             return true;
         }
         boolean food = this.mob.hasSupply(false);
         if (distance < (food ? EAT_DISTANCE : SAFE_DISTANCE)) {
             Vec3 away = this.mob.position().add(this.mob.position().subtract(target.position()).normalize().scale(8.0));
-            this.mob.getNavigation().moveTo(away.x, away.y, away.z, 1.15);
+            this.mob.getNavigation().moveTo(away.x, away.y, away.z, 1.0);
             return true;
         }
         if (food) {

@@ -40,6 +40,8 @@ public final class DungeonPortals {
     private static final int OPENING = 3;
     // How far from the dungeon's centre a new exit portal may be placed.
     private static final int SITE_RADIUS = 4096;
+    // Random chunks tried for one outside a Sanctuary labyrinth cell before taking the last.
+    private static final int CHUNK_ATTEMPTS = 16;
     // Columns tried inside the chosen chunk before carving a chamber at the last one.
     private static final int SITE_ATTEMPTS = 24;
     // Open floor kept on every side of an exit portal's frame.
@@ -185,11 +187,16 @@ public final class DungeonPortals {
         return anchor;
     }
 
-    // An open spot in the Sanctuary Region with room for an exit portal, or a spot to carve one when none is found.
+    // An open spot in the Sanctuary Region, outside labyrinth rock where a chunk allows, with room for an exit portal, or a spot to carve one when none is found.
     private static BlockPos findExitSite(ServerLevel dungeon) {
         RandomSource random = dungeon.getRandom();
-        int chunkX = random.nextIntBetweenInclusive(-SITE_RADIUS, SITE_RADIUS) >> 4;
-        int chunkZ = random.nextIntBetweenInclusive(-SITE_RADIUS, SITE_RADIUS) >> 4;
+        int chunkX;
+        int chunkZ;
+        int tries = 0;
+        do {
+            chunkX = random.nextIntBetweenInclusive(-SITE_RADIUS, SITE_RADIUS) >> 4;
+            chunkZ = random.nextIntBetweenInclusive(-SITE_RADIUS, SITE_RADIUS) >> 4;
+        } while (LabyrinthCells.isSanctuaryColumn(chunkX << 4, chunkZ << 4) && ++tries < CHUNK_ATTEMPTS);
         dungeon.getChunk(chunkX, chunkZ);
         int minX = (chunkX << 4) + 1 + ROOM_MARGIN;
         int maxX = (chunkX << 4) + 15 - OPENING - ROOM_MARGIN;

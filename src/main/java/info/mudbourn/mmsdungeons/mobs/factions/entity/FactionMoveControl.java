@@ -14,8 +14,7 @@ final class FactionMoveControl extends MoveControl<FactionMember> {
     // A player backs off a step or two from a foe in front of them, but turns round to go anywhere farther.
     private static final double BACKPEDAL_RANGE = 6.0;
     private static final double BACKWARD = -0.5;
-    // The sprint boost as it shows in a mob's speed attribute: the square root of a player's 30 percent, see FactionMember.
-    private static final float SPRINT_BOOST = (float) Math.sqrt(1.3);
+    private static final float SPRINT_BOOST = 1.3f;
 
     FactionMoveControl(FactionMember mob) {
         super(mob);
@@ -72,8 +71,8 @@ final class FactionMoveControl extends MoveControl<FactionMember> {
             speed /= SPRINT_BOOST;
         }
         this.mob.setSpeed(speed);
-        this.mob.setZza((float) (forward * speed));
-        this.mob.setXxa((float) (right * speed));
+        this.mob.setZza((float) forward);
+        this.mob.setXxa((float) right);
     }
 
     // Backing away is only for a foe close by and in sight; any longer way back it walks facing where it goes.

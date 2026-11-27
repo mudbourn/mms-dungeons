@@ -2,6 +2,7 @@ package info.mudbourn.mmsdungeons.guild;
 
 import info.mudbourn.mmsdungeons.config.GuildsConfig;
 import info.mudbourn.mmsdungeons.net.BountyActionPayload;
+import info.mudbourn.mmsdungeons.net.BoardNoticePayload;
 import info.mudbourn.mmsdungeons.net.BountyListPayload;
 import info.mudbourn.mmsdungeons.net.OpenBoardPayload;
 import info.mudbourn.mmsdungeons.net.PostBountyPayload;
@@ -35,6 +36,7 @@ final class GuildNetworking {
     static void register() {
         PayloadTypeRegistry.clientboundPlay().register(OpenBoardPayload.TYPE, OpenBoardPayload.CODEC);
         PayloadTypeRegistry.clientboundPlay().register(BountyListPayload.TYPE, BountyListPayload.CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(BoardNoticePayload.TYPE, BoardNoticePayload.CODEC);
         PayloadTypeRegistry.serverboundPlay().register(RequestBountiesPayload.TYPE, RequestBountiesPayload.CODEC);
         PayloadTypeRegistry.serverboundPlay().register(PostBountyPayload.TYPE, PostBountyPayload.CODEC);
         PayloadTypeRegistry.serverboundPlay().register(BountyActionPayload.TYPE, BountyActionPayload.CODEC);
@@ -115,7 +117,7 @@ final class GuildNetworking {
 
     // Tells the player the outcome and refreshes everyone looking at the same guild's board.
     private static void finish(ServerPlayer player, Guild guild, String error, String done) {
-        player.sendOverlayMessage(Component.literal(error != null ? error : done));
+        ServerPlayNetworking.send(player, new BoardNoticePayload(error != null ? error : done, error != null));
         if (error != null) {
             return;
         }

@@ -1,0 +1,21 @@
+{
+  "placement": {
+    "type": "mms_dungeons:labyrinth_cell",
+    "sanctuary": true,
+    "salt": 611820433
+  },
+  "structures": [
+    {
+      "structure": "mms_dungeons:ddd_labyrinth_sanctuary",
+      "weight": 1
+    },
+    {
+      "structure": "mms_dungeons:ddd_labyrinth_desert_sanctuary",
+      "weight": 1
+    },
+    {
+      "structure": "mms_dungeons:ddd_labyrinth_frozen_sanctuary",
+      "weight": 1
+    }
+  ]
+}

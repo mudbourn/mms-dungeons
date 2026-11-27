@@ -12,7 +12,7 @@ import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 
-// Corridors that join neighbouring labyrinths, and shafts that join a cell's upper and lower labyrinth, each half built by its own side.
+// Corridors that join neighbouring labyrinths, and shafts that join a cell's upper and lower labyrinth, each half built by its own side; Sanctuary labyrinths have none.
 public final class LabyrinthLinks {
 
     private static final long BRIDGE_SALT = 0x62726964676573L;
@@ -38,7 +38,7 @@ public final class LabyrinthLinks {
 
     public static List<StructurePiece> corridors(List<StructurePiece> kept, DddRuin ruin, long seed, StructureTemplateManager templates) {
         List<StructurePiece> out = new ArrayList<>();
-        if (kept.isEmpty()) {
+        if (kept.isEmpty() || ruin.sanctuary()) {
             return out;
         }
         BlockPos core = kept.get(0).getBoundingBox().getCenter();

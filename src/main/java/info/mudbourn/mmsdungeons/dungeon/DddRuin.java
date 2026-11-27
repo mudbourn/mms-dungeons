@@ -4,14 +4,24 @@ import info.mudbourn.mmsdungeons.MmsDungeons;
 import net.minecraft.resources.Identifier;
 import org.jspecify.annotations.Nullable;
 
-// The kinds of labyrinth dungeon: a template theme for each of the upper and lower halves, with the Y band, tunnels and loot each half uses.
+// The kinds of labyrinth dungeon: a template theme for each of the upper, lower and Sanctuary labyrinths, with the Y band, tunnels and loot each uses.
 public enum DddRuin {
-    LABYRINTH("ddd_labyrinth", Theme.PLAINS, false),
-    LABYRINTH_DESERT("ddd_labyrinth_desert", Theme.DESERT, false),
-    LABYRINTH_FROZEN("ddd_labyrinth_frozen", Theme.FROZEN, false),
-    LABYRINTH_DEEP("ddd_labyrinth_deep", Theme.PLAINS, true),
-    LABYRINTH_DESERT_DEEP("ddd_labyrinth_desert_deep", Theme.DESERT, true),
-    LABYRINTH_FROZEN_DEEP("ddd_labyrinth_frozen_deep", Theme.FROZEN, true);
+    LABYRINTH("ddd_labyrinth", Theme.PLAINS, Level.UPPER),
+    LABYRINTH_DESERT("ddd_labyrinth_desert", Theme.DESERT, Level.UPPER),
+    LABYRINTH_FROZEN("ddd_labyrinth_frozen", Theme.FROZEN, Level.UPPER),
+    LABYRINTH_DEEP("ddd_labyrinth_deep", Theme.PLAINS, Level.DEEP),
+    LABYRINTH_DESERT_DEEP("ddd_labyrinth_desert_deep", Theme.DESERT, Level.DEEP),
+    LABYRINTH_FROZEN_DEEP("ddd_labyrinth_frozen_deep", Theme.FROZEN, Level.DEEP),
+    LABYRINTH_SANCTUARY("ddd_labyrinth_sanctuary", Theme.PLAINS, Level.SANCTUARY),
+    LABYRINTH_DESERT_SANCTUARY("ddd_labyrinth_desert_sanctuary", Theme.DESERT, Level.SANCTUARY),
+    LABYRINTH_FROZEN_SANCTUARY("ddd_labyrinth_frozen_sanctuary", Theme.FROZEN, Level.SANCTUARY);
+
+    // Which labyrinth of a cell a kind is: the Deep Region's upper half, its lower half, or the Sanctuary Region's.
+    public enum Level {
+        UPPER,
+        DEEP,
+        SANCTUARY
+    }
 
     // Which family of Deadly Deadly Dungeon templates a labyrinth is built from.
     public enum Theme {
@@ -28,12 +38,12 @@ public enum DddRuin {
 
     private final Identifier structure;
     private final Theme theme;
-    private final boolean deep;
+    private final Level level;
 
-    DddRuin(String structure, Theme theme, boolean deep) {
+    DddRuin(String structure, Theme theme, Level level) {
         this.structure = MmsDungeons.id(structure);
         this.theme = theme;
-        this.deep = deep;
+        this.level = level;
     }
 
     public Theme theme() {
@@ -41,15 +51,23 @@ public enum DddRuin {
     }
 
     public int minY() {
-        return deep ? -128 : 0;
+        return switch (level) {
+            case UPPER -> 0;
+            case DEEP -> -128;
+            case SANCTUARY -> DungeonDimension.SANCTUARY_BOTTOM;
+        };
     }
 
     public int maxY() {
-        return deep ? DungeonDimension.PERICULUM_TOP : LabyrinthCells.TOP;
+        return switch (level) {
+            case UPPER -> LabyrinthCells.TOP;
+            case DEEP -> DungeonDimension.PERICULUM_TOP;
+            case SANCTUARY -> LabyrinthCells.SANCTUARY_TOP;
+        };
     }
 
     public int maxTunnels() {
-        return deep ? DEEP_TUNNELS : UPPER_TUNNELS;
+        return level == Level.DEEP ? DEEP_TUNNELS : UPPER_TUNNELS;
     }
 
     public int maxTunnelLength() {
@@ -57,11 +75,15 @@ public enum DddRuin {
     }
 
     public boolean richLoot() {
-        return deep;
+        return level != Level.UPPER;
     }
 
     public boolean deep() {
-        return deep;
+        return level == Level.DEEP;
+    }
+
+    public boolean sanctuary() {
+        return level == Level.SANCTUARY;
     }
 
     public static @Nullable DddRuin of(Identifier structure) {

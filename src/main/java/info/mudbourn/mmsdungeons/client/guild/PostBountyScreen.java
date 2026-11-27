@@ -8,11 +8,21 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 // The form for posting a quest (from the guild treasury) or a contract (from the player's wallet).
 final class PostBountyScreen extends Screen {
+
+    private static final int LABEL_COLOR = 0xFFAAAAAA;
+    private static final int TITLE_Y = 44;
+    private static final int DESCRIPTION_Y = 78;
+    private static final int PROOF_Y = 112;
+    private static final int NUMBERS_Y = 146;
+    private static final int TYPE_Y = 174;
+    private static final int SLOT_SIZE = 20;
+    private static final int CHOOSE_WIDTH = 100;
 
     private final Screen parent;
     private final boolean quest;
@@ -37,15 +47,15 @@ final class PostBountyScreen extends Screen {
     @Override
     protected void init() {
         int left = width / 2 - 120;
-        titleBox = field(left, 40, 240, 40, titleText, "gui.mms_dungeons.field_title");
-        descriptionBox = field(left, 72, 240, 200, descriptionText, "gui.mms_dungeons.field_description");
-        countBox = field(left, 148, 60, 6, countText, "gui.mms_dungeons.field_count");
-        rewardBox = field(left + 80, 148, 100, 12, rewardText, "gui.mms_dungeons.field_reward");
+        titleBox = field(left, TITLE_Y, 240, 40, titleText, "gui.mms_dungeons.field_title");
+        descriptionBox = field(left, DESCRIPTION_Y, 240, 200, descriptionText, "gui.mms_dungeons.field_description");
+        countBox = field(left, NUMBERS_Y, 60, 6, countText, "gui.mms_dungeons.field_count");
+        rewardBox = field(left + 80, NUMBERS_Y, 100, 12, rewardText, "gui.mms_dungeons.field_reward");
         addRenderableWidget(Button.builder(Component.translatable("gui.mms_dungeons.choose_item"), button -> chooseItem())
-            .bounds(left, 104, 240, 20)
+            .bounds(left + 240 - CHOOSE_WIDTH, PROOF_Y, CHOOSE_WIDTH, 20)
             .build());
         typeButton = addRenderableWidget(Button.builder(typeLabel(), button -> cycleType())
-            .bounds(left, 176, 240, 20)
+            .bounds(left, TYPE_Y, 240, 20)
             .build());
         addRenderableWidget(Button.builder(Component.translatable("gui.mms_dungeons.post"), button -> submit())
             .bounds(left, height - 52, 118, 20)
@@ -117,14 +127,26 @@ final class PostBountyScreen extends Screen {
             24,
             0xFFAAAAAA
         );
-        graphics.text(font, Component.translatable("gui.mms_dungeons.field_title"), left, 30, 0xFFAAAAAA, false);
-        graphics.text(font, Component.translatable("gui.mms_dungeons.field_description"), left, 62, 0xFFAAAAAA, false);
-        graphics.text(font, Component.translatable("gui.mms_dungeons.proof_item"), left, 94, 0xFFAAAAAA, false);
-        graphics.text(font, Component.translatable("gui.mms_dungeons.field_count"), left, 138, 0xFFAAAAAA, false);
-        graphics.text(font, Component.translatable("gui.mms_dungeons.field_reward"), left + 80, 138, 0xFFAAAAAA, false);
+        label(graphics, "gui.mms_dungeons.field_title", left, TITLE_Y);
+        label(graphics, "gui.mms_dungeons.field_description", left, DESCRIPTION_Y);
+        label(graphics, "gui.mms_dungeons.proof_item", left, PROOF_Y);
+        label(graphics, "gui.mms_dungeons.field_count", left, NUMBERS_Y);
+        label(graphics, "gui.mms_dungeons.field_reward", left + 80, NUMBERS_Y);
+        slot(graphics, left, PROOF_Y);
         if (!proof.isEmpty()) {
-            graphics.item(proof, left + 4, 126);
-            graphics.text(font, proof.getHoverName(), left + 26, 130, 0xFFFFFFFF, true);
+            graphics.item(proof, left + 2, PROOF_Y + 2);
+            graphics.text(font, Language.getInstance().getVisualOrder(font.substrByWidth(proof.getHoverName(), 240 - CHOOSE_WIDTH - SLOT_SIZE - 10)), left + SLOT_SIZE + 6, PROOF_Y + 6, 0xFFFFFFFF, true);
         }
+    }
+
+    private void label(GuiGraphicsExtractor graphics, String key, int x, int fieldY) {
+        graphics.text(font, Component.translatable(key), x, fieldY - 11, LABEL_COLOR, false);
+    }
+
+    // An inventory-style slot: dark edge top and left, light edge bottom and right.
+    private static void slot(GuiGraphicsExtractor graphics, int x, int y) {
+        graphics.fill(x, y, x + SLOT_SIZE, y + SLOT_SIZE, 0xFFFFFFFF);
+        graphics.fill(x, y, x + SLOT_SIZE - 1, y + SLOT_SIZE - 1, 0xFF373737);
+        graphics.fill(x + 1, y + 1, x + SLOT_SIZE - 1, y + SLOT_SIZE - 1, 0xFF8B8B8B);
     }
 }
