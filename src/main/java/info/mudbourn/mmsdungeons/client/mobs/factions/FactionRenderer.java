@@ -70,6 +70,7 @@ public class FactionRenderer extends HumanoidMobRenderer<FactionMember, AvatarRe
         state.skin = PlayerSkin.insecure(new ClientAsset.ResourceTexture(MmsDungeons.id("entity/factions/" + mob.skin())), null, null, PlayerModelType.WIDE);
         if (FURS) {
             FactionFurs.stamp(state, mob.origin(), mob.getUUID(), mob.isAggressive());
+            FactionFurs.leafForm(state, mob, partialTick);
         }
         faction.action = mob.action();
         this.extractSlot(mob, FactionSlots.belt(), faction.beltItem);

@@ -150,9 +150,7 @@ final class FactionPowers {
             }
             return false;
         });
-        if (this.mob.tickCount % 20 == 0) {
-            this.directSummons(this.mob.getTarget());
-        }
+        this.directSummons(this.mob.getTarget());
     }
 
     // Holds one or two power keys for a number of ticks, sneaking or not, unless it is already holding some.
@@ -391,18 +389,17 @@ final class FactionPowers {
         return landed;
     }
 
-    // Turns body, head and pitch toward a point, so powers that fire along the look go there.
+    // Turns head and pitch toward a point, so powers that fire along the look go there.
     void aim(Vec3 at, float pitchOffset) {
         Vec3 delta = at.subtract(this.mob.getEyePosition());
         float yaw = (float) (Mth.atan2(delta.z, delta.x) * Mth.RAD_TO_DEG) - 90.0f;
         float pitch = (float) -(Mth.atan2(delta.y, delta.horizontalDistance()) * Mth.RAD_TO_DEG) + pitchOffset;
         this.mob.setYRot(yaw);
         this.mob.setYHeadRot(yaw);
-        this.mob.setYBodyRot(yaw);
         this.mob.setXRot(pitch);
     }
 
-    // Points summons at the member's target, and calls them off a player the member is cowed by unless that player struck them.
+    // Every tick: points summons at the member's target, calls them off the crew, and off a player the member is cowed by unless that player struck them.
     private void directSummons(@Nullable LivingEntity target) {
         for (Summon summon : this.summons) {
             if (!(summon.entity() instanceof Mob ally)) {
@@ -411,8 +408,11 @@ final class FactionPowers {
             if (ally.getTarget() instanceof Player player && ally.getLastHurtByMob() != player && this.mob.cowedBy(player)) {
                 ally.setTarget(null);
             }
-            if (target != null && target.isAlive() && (ally.getTarget() == null || this.mob.considersEntityAsAlly(ally.getTarget()))) {
+            boolean onCrew = ally.getTarget() != null && this.mob.considersEntityAsAlly(ally.getTarget());
+            if (target != null && target.isAlive() && (ally.getTarget() == null || onCrew)) {
                 ally.setTarget(target);
+            } else if (onCrew) {
+                ally.setTarget(null);
             }
         }
     }

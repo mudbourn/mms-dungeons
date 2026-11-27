@@ -27,6 +27,7 @@ import org.jspecify.annotations.Nullable;
 public final class FactionCaster {
 
     private static final double ALLY_RANGE = 16.0;
+    private static final float CAST_TURN = 30.0f;
     private static final float HURT_FRACTION = 0.7f;
     private static final int MIN_GAP_TICKS = 30;
     private static final int GAP_SPREAD_TICKS = 40;
@@ -58,6 +59,7 @@ public final class FactionCaster {
         this.spell = null;
         this.aim = null;
         this.mob.setAction(FactionMember.ACTION_NONE);
+        this.mob.setCastingSpell("");
     }
 
     public void tick(ServerLevel level, LivingEntity enemy) {
@@ -111,6 +113,7 @@ public final class FactionCaster {
         this.channel = value.active != null && value.active.cast != null && value.active.cast.type == Spell.Active.Cast.Type.CHANNEL;
         this.channelInterval = this.channel ? Math.max(1, value.active.cast.channelTicks()) : 0;
         this.mob.setAction(FactionMember.ACTION_CAST);
+        this.mob.setCastingSpell(id(chosen));
         return true;
     }
 
@@ -141,9 +144,14 @@ public final class FactionCaster {
         SpellTarget.SearchResult targets = found.entities().isEmpty() ? SpellTarget.SearchResult.of(this.aim) : found;
         SpellDelivery.resolveAndDeliver(level, this.mob, holder, targets, context, completion -> {
         });
+        this.mob.releaseSpell(id(holder));
     }
 
-    // Turns body, head and pitch to the target so look-based spell targeting finds it.
+    private static String id(Holder<Spell> spell) {
+        return spell.unwrapKey().map(key -> key.identifier().toString()).orElse("");
+    }
+
+    // Turns head and pitch to the target so look-based spell targeting finds it.
     private void face(LivingEntity target) {
         if (target == this.mob) {
             return;
@@ -151,11 +159,11 @@ public final class FactionCaster {
         Vec3 delta = target.getEyePosition().subtract(this.mob.getEyePosition());
         float yaw = (float) (Mth.atan2(delta.z, delta.x) * Mth.RAD_TO_DEG) - 90.0f;
         float pitch = (float) -(Mth.atan2(delta.y, delta.horizontalDistance()) * Mth.RAD_TO_DEG);
-        this.mob.setYRot(yaw);
-        this.mob.setYHeadRot(yaw);
-        this.mob.setYBodyRot(yaw);
-        this.mob.setXRot(pitch);
-        this.mob.getLookControl().setLookAt(target);
+        // Turns onto the target over a few ticks of the cast, as a player drags their aim, instead of snapping.
+        float turned = Mth.approachDegrees(this.mob.getYHeadRot(), yaw, CAST_TURN);
+        this.mob.setYRot(turned);
+        this.mob.setYHeadRot(turned);
+        this.mob.setXRot(Mth.approachDegrees(this.mob.getXRot(), pitch, CAST_TURN));
     }
 
     // The most hurt faction ally in range, the caster included.

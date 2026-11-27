@@ -6,9 +6,12 @@ import com.zigythebird.playeranim.animation.PlayerAnimResources;
 import com.zigythebird.playeranimcore.animation.Animation;
 import com.zigythebird.playeranimcore.animation.AnimationData;
 import com.zigythebird.playeranimcore.animation.HumanoidAnimationController;
+import com.zigythebird.playeranimcore.animation.RawAnimation;
+import com.zigythebird.playeranimcore.animation.layered.modifier.AbstractFadeModifier;
 import com.zigythebird.playeranimcore.animation.layered.modifier.AdjustmentModifier;
 import com.zigythebird.playeranimcore.animation.layered.modifier.MirrorModifier;
 import com.zigythebird.playeranimcore.animation.layered.modifier.SpeedModifier;
+import com.zigythebird.playeranimcore.easing.EasingType;
 import com.zigythebird.playeranimcore.enums.PlayState;
 import com.zigythebird.playeranimcore.math.Vec3f;
 import com.zigythebird.playeranimcore.molang.MolangLoader;
@@ -36,14 +39,19 @@ import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.phys.Vec3;
+import net.spell_engine.api.spell.Spell;
+import net.spell_engine.api.spell.fx.PlayerAnimation;
+import net.spell_engine.api.spell.registry.SpellRegistry;
+import net.spell_engine.utils.AnimationHelper;
 import org.jspecify.annotations.Nullable;
 
-// Plays Better Combat attacks on a mob through Player Animation Library, layered as on a player, plus weapon poses and the Combat Roll roll for faction members.
+// Plays Better Combat attacks on a mob through Player Animation Library, layered as on a player, plus weapon poses, Spell Engine cast and release animations and the Combat Roll roll for faction members.
 public final class MobAnimations extends AvatarAnimManager {
 
     private static final Identifier ROLL = Identifier.fromNamespaceAndPath("combat_roll", "roll");
     private static final Map<LivingEntity, MobAnimations> BY_MOB = new WeakHashMap<>();
     private static final double WALKING_SPEED = 0.03;
+    private static final int SPELL_FADE_TICKS = 3;
 
     private final LivingEntity mob;
     private final @Nullable FactionMember member;
@@ -56,8 +64,12 @@ public final class MobAnimations extends AvatarAnimManager {
     private final PoseLayer mainBodyPose = new PoseLayer(false);
     private final PoseLayer offItemPose = new PoseLayer(true);
     private final PoseLayer offBodyPose = new PoseLayer(true);
+    private final SpellLayer casting = new SpellLayer();
+    private final SpellLayer release = new SpellLayer();
     private int lastSwing;
     private int lastRoll;
+    private String lastSpell = "";
+    private int lastRelease;
 
     private MobAnimations(LivingEntity mob) {
         super(null);
@@ -65,6 +77,7 @@ public final class MobAnimations extends AvatarAnimManager {
         this.member = mob instanceof FactionMember faction ? faction : null;
         this.lastSwing = this.member == null ? 0 : this.member.swingSequence();
         this.lastRoll = this.member == null ? 0 : this.member.rollTicks();
+        this.lastRelease = this.member == null ? 0 : this.member.releaseSequence();
         this.attackMirror.enabled = false;
         this.attack.addModifier(this.attackMirror, 0);
         this.attack.addModifier(this.attackSpeed, 0);
@@ -84,6 +97,8 @@ public final class MobAnimations extends AvatarAnimManager {
         this.addAnimLayer(3, this.mainItemPose.controller);
         this.addAnimLayer(4, this.mainBodyPose.controller);
         this.addAnimLayer(1000, this.roll);
+        this.addAnimLayer(1500, this.casting.controller);
+        this.addAnimLayer(1600, this.release.controller);
         this.addAnimLayer(2000, this.attack);
     }
 
@@ -163,7 +178,30 @@ public final class MobAnimations extends AvatarAnimManager {
             this.playRoll();
         }
         this.lastRoll = rollTicks;
+        this.updateSpells(member);
         this.updatePoses(member);
+    }
+
+    // Spell Engine's casting animation for as long as the member casts, and its release animation each time a spell goes off.
+    private void updateSpells(FactionMember member) {
+        String spell = member.castingSpell();
+        if (!spell.equals(this.lastSpell)) {
+            this.lastSpell = spell;
+            Spell value = this.spell(spell);
+            Spell.Active.Cast cast = value == null || value.active == null ? null : value.active.cast;
+            this.casting.play(cast == null ? null : cast.animation, cast != null && cast.animation_pitch);
+        }
+        int released = member.releaseSequence();
+        if (released != this.lastRelease) {
+            this.lastRelease = released;
+            Spell value = this.spell(member.releasedSpell());
+            this.release.play(value == null || value.release == null ? null : value.release.animation, true);
+        }
+    }
+
+    private @Nullable Spell spell(String id) {
+        Identifier parsed = id.isEmpty() ? null : Identifier.tryParse(id);
+        return parsed == null ? null : SpellRegistry.from(this.mob.level()).getValue(parsed);
     }
 
     @Override
@@ -265,6 +303,60 @@ public final class MobAnimations extends AvatarAnimManager {
 
     private boolean leftHanded() {
         return this.mob.getMainArm() == HumanoidArm.LEFT;
+    }
+
+    // One Spell Engine animation channel as a player has it: faded in, mirrored for left-handed mobs, and bent with the mob's pitch when the spell asks.
+    private final class SpellLayer {
+
+        private final HumanoidAnimationController controller = controller();
+        private final SpeedModifier speed = new SpeedModifier(1.0f);
+        private final MirrorModifier mirror = new MirrorModifier();
+        private boolean pitching;
+
+        private SpellLayer() {
+            this.mirror.enabled = false;
+            this.controller.addModifier(this.mirror, 0);
+            this.controller.addModifier(this.speed, 0);
+            this.controller.addModifierLast(new AdjustmentModifier((part, data) -> {
+                if (!this.pitching) {
+                    return Optional.empty();
+                }
+                float pitch = (float) Math.toRadians(MobAnimations.this.mob.getXRot() / 2.0f);
+                float rotation = switch (part) {
+                    case "body", "right_arm", "left_arm" -> pitch;
+                    case "right_leg", "left_leg" -> -pitch;
+                    default -> Float.NaN;
+                };
+                if (Float.isNaN(rotation)) {
+                    return Optional.empty();
+                }
+                return Optional.of(new AdjustmentModifier.PartModifier(new Vec3f(rotation, 0.0f, 0.0f), new Vec3f(0.0f, 0.0f, 0.0f)));
+            }));
+            this.controller.setPostAnimationSetupConsumer(bones -> {
+                bones.apply("torso").setEnabled(true);
+                bones.apply("head").rotXEnabled = false;
+                if (MobAnimations.this.mob.getVehicle() != null) {
+                    bones.apply("right_leg").setEnabled(false);
+                    bones.apply("left_leg").setEnabled(false);
+                }
+            });
+        }
+
+        private void play(@Nullable PlayerAnimation animation, boolean pitching) {
+            String id = animation == null ? "" : AnimationHelper.getAnimationId(MobAnimations.this.mob, animation);
+            Identifier parsed = id == null || id.isEmpty() ? null : Identifier.tryParse(id);
+            Optional<Animation> found = parsed == null ? Optional.empty() : PlayerAnimResources.getAnimationOptional(parsed);
+            if (found.isEmpty()) {
+                if (this.controller.isActive()) {
+                    this.controller.replaceAnimationWithFade(AbstractFadeModifier.standardFadeIn(SPELL_FADE_TICKS, EasingType.EASE_IN_OUT_SINE), RawAnimation.begin().thenWait(SPELL_FADE_TICKS));
+                }
+                return;
+            }
+            this.pitching = pitching;
+            this.mirror.enabled = MobAnimations.this.leftHanded();
+            this.speed.speed = animation.speed > 0.0f ? animation.speed : 1.0f;
+            this.controller.replaceAnimationWithFade(AbstractFadeModifier.standardFadeIn(SPELL_FADE_TICKS, EasingType.EASE_IN_OUT_SINE), found.get());
+        }
     }
 
     // One Better Combat pose channel, mirrored for the off hand and for left-handed mobs.

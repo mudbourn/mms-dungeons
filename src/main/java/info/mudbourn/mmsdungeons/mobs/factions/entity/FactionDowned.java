@@ -3,6 +3,7 @@ package info.mudbourn.mmsdungeons.mobs.factions.entity;
 import java.util.Comparator;
 import java.util.EnumSet;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.InteractionHand;
@@ -16,7 +17,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
-// Going down instead of dying: a downed member lies on the ground until a crewmate within 64 blocks, or any player it has no quarrel with, crouches over it to revive it, gets itself up once when no crewmate is near, and bleeds out the next time. Any damage while downed kills it.
+// Going down instead of dying: a downed member lies on the ground until a crewmate within 64 blocks, or any player it has no quarrel with crouching within 3 blocks, revives it, gets itself up once when no crewmate is near, and bleeds out the next time. Any damage while downed kills it.
 final class FactionDowned {
 
     private static final double HELP_RANGE = 64.0;
@@ -29,9 +30,12 @@ final class FactionDowned {
     private static final float DOWNED_HEALTH = 0.4f;
     private static final float REVIVED_HEALTH = 0.3f;
     private static final double REVIVE_REACH = 1.8;
+    private static final double PLAYER_REVIVE_REACH = 3.0;
     private static final double CRAWL_SPEED = 0.5;
     private static final double MEET_RANGE = 16.0;
     private static final double FLEE_RANGE = 6.0;
+    private static final int REPATH_TICKS = 20;
+    private static final int HELD_TICKS = 5;
 
     // AbsolutRevive lays a downed player still on its back, so members lie still beside it rather than crawl.
     private static final boolean LIE_STILL = FabricLoader.getInstance().isModLoaded("absolutrevive");
@@ -40,6 +44,7 @@ final class FactionDowned {
     private int downedTicks;
     private int aloneTicks;
     private int reviveProgress;
+    private int heldTicks;
     private boolean selfRevived;
     private @Nullable DamageSource cause;
     private @Nullable FactionMember helper;
@@ -79,6 +84,9 @@ final class FactionDowned {
             return;
         }
         this.downedTicks++;
+        if (this.heldTicks > 0) {
+            this.heldTicks--;
+        }
         if (!this.mob.crawling()) {
             this.mob.setCrawling(true);
         }
@@ -105,6 +113,7 @@ final class FactionDowned {
 
     // One tick of a crewmate's help; the member stands once the help is done.
     void help(ServerLevel level, FactionMember reviver) {
+        this.heldTicks = HELD_TICKS;
         if (++this.reviveProgress % 10 == 0) {
             reviver.swing(InteractionHand.MAIN_HAND, reviver.getMainHandItem().getAttackAnimation(), true);
         }
@@ -120,20 +129,27 @@ final class FactionDowned {
                 && player.isAlive()
                 && !player.isSpectator()
                 && !this.mob.provokedBy(player)
-                && player.distanceToSqr(this.mob) <= REVIVE_REACH * REVIVE_REACH) {
+                && player.distanceToSqr(this.mob) <= PLAYER_REVIVE_REACH * PLAYER_REVIVE_REACH) {
                 return player;
             }
         }
         return null;
     }
 
-    // One tick of a player's help; once it stands, it thanks them with a crouch and stays friendly with them.
+    // One tick of a player's help, shown on their action bar; once it stands, it thanks them with a crouch and stays friendly with them.
     private void helpedBy(ServerLevel level, Player player) {
+        this.heldTicks = HELD_TICKS;
         this.reviveProgress++;
+        player.sendOverlayMessage(Component.translatable("message.mms_dungeons.reviving", this.mob.getDisplayName(), Math.min(100, this.reviveProgress * 100 / REVIVE_TICKS)));
         if (this.reviveProgress >= REVIVE_TICKS) {
             this.revive(level);
             this.mob.peace().thank(player);
         }
+    }
+
+    // Someone is reviving it right now, so it lies still for them.
+    boolean beingHelped() {
+        return this.heldTicks > 0;
     }
 
     @Nullable FactionMember helper() {
@@ -209,6 +225,7 @@ final class FactionDowned {
     static final class DownedGoal extends Goal {
 
         private final FactionMember mob;
+        private int repath;
 
         DownedGoal(FactionMember mob) {
             this.mob = mob;
@@ -234,7 +251,7 @@ final class FactionDowned {
         public void tick() {
             FactionMember helper = this.mob.downedState().helper();
             LivingEntity threat = this.mob.getTarget();
-            if (LIE_STILL) {
+            if (LIE_STILL || this.mob.downedState().beingHelped()) {
                 this.mob.getNavigation().stop();
                 if (helper != null) {
                     this.mob.getLookControl().setLookAt(helper);
@@ -242,17 +259,30 @@ final class FactionDowned {
             } else if (helper != null && this.mob.distanceTo(helper) < MEET_RANGE) {
                 this.mob.getLookControl().setLookAt(helper);
                 if (this.mob.distanceTo(helper) > REVIVE_REACH) {
-                    this.mob.getNavigation().moveTo(helper, CRAWL_SPEED);
+                    this.crawlTo(helper.position());
                 } else {
                     this.mob.getNavigation().stop();
                 }
-            } else if (threat != null && threat.isAlive() && this.mob.distanceTo(threat) < FLEE_RANGE) {
+            } else if (threat != null && threat.isAlive() && this.mob.distanceTo(threat) < FLEE_RANGE && this.fears(threat)) {
                 this.mob.getLookControl().setLookAt(threat);
-                Vec3 away = this.mob.position().add(this.mob.position().subtract(threat.position()).normalize().scale(4.0));
-                this.mob.getNavigation().moveTo(away.x, away.y, away.z, CRAWL_SPEED);
+                this.crawlTo(this.mob.position().add(this.mob.position().subtract(threat.position()).normalize().scale(4.0)));
             } else {
                 this.mob.getNavigation().stop();
             }
+        }
+
+        // Paths again only when the last path is done or has gone stale; a fresh path every tick sets a slow crawler circling its first waypoint.
+        private void crawlTo(Vec3 spot) {
+            if (--this.repath > 0 && !this.mob.getNavigation().isDone()) {
+                return;
+            }
+            this.repath = REPATH_TICKS;
+            this.mob.getNavigation().moveTo(spot.x, spot.y, spot.z, CRAWL_SPEED);
+        }
+
+        // It crawls from whoever downed it, but not from a player it has no quarrel with, who may have come to revive it.
+        private boolean fears(LivingEntity threat) {
+            return !(threat instanceof Player player) || this.mob.provokedBy(player);
         }
     }
 
@@ -261,6 +291,7 @@ final class FactionDowned {
 
         private final FactionMember mob;
         private @Nullable FactionMember patient;
+        private int search;
 
         ReviveGoal(FactionMember mob) {
             this.mob = mob;
@@ -269,9 +300,10 @@ final class FactionDowned {
 
         @Override
         public boolean canUse() {
-            if (this.mob.downed() || this.mob.tickCount % SEARCH_TICKS != 0) {
+            if (this.mob.downed() || --this.search > 0) {
                 return false;
             }
+            this.search = reducedTickDelay(SEARCH_TICKS);
             this.patient = this.mob.level().getEntitiesOfClass(
                     FactionMember.class,
                     this.mob.getBoundingBox().inflate(HELP_RANGE),

@@ -22,7 +22,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
-// How a faction member gets about, by time and place: it walks short distances, runs (or sometimes strolls) longer ones, and only sprint-jumps and uses its origin's movement tricks when it hurries to help a crewmate or to reach something it is hostile to.
+// How a faction member gets about, by time and place: it walks short distances, runs (or sometimes strolls) longer ones, and only sprint-jumps and uses its origin's movement tricks when it hurries to help a crewmate, to reach something it is hostile to, or to get away from a player chasing it.
 final class FactionTravel {
 
     private static final double SPRINT_FAR = 8.0;
@@ -184,10 +184,10 @@ final class FactionTravel {
         }
     }
 
-    // In a hurry: closing on something it is hostile to, or on its way to revive a crewmate.
+    // In a hurry: closing on something it is hostile to, on its way to revive a crewmate, or running from a player chasing it.
     private boolean urgent() {
         LivingEntity target = this.mob.getTarget();
-        return target != null && target.isAlive() || this.mob.reviving();
+        return target != null && target.isAlive() || this.mob.reviving() || this.mob.fleeing();
     }
 
     // Whether it has chosen to stroll rather than run to this goal: rolled once each time it sets off somewhere new.

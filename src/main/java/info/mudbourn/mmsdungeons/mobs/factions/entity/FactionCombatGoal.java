@@ -48,8 +48,7 @@ public class FactionCombatGoal extends Goal {
         NONE,
         BASH,
         THROW,
-        SLAM,
-        BARRAGE
+        SLAM
     }
 
     private static final float SKILL_CHANCE = 0.04f;
@@ -61,10 +60,10 @@ public class FactionCombatGoal extends Goal {
     private static final double SLAM_RADIUS = 3.0;
     private static final int WEAPON_AWAY_TICKS = 50;
     private static final int BOW_DRAW_TICKS = 20;
+    private static final int STRAFE_MIN = 20;
+    private static final double SEE_DOT = 0.2;
     private static final double ARCHER_MIN = 6.0;
     private static final double ARCHER_MAX = 16.0;
-    private static final int BARRAGE_SHOTS = 5;
-    private static final int BARRAGE_GAP = 4;
     private static final int CROSSBOW_AIM_TICKS = 15;
     private static final double PILOT_REACH = 3.0;
     private static final double PILOT_RUN_DISTANCE = 8.0;
@@ -89,8 +88,9 @@ public class FactionCombatGoal extends Goal {
     private Skill skill = Skill.NONE;
     private int skillTicks;
     private int skillCooldown = 60;
-    private int barrageShots;
     private int bowTicks;
+    private int strafeTicks;
+    private boolean strafeRight;
     private int hitDelay;
     private FactionWeapons.@Nullable Swing pendingSwing;
     private boolean pendingOffHand;
@@ -130,7 +130,6 @@ public class FactionCombatGoal extends Goal {
         this.mob.setAction(FactionMember.ACTION_NONE);
         this.mob.getNavigation().stop();
         this.skill = Skill.NONE;
-        this.barrageShots = 0;
         this.bowTicks = 0;
         this.hitDelay = 0;
         this.pendingSwing = null;
@@ -153,10 +152,6 @@ public class FactionCombatGoal extends Goal {
         }
         if (this.hitDelay > 0 && --this.hitDelay == 0) {
             this.landHit(level, target);
-        }
-        if (this.barrageShots > 0) {
-            this.tickBarrage(target);
-            return;
         }
         if (this.skill != Skill.NONE) {
             this.tickSkill(level, target);
@@ -368,7 +363,11 @@ public class FactionCombatGoal extends Goal {
 
     private boolean projectileComing(ServerLevel level) {
         for (Projectile projectile : level.getEntitiesOfClass(Projectile.class, this.mob.getBoundingBox().inflate(PROJECTILE_RANGE))) {
-            if (projectile.getOwner() == this.mob || projectile.getOwner() instanceof LivingEntity owner && this.mob.isAlliedTo(owner)) {
+            if (projectile.getOwner() == this.mob || projectile.getOwner() != null && this.mob.considersEntityAsAlly(projectile.getOwner())) {
+                continue;
+            }
+            // Only a projectile in front of it can be seen coming.
+            if (this.mob.getLookAngle().dot(projectile.position().subtract(this.mob.getEyePosition()).normalize()) < SEE_DOT) {
                 continue;
             }
             Vec3 motion = projectile.getDeltaMovement();
@@ -416,6 +415,17 @@ public class FactionCombatGoal extends Goal {
         this.attackCooldown = interval;
     }
 
+    // Which way the archer sidesteps: it keeps one way for one to two seconds, then may switch, rather than jittering.
+    private float strafeSide() {
+        if (--this.strafeTicks <= 0) {
+            this.strafeTicks = STRAFE_MIN + this.mob.getRandom().nextInt(STRAFE_MIN);
+            if (this.mob.getRandom().nextFloat() < 0.6f) {
+                this.strafeRight = !this.strafeRight;
+            }
+        }
+        return this.strafeRight ? 1.0f : -1.0f;
+    }
+
     private int attackInterval() {
         double speed = this.mob.getAttributeValue(Attributes.ATTACK_SPEED);
         return Math.max(8, Mth.ceil(20.0 / Math.max(0.5, speed)));
@@ -428,10 +438,10 @@ public class FactionCombatGoal extends Goal {
             this.mob.getNavigation().moveTo(target, 1.0);
         } else if (distance < ARCHER_MIN) {
             this.mob.getNavigation().stop();
-            this.mob.getMoveControl().strafe(-0.6f, this.mob.getRandom().nextBoolean() ? 0.4f : -0.4f);
+            this.mob.getMoveControl().strafe(-0.6f, this.strafeSide() * 0.4f);
         } else {
             this.mob.getNavigation().stop();
-            this.mob.getMoveControl().strafe(0.0f, (this.mob.tickCount / 40 % 2 == 0 ? 0.35f : -0.35f));
+            this.mob.getMoveControl().strafe(0.0f, this.strafeSide() * 0.35f);
         }
         if (!sees) {
             this.mob.stopUsingItem();
@@ -440,11 +450,6 @@ public class FactionCombatGoal extends Goal {
         }
         if (this.mob.getMainHandItem().getItem() instanceof CrossbowItem) {
             this.tickCrossbow(target);
-            return;
-        }
-        if (this.skillCooldown <= 0 && this.mob.getRandom().nextFloat() < SKILL_CHANCE * 0.5f) {
-            this.mob.startUsingItem(InteractionHand.MAIN_HAND);
-            this.begin(Skill.BARRAGE, 30);
             return;
         }
         if (this.attackCooldown > 0) {
@@ -532,10 +537,6 @@ public class FactionCombatGoal extends Goal {
             this.mob.setAction(FactionMember.ACTION_BASH);
             return;
         }
-        if (skill == Skill.BARRAGE) {
-            this.mob.setAction(FactionMember.ACTION_NONE);
-            return;
-        }
         this.mob.stopUsingItem();
         this.mob.setAction(FactionMember.ACTION_CHARGE);
     }
@@ -552,7 +553,6 @@ public class FactionCombatGoal extends Goal {
             case BASH -> this.bash(level, target);
             case THROW -> this.throwWeapon(level, target);
             case SLAM -> this.slam(level);
-            case BARRAGE -> this.barrageShots = BARRAGE_SHOTS;
             default -> {
             }
         }
@@ -608,33 +608,20 @@ public class FactionCombatGoal extends Goal {
         }
     }
 
-    // A focus barrage looses a quick volley after its long draw.
-    private void tickBarrage(LivingEntity target) {
-        this.mob.getNavigation().stop();
-        if (this.attackCooldown > 0) {
-            return;
-        }
-        shootArrow(this.mob, target, 1.0f);
-        this.attackCooldown = BARRAGE_GAP;
-        if (--this.barrageShots == 0) {
-            this.mob.stopUsingItem();
-            this.skillCooldown = 200;
-            this.attackCooldown = 20;
-        }
-    }
-
     public static void shootArrow(FactionMember mob, LivingEntity target, float power) {
         if (!(mob.level() instanceof ServerLevel level)) {
             return;
         }
         ItemStack weapon = mob.getMainHandItem();
         AbstractArrow arrow = ProjectileUtil.getMobArrow(mob, new ItemStack(Items.ARROW), power, weapon);
-        double dx = target.getX() - mob.getX();
-        double dy = target.getY(0.3333) - arrow.getY();
-        double dz = target.getZ() - mob.getZ();
-        double flat = Math.sqrt(dx * dx + dz * dz);
         boolean crossbow = weapon.getItem() instanceof CrossbowItem;
         float velocity = crossbow ? CROSSBOW_VELOCITY : BOW_VELOCITY;
+        // Leads a moving target by where it will be when the arrow arrives, as a practiced archer does.
+        double flight = mob.distanceTo(target) / velocity;
+        double dx = target.getX() + (target.getX() - target.xo) * flight - mob.getX();
+        double dy = target.getY(0.3333) - arrow.getY();
+        double dz = target.getZ() + (target.getZ() - target.zo) * flight - mob.getZ();
+        double flat = Math.sqrt(dx * dx + dz * dz);
         double arc = 0.2 * (BOW_VELOCITY / velocity) * (BOW_VELOCITY / velocity);
         arrow.shoot(dx, dy + flat * arc, dz, velocity, 14 - level.getDifficulty().getId() * 4);
         level.playSound(null, mob.blockPosition(), crossbow ? SoundEvents.CROSSBOW_SHOOT : SoundEvents.ARROW_SHOOT, mob.getSoundSource(), 1.0f, 1.0f / (mob.getRandom().nextFloat() * 0.4f + 0.8f));

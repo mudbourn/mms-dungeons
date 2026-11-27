@@ -7,18 +7,27 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
-// A human that fears a player, and has not made peace with them, keeps its distance and stares at them: it backs off when they come close, runs when they get right up to it, and watches them while they stay in sight.
+// A human that fears a player, and has not made peace with them, keeps its distance and stares at them: it backs off when they come close, runs when they get right up to it or chase it, and watches them while they stay in sight.
 final class FactionWary extends Goal {
 
     private static final double WATCH_RANGE = 16.0;
     private static final double KEEP_AWAY = 7.0;
     private static final double TOO_CLOSE = 3.5;
     private static final int RETREAT_DISTANCE = 10;
+    private static final int FLEE_DISTANCE = 16;
     private static final int RETREAT_HEIGHT = 4;
     private static final int REPLAN_TICKS = 20;
+    private static final double CHASE_RANGE = 12.0;
+    private static final int CHASE_SAMPLE_TICKS = 10;
+    // Blocks the player closes in one sample: a little under a player's walk.
+    private static final double CHASE_CLOSING = 1.5;
+    private static final int CHASE_HOLD_TICKS = 60;
 
     private final FactionMember mob;
     private @Nullable Player feared;
+    private @Nullable Vec3 lastSeenAt;
+    private int sample;
+    private int chased;
     private int replan;
     private boolean running;
 
@@ -54,11 +63,17 @@ final class FactionWary extends Goal {
     @Override
     public void start() {
         this.replan = 0;
+        this.sample = 0;
+        this.chased = 0;
+        this.lastSeenAt = null;
     }
 
     @Override
     public void stop() {
         this.feared = null;
+        this.lastSeenAt = null;
+        this.chased = 0;
+        this.mob.setFleeing(false);
         this.run(false);
         this.mob.getNavigation().stop();
     }
@@ -70,29 +85,51 @@ final class FactionWary extends Goal {
             return;
         }
         double distance = this.mob.distanceToSqr(feared);
-        if (distance < TOO_CLOSE * TOO_CLOSE) {
+        boolean chased = this.tickChase(feared, distance);
+        boolean fleeing = this.mob.fleeing();
+        this.mob.setFleeing(chased);
+        if (chased || distance < TOO_CLOSE * TOO_CLOSE) {
             this.run(true);
         } else if (distance >= KEEP_AWAY * KEEP_AWAY) {
             this.run(false);
         }
-        // A runner looks where it is going, as a sprinting player must; otherwise it keeps its eyes on the player.
         if (!this.running) {
             this.mob.getLookControl().setLookAt(feared, 30.0f, 30.0f);
         }
-        if (distance >= KEEP_AWAY * KEEP_AWAY) {
+        if (!chased && distance >= KEEP_AWAY * KEEP_AWAY) {
             if (!this.mob.getNavigation().isDone()) {
                 this.mob.getNavigation().stop();
             }
             return;
         }
-        if (--this.replan > 0 && !this.mob.getNavigation().isDone()) {
+        if (chased == fleeing && --this.replan > 0 && !this.mob.getNavigation().isDone()) {
             return;
         }
         this.replan = REPLAN_TICKS;
-        Vec3 away = DefaultRandomPos.getPosAway(this.mob, RETREAT_DISTANCE, RETREAT_HEIGHT, feared.position());
+        Vec3 away = DefaultRandomPos.getPosAway(this.mob, chased ? FLEE_DISTANCE : RETREAT_DISTANCE, RETREAT_HEIGHT, feared.position());
         if (away != null) {
             this.mob.getNavigation().moveTo(away.x, away.y, away.z, 1.0);
         }
+    }
+
+    // Whether the player is chasing it: closing on it at walking pace or faster, remembered for a few seconds after.
+    private boolean tickChase(Player feared, double distance) {
+        if (this.chased > 0) {
+            this.chased--;
+        }
+        if (--this.sample <= 0) {
+            this.sample = CHASE_SAMPLE_TICKS;
+            Vec3 now = feared.position();
+            Vec3 then = this.lastSeenAt;
+            this.lastSeenAt = now;
+            if (then != null && distance <= CHASE_RANGE * CHASE_RANGE) {
+                Vec3 toward = this.mob.position().subtract(then).multiply(1.0, 0.0, 1.0).normalize();
+                if (now.subtract(then).dot(toward) >= CHASE_CLOSING) {
+                    this.chased = CHASE_HOLD_TICKS;
+                }
+            }
+        }
+        return this.chased > 0;
     }
 
     // Breaks into a run, or slows back to a walk once it has put some ground between them.

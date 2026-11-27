@@ -570,6 +570,7 @@
   "entity.mms_dungeons.thrown_weapon": "Thrown Weapon",
   "entity.mms_dungeons.thrown_buff": "Thrown Buff Potion",
   "entity.mms_dungeons.faction_origin": "%s %s",
+  "message.mms_dungeons.reviving": "Reviving %s: %s%%",
   "tooltip.item.mms_dungeons.fur_helmet.1": "Wild Wolves ignore the wearer.",
   "tooltip.item.mms_dungeons.fur_helmet.2": "Slows freezing in powder snow. A full set stops it.",
   "tooltip.item.mms_dungeons.fur_chestplate.1": "Slows freezing in powder snow. A full set stops it.",

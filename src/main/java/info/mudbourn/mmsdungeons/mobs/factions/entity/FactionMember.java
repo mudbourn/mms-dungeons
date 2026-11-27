@@ -33,6 +33,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
@@ -53,10 +54,7 @@ import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.control.BodyRotationControl;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
-import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
@@ -112,6 +110,9 @@ public class FactionMember extends Monster implements RangedAttackMob, FeudAware
     private static final EntityDataAccessor<Integer> DATA_SWING_TICKS = SynchedEntityData.defineId(FactionMember.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Float> DATA_SWING_UPSWING = SynchedEntityData.defineId(FactionMember.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Byte> DATA_SWING_HAND = SynchedEntityData.defineId(FactionMember.class, EntityDataSerializers.BYTE);
+    private static final EntityDataAccessor<String> DATA_SPELL = SynchedEntityData.defineId(FactionMember.class, EntityDataSerializers.STRING);
+    private static final EntityDataAccessor<String> DATA_RELEASE = SynchedEntityData.defineId(FactionMember.class, EntityDataSerializers.STRING);
+    private static final EntityDataAccessor<Integer> DATA_RELEASE_SEQ = SynchedEntityData.defineId(FactionMember.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<String> DATA_ORIGIN = SynchedEntityData.defineId(FactionMember.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<Boolean> DATA_FLYING = SynchedEntityData.defineId(FactionMember.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> DATA_DOWNED = SynchedEntityData.defineId(FactionMember.class, EntityDataSerializers.BOOLEAN);
@@ -148,11 +149,17 @@ public class FactionMember extends Monster implements RangedAttackMob, FeudAware
     private final FactionTactics tactics = new FactionTactics(this);
     private final FactionTravel travel = new FactionTravel(this);
     private static final float COLLAPSE_TICKS = 12.0f;
+    private static final float BODY_TURN = 0.3f;
+    private static final float HEAD_TWIST = 50.0f;
+    private static final float BLOCKING_HEAD_TWIST = 15.0f;
+    private static final float BACKWARD_FROM = 95.0f;
+    private static final double WALKING_SQR = 0.0025;
 
     private final FactionDowned downedState = new FactionDowned(this);
     private final FactionPeace peace = new FactionPeace();
     private int downedSince = -1;
     private boolean reviving;
+    private boolean fleeing;
     private final FactionPowers powers = new FactionPowers(this);
     private final FactionClimate climate = new FactionClimate(this);
     private ItemStack sidearm = ItemStack.EMPTY;
@@ -194,9 +201,37 @@ public class FactionMember extends Monster implements RangedAttackMob, FeudAware
         return new FactionNavigation(this, level);
     }
 
+    // Turns the body as a player's turns: toward where it walks or swings, and otherwise only as far as keeps the head within its limit.
     @Override
-    protected BodyRotationControl createBodyControl() {
-        return new FactionBodyControl(this);
+    protected void tickHeadTurn(float walkFacing) {
+        float look = this.getYHeadRot();
+        float target = this.yBodyRot;
+        double dx = this.getX() - this.xo;
+        double dz = this.getZ() - this.zo;
+        boolean walking = dx * dx + dz * dz > WALKING_SQR;
+        // Only a member in a fight backs away from what it faces; out of one, like a downed crawler, it walks where it faces.
+        boolean headFirst = this.downed() || !this.isAggressive();
+        if (walking) {
+            float walk = (float) (Mth.atan2(dz, dx) * Mth.RAD_TO_DEG) - 90.0f;
+            float apart = Math.abs(Mth.wrapDegrees(look - walk));
+            target = apart > BACKWARD_FROM && !headFirst ? walk - 180.0f : walk;
+        }
+        if (this.getSwingAnimation(1.0f) > 0.0f) {
+            target = look;
+        }
+        this.yBodyRot += Mth.wrapDegrees(target - this.yBodyRot) * BODY_TURN;
+        float twist = Mth.wrapDegrees(look - this.yBodyRot);
+        float limit = this.isBlocking() ? BLOCKING_HEAD_TWIST : HEAD_TWIST;
+        // Walking head first, the head follows the body rather than dragging it round; a downed member's always does.
+        if (headFirst && (walking || this.downed())) {
+            if (Math.abs(twist) > limit) {
+                this.setYHeadRot(this.yBodyRot + Math.signum(twist) * limit);
+            }
+            return;
+        }
+        if (Math.abs(twist) > limit) {
+            this.yBodyRot += twist - Math.signum(twist) * limit;
+        }
     }
 
     @Override
@@ -209,8 +244,6 @@ public class FactionMember extends Monster implements RangedAttackMob, FeudAware
         this.goalSelector.addGoal(4, new FactionPeace.FriendGoal(this));
         this.goalSelector.addGoal(4, new FactionWary(this));
         this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 0.8));
-        this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0f));
-        this.goalSelector.addGoal(7, new RandomLookAroundGoal(this));
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this, FactionMember.class));
         this.targetSelector.addGoal(1, new FactionThreatSense(this));
         this.targetSelector.addGoal(2, new FeudTargetGoal(this, TARGET_INTERVAL, target -> false));
@@ -231,6 +264,9 @@ public class FactionMember extends Monster implements RangedAttackMob, FeudAware
         builder.define(DATA_SWING_TICKS, 0);
         builder.define(DATA_SWING_UPSWING, 0.5f);
         builder.define(DATA_SWING_HAND, SWING_MAIN_HAND);
+        builder.define(DATA_SPELL, "");
+        builder.define(DATA_RELEASE, "");
+        builder.define(DATA_RELEASE_SEQ, 0);
         builder.define(DATA_COVER_HEAD, ItemStack.EMPTY);
         builder.define(DATA_COVER_CHEST, ItemStack.EMPTY);
         builder.define(DATA_COVER_LEGS, ItemStack.EMPTY);
@@ -330,6 +366,29 @@ public class FactionMember extends Monster implements RangedAttackMob, FeudAware
 
     public byte swingHand() {
         return this.entityData.get(DATA_SWING_HAND);
+    }
+
+    // The Spell Engine spell it is casting, or empty; clients play its casting animation while it lasts.
+    public String castingSpell() {
+        return this.entityData.get(DATA_SPELL);
+    }
+
+    void setCastingSpell(String spell) {
+        this.entityData.set(DATA_SPELL, spell);
+    }
+
+    // Lets a spell go; clients play its release animation whenever the sequence number changes.
+    void releaseSpell(String spell) {
+        this.entityData.set(DATA_RELEASE, spell);
+        this.entityData.set(DATA_RELEASE_SEQ, this.entityData.get(DATA_RELEASE_SEQ) + 1);
+    }
+
+    public String releasedSpell() {
+        return this.entityData.get(DATA_RELEASE);
+    }
+
+    public int releaseSequence() {
+        return this.entityData.get(DATA_RELEASE_SEQ);
     }
 
     // Whether it still carries food, or a quick heal such as a potion or golden apple when quick is set.
@@ -598,6 +657,15 @@ public class FactionMember extends Monster implements RangedAttackMob, FeudAware
         this.reviving = reviving;
     }
 
+    // Running from a feared player who is chasing it, which it hurries to do.
+    boolean fleeing() {
+        return this.fleeing;
+    }
+
+    void setFleeing(boolean fleeing) {
+        this.fleeing = fleeing;
+    }
+
     FactionPeace peace() {
         return this.peace;
     }
@@ -774,9 +842,19 @@ public class FactionMember extends Monster implements RangedAttackMob, FeudAware
             || super.considersEntityAsAlly(other);
     }
 
+    // Never turns on its own crew or the crew's summons, whoever pointed it there.
+    @Override
+    public void setTarget(@Nullable LivingEntity target) {
+        if (target != null && this.considersEntityAsAlly(target)) {
+            return;
+        }
+        super.setTarget(target);
+    }
+
     @Override
     public boolean hurtServer(ServerLevel level, DamageSource source, float amount) {
-        if (source.getEntity() instanceof FactionMember member && member.faction == this.faction) {
+        // Crewmates and the crew's summons cannot hurt it, so a stray swoop or arrow never sets the crew on one another.
+        if (source.getEntity() != null && this.considersEntityAsAlly(source.getEntity())) {
             return false;
         }
         // As AbsolutRevive treats a downed player: only a creature's hit lands, and it finishes the member; falls, fire and the like pass over it.
@@ -860,23 +938,20 @@ public class FactionMember extends Monster implements RangedAttackMob, FeudAware
         this.keysHeld.clear();
     }
 
-    // Puts back a human that Random Mob Sizes resized before it was told to skip them: player scale, and none of its stat changes.
+    // Puts back a human that Random Mob Sizes resized before it was told to skip them, known by its stat changes: player scale, and none of those changes. An origin's own scale, such as the Enderian's, stays.
     private void undoRandomSize() {
+        boolean resized = removeRandomSizeModifier(this.getAttribute(Attributes.MAX_HEALTH), "health_scale");
+        resized |= removeRandomSizeModifier(this.getAttribute(Attributes.MOVEMENT_SPEED), "speed_scale");
+        resized |= removeRandomSizeModifier(this.getAttribute(Attributes.ATTACK_DAMAGE), "damage_scale");
         AttributeInstance scale = this.getAttribute(Attributes.SCALE);
-        if (scale == null || scale.getBaseValue() == 1.0) {
-            return;
+        if (resized && scale != null) {
+            scale.setBaseValue(1.0);
+            this.setHealth(Math.min(this.getHealth(), this.getMaxHealth()));
         }
-        scale.setBaseValue(1.0);
-        removeRandomSizeModifier(this.getAttribute(Attributes.MAX_HEALTH), "health_scale");
-        removeRandomSizeModifier(this.getAttribute(Attributes.MOVEMENT_SPEED), "speed_scale");
-        removeRandomSizeModifier(this.getAttribute(Attributes.ATTACK_DAMAGE), "damage_scale");
-        this.setHealth(Math.min(this.getHealth(), this.getMaxHealth()));
     }
 
-    private static void removeRandomSizeModifier(AttributeInstance attribute, String name) {
-        if (attribute != null) {
-            attribute.removeModifier(Identifier.fromNamespaceAndPath("random_mob_sizes", name));
-        }
+    private static boolean removeRandomSizeModifier(@Nullable AttributeInstance attribute, String name) {
+        return attribute != null && attribute.removeModifier(Identifier.fromNamespaceAndPath("random_mob_sizes", name));
     }
 
     // Opens an umbrella in the off hand when the weather would hurt it, as a player of its origin would, and puts it away once it is safe. With Combat Amenities it lives on the back and trades places with the off-hand item.

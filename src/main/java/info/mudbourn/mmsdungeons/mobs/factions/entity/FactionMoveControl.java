@@ -1,15 +1,19 @@
 package info.mudbourn.mmsdungeons.mobs.factions.entity;
 
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.MoveControl;
 
-// Walks a path the way a player fights: facing where it looks and stepping forward, back or sideways along the path. Flying and downed members leave movement to their own code.
+// Walks a path the way a player fights: facing where it looks and stepping forward, sideways or a short way back along the path. Flying and downed members leave movement to their own code.
 final class FactionMoveControl extends MoveControl<FactionMember> {
 
     private static final float MAX_TURN = 25.0f;
     private static final float TURN_EASE = 0.45f;
     private static final float MIN_TURN = 3.0f;
+    // A player backs off a step or two from a foe in front of them, but turns round to go anywhere farther.
+    private static final double BACKPEDAL_RANGE = 6.0;
+    private static final double BACKWARD = -0.5;
     // The sprint boost as it shows in a mob's speed attribute: the square root of a player's 30 percent, see FactionMember.
     private static final float SPRINT_BOOST = (float) Math.sqrt(1.3);
 
@@ -51,13 +55,17 @@ final class FactionMoveControl extends MoveControl<FactionMember> {
             super.tick();
             return;
         }
-        this.operation = Operation.WAIT;
         float facing = this.mob.getYHeadRot();
-        this.mob.setYRot(facing);
-        float speed = (float) (this.speedModifier * this.mob.getAttributeValue(Attributes.MOVEMENT_SPEED));
         double length = Math.sqrt(flat);
         double yaw = facing * Mth.DEG_TO_RAD;
         double forward = (dz * Mth.cos(yaw) - dx * Mth.sin(yaw)) / length;
+        if (forward < BACKWARD && !this.backingOff()) {
+            super.tick();
+            return;
+        }
+        this.operation = Operation.WAIT;
+        this.mob.setYRot(facing);
+        float speed = (float) (this.speedModifier * this.mob.getAttributeValue(Attributes.MOVEMENT_SPEED));
         double right = (dx * Mth.cos(yaw) + dz * Mth.sin(yaw)) / length;
         // A player only keeps the sprint boost while moving at least partly forward; stepping back or sideways it moves at a walk.
         if (this.mob.isSprinting() && forward <= 0.0) {
@@ -66,5 +74,11 @@ final class FactionMoveControl extends MoveControl<FactionMember> {
         this.mob.setSpeed(speed);
         this.mob.setZza((float) (forward * speed));
         this.mob.setXxa((float) (right * speed));
+    }
+
+    // Backing away is only for a foe close by and in sight; any longer way back it walks facing where it goes.
+    private boolean backingOff() {
+        LivingEntity target = this.mob.getTarget();
+        return target != null && this.mob.distanceTo(target) < BACKPEDAL_RANGE && this.mob.getSensing().hasLineOfSight(target);
     }
 }
