@@ -1,21 +1,12 @@
 {
-  "type": "uselessreptile:moleclaw",
-  "base_taming_progress": 64,
+  "abilities": "uselessreptile:moleclaw/default",
+  "base_attribute_values": "uselessreptile:moleclaw/default",
   "dragon_model": "uselessreptile:moleclaw/grey",
-  "equipment": "uselessreptile:moleclaw",
-  "food_items": {
-    "#c:foods/vegetable": 2
-  },
+  "equipment": "uselessreptile:moleclaw/default",
+  "interaction_settings": "mms_dungeons:moleclaw/dungeon_grey",
   "name": "grey",
   "spawn_conditions": "mms_dungeons:moleclaw/dungeon",
-  "taming_items": [
-    {
-      "item": "minecraft:beetroot",
-      "taming_progress_increase": [
-        1,
-        2
-      ]
-    }
-  ],
+  "targeting_settings": "uselessreptile:moleclaw/default",
+  "type": "uselessreptile:moleclaw",
   "variant_name_key": "variant.uselessreptile.moleclaw.grey"
 }
