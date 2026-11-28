@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.UnaryOperator;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
@@ -25,6 +26,7 @@ public final class GuildMenuScreen extends Screen {
     private static final int ROW_HEIGHT = 22;
     private static final int SMALL_BUTTON = 54;
     private static final int PANEL_WIDTH = 300;
+    private static final int TREASURY_FIELD = 70;
 
     private final @Nullable Screen parent;
     private @Nullable GuildMenuPayload state;
@@ -64,6 +66,7 @@ public final class GuildMenuScreen extends Screen {
         }
         int left = width / 2 - PANEL_WIDTH / 2;
         boolean inGuild = state.mine() >= 0;
+        boolean member = state.member();
         addRenderableWidget(Button.builder(Component.translatable("gui.mms_dungeons.all_guilds"), button -> tab(false))
             .bounds(left, 26, PANEL_WIDTH / 2 - 2, 20)
             .build()).active = ownTab;
@@ -74,7 +77,7 @@ public final class GuildMenuScreen extends Screen {
             initOwn(left);
         } else {
             ownTab = false;
-            initAll(left, inGuild);
+            initAll(left, member);
         }
         addRenderableWidget(Button.builder(Component.translatable("gui.mms_dungeons.close"), button -> onClose())
             .bounds(width / 2 - 50, height - 28, 100, 20)
@@ -115,13 +118,12 @@ public final class GuildMenuScreen extends Screen {
     private void initOwn(int left) {
         GuildMenuPayload.Row guild = state.guilds().get(state.mine());
         list = addRenderableWidget(new RowList(52, height - 86));
-        list.add(guild.name(), "Treasury " + state.treasury() + ", fee " + guild.fee() + ", commission "
-            + guild.commission() + "%", guild.charter(), List.of());
+        list.add(guild.name(), "Fee " + guild.fee() + ", commission " + guild.commission() + "%", guild.charter(), List.of());
+        this.treasury();
         if (state.manager()) {
             setting("gui.mms_dungeons.set_charter", guild.charter(), 200, text -> "charter " + text);
             setting("gui.mms_dungeons.set_fee", guild.fee(), 12, text -> "fee " + text);
             setting("gui.mms_dungeons.set_commission", Integer.toString(guild.commission()), 2, text -> "commission " + text);
-            setting("gui.mms_dungeons.withdraw", "", 12, text -> "withdraw " + text);
             list.add(Component.translatable("gui.mms_dungeons.depot_hint").getString(), "", "", List.of(
                 small("gui.mms_dungeons.set_depot", () -> send("depot")),
                 small("gui.mms_dungeons.bind_board", () -> send("bind"))));
@@ -138,11 +140,24 @@ public final class GuildMenuScreen extends Screen {
                 : List.of();
             list.add(exile, "Banished", "", buttons);
         }
-        if (!guild.master().equals(minecraft.player.getGameProfile().name())) {
+        if (state.member() && !guild.master().equals(minecraft.player.getGameProfile().name())) {
             addRenderableWidget(Button.builder(Component.translatable("gui.mms_dungeons.leave_guild"), button -> send("leave"))
                 .bounds(left, height - 56, PANEL_WIDTH, 20)
                 .build());
         }
+    }
+
+    // The treasury: its balance, an amount field, and Deposit beside it, with Withdraw for whoever runs the guild.
+    private void treasury() {
+        EditBox amount = new EditBox(font, 0, 0, TREASURY_FIELD, 18, Component.translatable("gui.mms_dungeons.amount"));
+        amount.setMaxLength(12);
+        amount.setHint(Component.translatable("gui.mms_dungeons.amount"));
+        List<Button> buttons = new ArrayList<>();
+        buttons.add(small("gui.mms_dungeons.deposit", () -> send("deposit " + amount.getValue().strip())));
+        if (state.manager()) {
+            buttons.add(small("gui.mms_dungeons.withdraw", () -> send("withdraw " + amount.getValue().strip())));
+        }
+        list.addField(Component.translatable("gui.mms_dungeons.treasury", state.treasury()).getString(), amount, buttons);
     }
 
     // A settings row: a text field and a Set button that sends the command it builds.
@@ -151,7 +166,7 @@ public final class GuildMenuScreen extends Screen {
         box.setMaxLength(max);
         box.setValue(value);
         Button set = small("gui.mms_dungeons.set", () -> send(command.apply(box.getValue().strip())));
-        list.addField(Component.translatable(key).getString(), box, set);
+        list.addField(Component.translatable(key).getString(), box, List.of(set));
     }
 
     private Button small(String key, Runnable action) {
@@ -189,8 +204,8 @@ public final class GuildMenuScreen extends Screen {
             addEntry(new Entry(name, detail, tooltip, null, buttons));
         }
 
-        void addField(String name, EditBox box, Button button) {
-            addEntry(new Entry(name, "", "", box, List.of(button)));
+        void addField(String name, EditBox box, List<Button> buttons) {
+            addEntry(new Entry(name, "", "", box, buttons));
         }
 
         // One row: a name with a grey detail, an optional text field, and buttons on the right.
@@ -198,6 +213,7 @@ public final class GuildMenuScreen extends Screen {
 
             private final String name;
             private final String detail;
+            // The charter shown on hover, or empty for none.
             private final String tooltip;
             private final @Nullable EditBox box;
             private final List<Button> buttons;
@@ -252,7 +268,8 @@ public final class GuildMenuScreen extends Screen {
                     graphics.text(font, font.plainSubstrByWidth(detail, textWidth), x, getContentY() + 11, LABEL_COLOR, false);
                 }
                 if (hovered && !tooltip.isEmpty() && mouseX < right) {
-                    graphics.setTooltipForNextFrame(font, Component.literal(tooltip), mouseX, mouseY);
+                    graphics.setTooltipForNextFrame(font, Component.translatable("gui.mms_dungeons.charter_tooltip")
+                        .append(Component.literal(tooltip).withStyle(ChatFormatting.ITALIC)), mouseX, mouseY);
                 }
             }
         }

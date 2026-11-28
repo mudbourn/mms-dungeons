@@ -5,8 +5,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.tags.EnchantmentTags;
 import info.mudbourn.mmsdungeons.MmsDungeons;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import net.minecraft.network.chat.Component;
 import net.minecraft.core.Holder;
@@ -59,19 +57,6 @@ public final class GateCheck {
         EquipmentSlot.LEGS, 9.0,
         EquipmentSlot.FEET, 6.0
     );
-    // The share of the defence bar each slot is expected to carry, iron-shaped for the portal and netherite-shaped for the Deep Region.
-    private static final Map<EquipmentSlot, Double> ENTRY_SHARE = Map.of(
-        EquipmentSlot.HEAD, 2.0,
-        EquipmentSlot.CHEST, 6.0,
-        EquipmentSlot.LEGS, 5.0,
-        EquipmentSlot.FEET, 2.0
-    );
-    private static final Map<EquipmentSlot, String> SLOT_NAMES = Map.of(
-        EquipmentSlot.HEAD, "helmet",
-        EquipmentSlot.CHEST, "chestplate",
-        EquipmentSlot.LEGS, "leggings",
-        EquipmentSlot.FEET, "boots"
-    );
     private static final int MIN_BOOK_SPELLS = 2;
     private static final int MIN_STAFF_ENCHANT_LEVEL = 2;
 
@@ -94,35 +79,9 @@ public final class GateCheck {
         return defence(player) >= defence && bestWeapon(player) >= weapon;
     }
 
-    // Tells a player in plain words what gear the check wants and which part of their kit falls short.
-    public static Component shortfall(ServerPlayer player, boolean deep) {
-        Map<EquipmentSlot, Double> share = deep ? PROVEN_FLOOR : ENTRY_SHARE;
-        double need = deep ? DEEP_DEFENCE : ENTRY_DEFENCE;
-        double shareTotal = share.values().stream().mapToDouble(Double::doubleValue).sum();
-        List<String> weakPieces = new ArrayList<>();
-        for (EquipmentSlot slot : List.of(EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET)) {
-            if (armorScore(player.getItemBySlot(slot), slot) < need * share.get(slot) / shareTotal) {
-                weakPieces.add(SLOT_NAMES.get(slot));
-            }
-        }
-        boolean armorShort = defence(player) < need;
-        boolean weaponShort = bestWeapon(player) < (deep ? DEEP_WEAPON : ENTRY_WEAPON);
-        StringBuilder text = new StringBuilder(deep ? "The Deep Region is beyond you for now. " : "The gatekeeper notices your effort, and laughs. ");
-        text.append(deep
-            ? "You need netherite armor, or enchanted diamond armor, and a netherite weapon, or an enchanted diamond one. "
-            : "You need at least iron armor and an iron weapon, or better. ");
-        if (armorShort) {
-            text.append(weakPieces.isEmpty()
-                ? "Your armor is not strong enough. "
-                : "Your " + String.join(", ", weakPieces) + (weakPieces.size() == 1 ? " falls" : " fall") + " short. ");
-        }
-        if (weaponShort) {
-            text.append("Your best weapon is not strong enough. ");
-        }
-        text.append(deep
-            ? "A mage needs a full set of enchanted netherite-tier robes, an enchanted staff or wand and a spellbook."
-            : "A mage needs a full set of tier 2 robes, a staff or wand and a spellbook.");
-        return Component.literal(text.toString());
+    // The line a player turned back by the check sees.
+    public static Component shortfall(boolean deep) {
+        return Component.literal(deep ? "The Deep Region is beyond you for now." : "The gatekeeper notices your effort, and laughs.");
     }
 
     // The least a proven armor piece counts for in its slot: a netherite piece, toughness included.

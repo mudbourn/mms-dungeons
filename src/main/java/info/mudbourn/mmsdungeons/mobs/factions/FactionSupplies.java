@@ -19,9 +19,14 @@ import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import org.jspecify.annotations.Nullable;
 
 // The food, healing potions and weather gear a faction member carries, better kit for stronger factions and tiers.
 public final class FactionSupplies {
+
+    private static final int FARM_SEEDS = 9;
 
     private static final Item[] BANDIT_FOOD = {Items.BREAD, Items.COOKED_PORKCHOP, Items.COOKED_MUTTON};
     private static final Item[] MERCENARY_FOOD = {Items.COOKED_BEEF, Items.COOKED_PORKCHOP, Items.BAKED_POTATO};
@@ -66,7 +71,19 @@ public final class FactionSupplies {
             }
         }
         supplies.addAll(climateKit(level, pos, random));
+        supplies.addAll(tools(tier));
         return supplies;
+    }
+
+    // A pickaxe, shovel and axe for digging, stone at the lowest tier, iron in the middle and diamond above.
+    private static List<ItemStack> tools(int tier) {
+        if (tier <= 1) {
+            return List.of(new ItemStack(Items.STONE_PICKAXE), new ItemStack(Items.STONE_SHOVEL), new ItemStack(Items.STONE_AXE));
+        }
+        if (tier == 2) {
+            return List.of(new ItemStack(Items.IRON_PICKAXE), new ItemStack(Items.IRON_SHOVEL), new ItemStack(Items.IRON_AXE));
+        }
+        return List.of(new ItemStack(Items.DIAMOND_PICKAXE), new ItemStack(Items.DIAMOND_SHOVEL), new ItemStack(Items.DIAMOND_AXE));
     }
 
     // Gear for the place it spawns: skins and cauldron stock in the Nether, a skin and maybe a bucket in hot biomes, a lantern in cold ones.
@@ -126,6 +143,63 @@ public final class FactionSupplies {
         ItemStack bottle = potion(Potions.WATER);
         bottle.setCount(count);
         return bottle;
+    }
+
+    // The crop a meal is made from, or null for a meal no field grows, such as meat.
+    public static @Nullable Block crop(ItemStack meal) {
+        if (meal.is(Items.BREAD)) {
+            return Blocks.WHEAT;
+        }
+        if (meal.is(Items.BAKED_POTATO)) {
+            return Blocks.POTATOES;
+        }
+        if (meal.is(Items.GOLDEN_CARROT)) {
+            return Blocks.CARROTS;
+        }
+        return null;
+    }
+
+    // A meal no field grows, such as meat, which only a herd can supply.
+    public static boolean meat(ItemStack stack) {
+        return meal(stack) && crop(stack) == null;
+    }
+
+    // The meal a ripe crop of this kind makes, the reverse of crop.
+    // What plants a crop: seeds for wheat, the crop itself for potatoes and carrots.
+    public static ItemStack seed(Block crop) {
+        if (crop == Blocks.POTATOES) {
+            return new ItemStack(Items.POTATO);
+        }
+        if (crop == Blocks.CARROTS) {
+            return new ItemStack(Items.CARROT);
+        }
+        return new ItemStack(Items.WHEAT_SEEDS);
+    }
+
+    // A farmer's kit: a hoe, a water bucket for its well and seeds for the crop behind its meal.
+    public static List<ItemStack> farmKit(List<ItemStack> supplies) {
+        Block crop = Blocks.WHEAT;
+        for (ItemStack stack : supplies) {
+            Block meal = meal(stack) ? crop(stack) : null;
+            if (meal != null) {
+                crop = meal;
+                break;
+            }
+        }
+        return List.of(new ItemStack(Items.STONE_HOE), new ItemStack(Items.WATER_BUCKET), seed(crop).copyWithCount(FARM_SEEDS));
+    }
+
+    public static ItemStack meal(Block crop) {
+        if (crop == Blocks.WHEAT) {
+            return new ItemStack(Items.BREAD);
+        }
+        if (crop == Blocks.POTATOES) {
+            return new ItemStack(Items.BAKED_POTATO);
+        }
+        if (crop == Blocks.CARROTS) {
+            return new ItemStack(Items.GOLDEN_CARROT);
+        }
+        return ItemStack.EMPTY;
     }
 
     private static ItemStack food(Item[] choices, RandomSource random, int count) {

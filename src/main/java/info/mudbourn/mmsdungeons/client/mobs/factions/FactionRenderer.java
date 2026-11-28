@@ -111,10 +111,6 @@ public class FactionRenderer extends HumanoidMobRenderer<FactionMember, AvatarRe
         state.showRightPants = true;
         state.showLeftSleeve = true;
         state.showRightSleeve = true;
-        state.headEquipment = covered(mob, EquipmentSlot.HEAD, state.headEquipment);
-        state.chestEquipment = covered(mob, EquipmentSlot.CHEST, state.chestEquipment);
-        state.legsEquipment = covered(mob, EquipmentSlot.LEGS, state.legsEquipment);
-        state.feetEquipment = covered(mob, EquipmentSlot.FEET, state.feetEquipment);
     }
 
     // Resolves the item in a Combat Amenities slot for drawing, or clears it when the mod is not loaded.
@@ -149,11 +145,6 @@ public class FactionRenderer extends HumanoidMobRenderer<FactionMember, AvatarRe
             poseStack.rotateDegrees(Axis.XP, -360.0f * faction.rollProgress);
             poseStack.translate(0.0f, -0.5f, 0.0f);
         }
-    }
-
-    private static ItemStack covered(FactionMember mob, EquipmentSlot slot, ItemStack real) {
-        ItemStack cover = mob.cover(slot);
-        return cover.isEmpty() ? real : cover;
     }
 
     @Override

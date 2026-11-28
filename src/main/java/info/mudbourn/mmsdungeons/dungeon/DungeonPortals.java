@@ -119,7 +119,7 @@ public final class DungeonPortals {
             return turnBack(player, level, anchor, refusal);
         }
         if (!GateCheck.passes(player)) {
-            return turnBack(player, level, anchor, GateCheck.shortfall(player, false));
+            return turnBack(player, level, anchor, GateCheck.shortfall(false));
         }
         ServerLevel dungeon = level.getServer().getLevel(DungeonDimension.LEVEL);
         if (dungeon == null) {
@@ -136,7 +136,7 @@ public final class DungeonPortals {
     }
 
     private static TeleportTransition turnBack(ServerPlayer player, ServerLevel level, BlockPos anchor, Component message) {
-        player.sendSystemMessage(message);
+        player.sendSystemMessage(message, true);
         Vec3 spot = Vec3.atBottomCenterOf(standingSpotNear(level, anchor));
         player.teleportTo(spot.x, spot.y, spot.z);
         return null;

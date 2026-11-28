@@ -41,6 +41,9 @@ import org.slf4j.LoggerFactory;
 // Reads the creature kinds and the relations between them, and answers who hates whom.
 public final class MobRelations {
 
+    // A creature a player summoned, such as a Phantom's phantoms: it starts no feuds of its own.
+    private static final String SUMMONED_TAG = "mms_origins.summoned";
+
     public static final String PLAYER = "player";
     public static final TagKey<EntityType<?>> LIGHT_WARY = TagKey.create(Registries.ENTITY_TYPE, MmsDungeons.id("light_wary"));
 
@@ -144,7 +147,7 @@ public final class MobRelations {
         if (target instanceof Player player && player.isCreative()) {
             return false;
         }
-        if (mob instanceof OwnableEntity owned && owned.getOwner() != null) {
+        if (mob instanceof OwnableEntity owned && owned.getOwner() != null || mob.entityTags().contains(SUMMONED_TAG)) {
             return false;
         }
         if (mob instanceof FeudAware aware && !aware.mayStartFeud(target)) {

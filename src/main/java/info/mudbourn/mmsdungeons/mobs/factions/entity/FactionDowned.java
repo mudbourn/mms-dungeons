@@ -124,6 +124,7 @@ final class FactionDowned {
     // One tick of a crewmate's help; the member stands once the help is done.
     void help(ServerLevel level, FactionMember reviver) {
         this.heldTicks = HELD_TICKS;
+        this.punishReviver(reviver);
         if (++this.reviveProgress >= REVIVE_TICKS) {
             this.revive(level);
         }
@@ -145,6 +146,7 @@ final class FactionDowned {
     // One tick of a player's help, shown on their action bar; once it stands, it thanks them with a crouch and stays friendly with them.
     private void helpedBy(ServerLevel level, Player player) {
         this.heldTicks = HELD_TICKS;
+        this.punishReviver(player);
         this.reviveProgress++;
         player.sendOverlayMessage(Component.translatable("message.mms_dungeons.reviving", this.mob.getDisplayName(), Math.min(100, this.reviveProgress * 100 / REVIVE_TICKS)));
         if (this.reviveProgress >= REVIVE_TICKS) {
@@ -214,6 +216,17 @@ final class FactionDowned {
             hunter.setTarget(null);
             if (!this.paused.contains(hunter)) {
                 this.paused.add(hunter);
+            }
+        }
+    }
+
+    // Humans whose fight with it is paused turn on whoever tries to get it back up.
+    private void punishReviver(LivingEntity reviver) {
+        for (Mob hunter : this.paused) {
+            if (hunter instanceof FactionMember human && human.isAlive() && !human.downed() && human.level() == reviver.level()
+                && human.getTarget() != reviver && human.canAttack(reviver)
+                && !(reviver instanceof FactionMember member && member.crew().equals(human.crew()))) {
+                human.setTarget(reviver);
             }
         }
     }

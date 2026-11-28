@@ -1,15 +1,6 @@
 {
   "variants": {
-    "facing=north": {
-      "model": "mms_dungeons:block/quest_board"
-    },
-    "facing=south": {
-      "model": "mms_dungeons:block/quest_board"
-    },
-    "facing=west": {
-      "model": "mms_dungeons:block/quest_board"
-    },
-    "facing=east": {
+    "": {
       "model": "mms_dungeons:block/quest_board"
     }
   }

@@ -39,7 +39,10 @@ public final class HostOres implements Feature {
     private static final List<ResourceKey<PlacedFeature>> ORES = keys("host_ores/", HOST_NAMES);
     private static final List<ResourceKey<PlacedFeature>> DUNGEON_ORES = Stream.concat(
         keys("dungeon_host_ores/", HOST_NAMES).stream(),
-        keys("dungeon_ores/", List.of("iron", "gold", "redstone", "diamond", "lapis", "copper")).stream()
+        keys("dungeon_ores/", List.of(
+            "iron", "gold", "redstone", "diamond", "lapis", "copper",
+            "exposed_iron", "exposed_gold", "exposed_redstone", "exposed_diamond", "exposed_lapis", "exposed_copper"
+        )).stream()
     ).toList();
 
     private static List<ResourceKey<PlacedFeature>> keys(String folder, List<String> names) {

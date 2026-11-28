@@ -38,7 +38,7 @@
                               "y_scale": 8.0
                             }
                           },
-                          "right": 4.0
+                          "right": 2.0
                         },
                         "right": {
                           "type": "minecraft:add",
@@ -50,27 +50,9 @@
                                 "type": "minecraft:noise",
                                 "noise": "minecraft:cave_cheese",
                                 "xz_scale": 1.0,
-                                "y_scale": 0.6666666666666666
+                                "y_scale": 0.5
                               },
-                              "right": {
-                                "type": "minecraft:add",
-                                "left": {
-                                  "type": "minecraft:gradient",
-                                  "axis": "y",
-                                  "from_coordinate": 80,
-                                  "from_value": 0.27,
-                                  "to_coordinate": 100,
-                                  "to_value": 0.02
-                                },
-                                "right": {
-                                  "type": "minecraft:gradient",
-                                  "axis": "y",
-                                  "from_coordinate": -16,
-                                  "from_value": 0.0,
-                                  "to_coordinate": -80,
-                                  "to_value": -0.22
-                                }
-                              }
+                              "right": 0.12
                             },
                             "max": 1.0,
                             "min": -1.0

@@ -8,8 +8,8 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
-// Server to client: every guild, and the player's own with what they may manage, for the guild menu.
-public record GuildMenuPayload(List<Row> guilds, int mine, boolean manager, boolean admin, String treasury,
+// Server to client: every guild, and the one the player belongs to or runs as an admin, with what they may do there, for the guild menu.
+public record GuildMenuPayload(List<Row> guilds, int mine, boolean member, boolean manager, String treasury,
                                List<String> members, List<String> banished) implements CustomPacketPayload {
 
     public static final Type<GuildMenuPayload> TYPE = new Type<>(MmsDungeons.id("guild_menu"));
@@ -39,9 +39,9 @@ public record GuildMenuPayload(List<Row> guilds, int mine, boolean manager, bool
         ByteBufCodecs.VAR_INT,
         GuildMenuPayload::mine,
         ByteBufCodecs.BOOL,
-        GuildMenuPayload::manager,
+        GuildMenuPayload::member,
         ByteBufCodecs.BOOL,
-        GuildMenuPayload::admin,
+        GuildMenuPayload::manager,
         ByteBufCodecs.STRING_UTF8,
         GuildMenuPayload::treasury,
         ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs.list()),

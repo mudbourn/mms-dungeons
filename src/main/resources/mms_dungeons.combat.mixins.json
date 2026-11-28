@@ -10,6 +10,7 @@
     "ArmedRenderStateMixin",
     "IllagerModelAccessor",
     "LivingRendererSwingMixin",
+    "HumanoidModelSwingMixin",
     "ModelFeatureSwingMixin"
   ],
   "injectors": {

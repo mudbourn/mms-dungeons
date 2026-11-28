@@ -34,6 +34,9 @@ public final class PericulumRules extends SavedData {
     // Two Minecraft days.
     private static final long BAN_TICKS = 48000L;
     private static final int CHECK_INTERVAL = 20;
+    // Ticks a relocated player stays in the dungeon after joining before it is moved out.
+    private static final int EVACUATE_DELAY = 40;
+    private static final Map<UUID, Integer> EVACUATIONS = new HashMap<>();
 
     public static final Codec<PericulumRules> CODEC = RecordCodecBuilder.create(instance -> instance.group(
         Codec.unboundedMap(UUIDUtil.STRING_CODEC, Codec.LONG).fieldOf("bans").forGetter(rules -> rules.bans),
@@ -97,19 +100,37 @@ public final class PericulumRules extends SavedData {
     }
 
     private static void onJoin(ServerPlayer player) {
-        PericulumRules rules = get(player.level().getServer());
-        if (!rules.relocate.remove(player.getUUID())) {
+        MinecraftServer server = player.level().getServer();
+        if (get(server).relocate.contains(player.getUUID())) {
+            EVACUATIONS.put(player.getUUID(), server.getTickCount() + EVACUATE_DELAY);
+        }
+    }
+
+    private static void evacuateJoined(MinecraftServer server) {
+        if (EVACUATIONS.isEmpty()) {
             return;
         }
-        long until = player.level().getServer().overworld().getGameTime() + BAN_TICKS;
-        rules.bans.put(player.getUUID(), until);
-        rules.setDirty();
-        DeepRebuild.evacuate(player);
-        player.sendSystemMessage(Component.literal("You left the game without exiting the Periculum Region properly. You are now forbidden to enter it for two days."));
+        int now = server.getTickCount();
+        PericulumRules rules = get(server);
+        EVACUATIONS.entrySet().removeIf(entry -> {
+            if (entry.getValue() > now) {
+                return false;
+            }
+            ServerPlayer player = server.getPlayerList().getPlayer(entry.getKey());
+            if (player == null || !rules.relocate.remove(entry.getKey())) {
+                return true;
+            }
+            rules.bans.put(entry.getKey(), server.overworld().getGameTime() + BAN_TICKS);
+            rules.setDirty();
+            DeepRebuild.evacuate(player);
+            player.sendSystemMessage(Component.literal("You left the game without exiting the Periculum Region properly. You are now forbidden to enter it for two days."));
+            return true;
+        });
     }
 
     // Moves banned players back up into the Deep Region if they cross below Y 0.
     private static void tick(MinecraftServer server) {
+        evacuateJoined(server);
         long now = server.overworld().getGameTime();
         if (now % CHECK_INTERVAL != 0) {
             return;

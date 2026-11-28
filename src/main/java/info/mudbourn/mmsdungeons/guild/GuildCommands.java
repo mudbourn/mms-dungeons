@@ -31,6 +31,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 
@@ -81,6 +82,9 @@ final class GuildCommands {
             .then(Commands.literal("withdraw")
                 .then(Commands.argument("amount", StringArgumentType.word())
                     .executes(ctx -> withdraw(ctx, StringArgumentType.getString(ctx, "amount")))))
+            .then(Commands.literal("deposit")
+                .then(Commands.argument("amount", StringArgumentType.word())
+                    .executes(ctx -> deposit(ctx, StringArgumentType.getString(ctx, "amount")))))
             .then(Commands.literal("depot").executes(ctx -> depot(ctx, null)))
             .then(Commands.literal("bind").executes(ctx -> bind(ctx, null)))
             .then(Commands.literal("info")
@@ -379,6 +383,10 @@ final class GuildCommands {
     private static int transfer(CommandContext<CommandSourceStack> ctx, String name) throws CommandSyntaxException {
         ServerPlayer player = ctx.getSource().getPlayerOrException();
         MinecraftServer server = ctx.getSource().getServer();
+        Guild managed = managed(player);
+        if (managed != null && managed.isPublic && Guilds.isAdmin(player)) {
+            return appoint(ctx, server, managed, name);
+        }
         Guild guild = Guilds.data().guildOf(player.getUUID());
         if (guild == null || !player.getUUID().equals(guild.master)) {
             return fail(ctx, "Only the guildmaster can transfer the guild.");
@@ -402,6 +410,49 @@ final class GuildCommands {
         guild.master = target;
         Guilds.data().setDirty();
         return ok(ctx, name + " is now the guildmaster of " + guild.name + ".");
+    }
+
+    // An admin names the public guild's guildmaster, themselves included; it holds no land or party to hand over.
+    private static int appoint(CommandContext<CommandSourceStack> ctx, MinecraftServer server, Guild guild, String name) {
+        UUID target = memberByName(guild, name);
+        if (target == null || server.getPlayerList().getPlayer(target) == null) {
+            return fail(ctx, "Name a member of " + guild.name + " who is online.");
+        }
+        guild.master = target;
+        Guilds.data().setDirty();
+        return ok(ctx, name + " is now the guildmaster of " + guild.name + ".");
+    }
+
+    // Any member pays from their wallet into their guild's treasury; an admin outside a guild pays into the public guild.
+    private static int deposit(CommandContext<CommandSourceStack> ctx, String amount) throws CommandSyntaxException {
+        ServerPlayer player = ctx.getSource().getPlayerOrException();
+        Guild guild = Guilds.data().guildOf(player.getUUID());
+        if (guild == null) {
+            guild = managed(player);
+        }
+        if (guild == null) {
+            return fail(ctx, "You are not in a guild.");
+        }
+        long pice = Currency.parse(amount);
+        if (pice <= 0) {
+            return fail(ctx, "Name an amount above zero.");
+        }
+        if (!Wallet.withdraw(player, pice)) {
+            return fail(ctx, "Your wallet does not hold " + Currency.format(pice) + ".");
+        }
+        guild.treasury += pice;
+        History.log(player, new HistoryEntry(
+            Billing.today(ctx.getSource().getServer()),
+            HistoryCategory.PAYMENT,
+            "",
+            0,
+            pice,
+            0L,
+            -pice,
+            guild.name + " treasury"
+        ));
+        Guilds.data().setDirty();
+        return ok(ctx, "Deposited " + Currency.format(pice) + ". The treasury holds " + Currency.format(guild.treasury) + ".");
     }
 
     private static int withdraw(CommandContext<CommandSourceStack> ctx, String amount) throws CommandSyntaxException {
@@ -457,8 +508,10 @@ final class GuildCommands {
             return fail(ctx, guildName == null ? "Only a guildmaster can do that." : "No guild is called " + guildName + ".");
         }
         HitResult hit = player.pick(LOOK_REACH, 1.0f, false);
-        if (hit.getType() != HitResult.Type.BLOCK
-            || !(player.level().getBlockEntity(((BlockHitResult) hit).getBlockPos()) instanceof QuestBoardBlockEntity board)) {
+        BlockPos looked = hit.getType() == HitResult.Type.BLOCK ? ((BlockHitResult) hit).getBlockPos() : null;
+        BlockState lookedState = looked == null ? null : player.level().getBlockState(looked);
+        BlockPos main = lookedState != null && lookedState.getBlock() instanceof QuestBoardBlock ? QuestBoardBlock.mainPos(looked, lookedState) : looked;
+        if (main == null || !(player.level().getBlockEntity(main) instanceof QuestBoardBlockEntity board)) {
             return fail(ctx, "Look at a quest board.");
         }
         board.bind(guild.id);

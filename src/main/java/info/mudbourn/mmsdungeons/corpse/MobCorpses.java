@@ -61,8 +61,8 @@ public final class MobCorpses {
         return entity instanceof Mannequin && entity.entityTags().contains(TAG);
     }
 
-    // Lays a body at the spot wearing the given skin texture, holding the loot. Nothing is made when there is no loot.
-    public static void leave(ServerLevel level, Vec3 at, float facing, String texture, Component name, List<ItemStack> loot) {
+    // Lays a body at the spot wearing the given skin texture and armor, head to feet, at the given size, holding the loot. Nothing is made when there is no loot.
+    public static void leave(ServerLevel level, Vec3 at, float facing, String texture, Component name, List<ItemStack> worn, float scale, List<ItemStack> loot) {
         List<ItemStack> items = new ArrayList<>();
         for (ItemStack stack : loot) {
             if (!stack.isEmpty()) {
@@ -76,6 +76,7 @@ public final class MobCorpses {
         profile.putString("texture", texture);
         Mannequin body = CorpseMarkers.body(level, at, facing, profile, name, CollisionContext.empty());
         body.addTag(TAG);
+        CorpseMarkers.dress(body, worn, scale);
         body.setAttached(LOOT, items);
         body.setAttached(EXPIRES, level.getGameTime() + LIFETIME_TICKS);
         level.addFreshEntity(body);

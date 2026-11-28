@@ -1,5 +1,9 @@
 package info.mudbourn.mmsdungeons.mobs.factions.entity;
 
+import net.minecraft.world.level.block.Block;
+import net.minecraft.tags.TagKey;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.core.BlockPos;
 import info.mudbourn.mmsdungeons.MmsDungeons;
 import info.mudbourn.mmsdungeons.mobs.factions.FactionClass;
 import java.util.ArrayList;
@@ -39,6 +43,7 @@ final class FactionFloran {
     private static final double MOUNT_RANGE = 6.0;
     private static final double LEAF_RUN_BONUS = 0.25;
     private static final Identifier LEAF_RUN = MmsDungeons.id("leaf_run");
+    private static final TagKey<Block> LEAF_CLIMBABLE = TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath("mms_origins", "leaf_climbable"));
 
     private final FactionMember mob;
     private final List<int[]> refunds = new ArrayList<>();
@@ -232,12 +237,23 @@ final class FactionFloran {
         }
     }
 
-    // Leaf form's pace on the move: close to a running player's.
+    // Leaf form's pace on the move: close to a running player's, but only while buried in natural blocks as a player's is.
     private void runAsLeaves() {
         AttributeInstance speed = this.mob.getAttribute(Attributes.MOVEMENT_SPEED);
-        if (speed != null && !speed.hasModifier(LEAF_RUN)) {
-            speed.addTransientModifier(new AttributeModifier(LEAF_RUN, LEAF_RUN_BONUS, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+        if (speed == null) {
+            return;
         }
+        boolean buried = this.buried();
+        if (buried && !speed.hasModifier(LEAF_RUN)) {
+            speed.addTransientModifier(new AttributeModifier(LEAF_RUN, LEAF_RUN_BONUS, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+        } else if (!buried) {
+            speed.removeModifier(LEAF_RUN);
+        }
+    }
+
+    private boolean buried() {
+        BlockPos feet = this.mob.blockPosition();
+        return this.mob.level().getBlockState(feet).is(LEAF_CLIMBABLE) || this.mob.level().getBlockState(feet.above()).is(LEAF_CLIMBABLE);
     }
 
     private void refund(int amount) {

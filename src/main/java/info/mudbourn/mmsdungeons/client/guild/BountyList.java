@@ -71,7 +71,9 @@ final class BountyList extends ObjectSelectionList<BountyList.Row> {
             boolean quest = bounty.kind == BountyKind.QUEST;
 
             graphics.item(bounty.proof.stack(), x + 4, y + 4);
-            graphics.text(mc.font, "x" + bounty.proof.count(), x + 4, y + 24, GRAY, true);
+            // The count sits centered under the 16-pixel item icon.
+            String count = "x" + bounty.proof.count();
+            graphics.text(mc.font, count, x + 4 + (16 - mc.font.width(count)) / 2, y + 24, GRAY, true);
             graphics.text(mc.font, bounty.title, x + 28, y + 3, WHITE, true);
             String tag = Component.translatable(quest ? "gui.mms_dungeons.quest" : "gui.mms_dungeons.contract").getString()
                 + " - " + bounty.type.label();

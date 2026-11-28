@@ -82,7 +82,8 @@ final class GuildMenu {
                 guild.commissionPercent,
                 guild.charter));
         }
-        Guild managed = own != null ? own : admin ? data.guilds.stream().filter(guild -> guild.isPublic).findFirst().orElse(null) : null;
+        // The menu only ever shows the guild the player is in; an admin runs the public guild from inside it.
+        Guild managed = own;
         boolean manager = managed != null && (id.equals(managed.master) || managed.isPublic && admin);
         List<String> members = new ArrayList<>();
         List<String> banished = new ArrayList<>();
@@ -93,8 +94,8 @@ final class GuildMenu {
         ServerPlayNetworking.send(player, new GuildMenuPayload(
             rows,
             managed == null ? -1 : data.guilds.indexOf(managed),
+            own != null,
             manager,
-            admin,
             managed == null ? "" : Currency.format(managed.treasury),
             members,
             banished));

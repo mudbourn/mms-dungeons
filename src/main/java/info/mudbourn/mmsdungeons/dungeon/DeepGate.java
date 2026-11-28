@@ -49,7 +49,7 @@ public final class DeepGate {
             Vec3 spot = DungeonPortals.arrivalSpot(level, player.getBlockX(), player.getBlockZ());
             player.teleportTo(spot.x, spot.y, spot.z);
             player.resetFallDistance();
-            player.sendSystemMessage(GateCheck.shortfall(player, true));
+            player.sendSystemMessage(GateCheck.shortfall(true), true);
         }
     }
 }

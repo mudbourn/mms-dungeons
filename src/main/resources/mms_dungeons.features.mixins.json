@@ -3,6 +3,7 @@
   "package": "info.mudbourn.mmsdungeons.mixin.features",
   "compatibilityLevel": "JAVA_25",
   "mixins": [
+    "CorpseHitboxMixin",
     "AerialHellPortalDestinationMixin",
     "BodyTypeNameMixin",
     "CarryOnCorpseMixin",
@@ -15,6 +16,7 @@
     "MobShriekerMixin",
     "PowderSnowFurMixin",
     "SpikePathingMixin",
+    "SpiritDamageMixin",
     "StellarLighterMixin"
   ],
   "client": [

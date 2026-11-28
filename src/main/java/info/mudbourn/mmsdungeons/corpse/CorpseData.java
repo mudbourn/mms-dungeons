@@ -48,7 +48,7 @@ public final class CorpseData extends SavedData {
         }
     }
 
-    // One death's items, marker entity, dimension, spot and time.
+    // One death's items, marker entity, dimension, spot, time, and the look of its body.
     public static final class Corpse {
 
         public static final Codec<Corpse> CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -58,16 +58,18 @@ public final class CorpseData extends SavedData {
             UUIDUtil.CODEC.optionalFieldOf("marker").forGetter(corpse -> Optional.ofNullable(corpse.marker)),
             Identifier.CODEC.fieldOf("dimension").forGetter(corpse -> corpse.dimension),
             BlockPos.CODEC.optionalFieldOf("pos").forGetter(corpse -> Optional.ofNullable(corpse.pos)),
-            Codec.LONG.optionalFieldOf("time", 0L).forGetter(corpse -> corpse.time)
-        ).apply(instance, (id, owner, items, marker, dimension, pos, time) ->
-            new Corpse(id, owner, items, marker.orElse(null), dimension, pos.orElse(null), time)));
+            Codec.LONG.optionalFieldOf("time", 0L).forGetter(corpse -> corpse.time),
+            ItemStack.OPTIONAL_CODEC.listOf().optionalFieldOf("worn", List.of()).forGetter(corpse -> corpse.worn),
+            Codec.FLOAT.optionalFieldOf("scale", 1.0F).forGetter(corpse -> corpse.scale)
+        ).apply(instance, (id, owner, items, marker, dimension, pos, time, worn, scale) ->
+            new Corpse(id, owner, items, marker.orElse(null), dimension, pos.orElse(null), time, worn, scale)));
 
         public static final Codec<Corpse> LEGACY_CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ItemStack.CODEC.listOf().fieldOf("items").forGetter(corpse -> corpse.items),
             UUIDUtil.CODEC.optionalFieldOf("marker").forGetter(corpse -> Optional.ofNullable(corpse.marker)),
             Identifier.CODEC.fieldOf("dimension").forGetter(corpse -> corpse.dimension)
         ).apply(instance, (items, marker, dimension) ->
-            new Corpse(UUID.randomUUID(), null, items, marker.orElse(null), dimension, null, 0L)));
+            new Corpse(UUID.randomUUID(), null, items, marker.orElse(null), dimension, null, 0L, List.of(), 1.0F)));
 
         public final UUID id;
         public UUID owner;
@@ -76,8 +78,11 @@ public final class CorpseData extends SavedData {
         public Identifier dimension;
         public BlockPos pos;
         public long time;
+        // What the body wears for show, head to feet, and its size.
+        public final List<ItemStack> worn;
+        public final float scale;
 
-        private Corpse(UUID id, UUID owner, List<ItemStack> items, UUID marker, Identifier dimension, BlockPos pos, long time) {
+        private Corpse(UUID id, UUID owner, List<ItemStack> items, UUID marker, Identifier dimension, BlockPos pos, long time, List<ItemStack> worn, float scale) {
             this.id = id;
             this.owner = owner;
             this.items = new ArrayList<>(items);
@@ -85,11 +90,13 @@ public final class CorpseData extends SavedData {
             this.dimension = dimension;
             this.pos = pos;
             this.time = time;
+            this.worn = List.copyOf(worn);
+            this.scale = scale;
         }
     }
 
-    public Corpse add(UUID owner, List<ItemStack> items, Identifier dimension, BlockPos pos, long time) {
-        Corpse corpse = new Corpse(UUID.randomUUID(), owner, items, null, dimension, pos, time);
+    public Corpse add(UUID owner, List<ItemStack> items, Identifier dimension, BlockPos pos, long time, List<ItemStack> worn, float scale) {
+        Corpse corpse = new Corpse(UUID.randomUUID(), owner, items, null, dimension, pos, time, worn, scale);
         records.add(corpse);
         setDirty();
         return corpse;

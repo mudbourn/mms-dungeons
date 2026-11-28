@@ -13,6 +13,8 @@ import info.mudbourn.mmseconomy.market.Depot;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
@@ -119,7 +121,23 @@ final class BountyService {
         }
         data.bounties.add(bounty);
         data.setDirty();
+        if (asGuild) {
+            announceQuest(server, guild, bounty);
+        }
         return null;
+    }
+
+    // Tells every online member of the guild, in chat, about a quest the guild just posted.
+    private static void announceQuest(MinecraftServer server, Guild guild, Bounty bounty) {
+        Component message = Component.literal(guild.name + " posted a new quest: ").withStyle(ChatFormatting.GOLD)
+            .append(Component.literal(bounty.title).withStyle(ChatFormatting.YELLOW))
+            .append(Component.literal(" for " + Currency.format(bounty.reward) + ".").withStyle(ChatFormatting.GOLD));
+        for (UUID member : guild.members) {
+            ServerPlayer online = server.getPlayerList().getPlayer(member);
+            if (online != null) {
+                online.sendSystemMessage(message);
+            }
+        }
     }
 
     // Takes a posting for the player's whole party; returns an error or null.

@@ -129,6 +129,7 @@ public final class Corpses {
         if (data == null || !(player.level() instanceof ServerLevel level)) {
             return;
         }
+        List<ItemStack> worn = CorpseMarkers.wornBy(player::getItemBySlot);
         List<ItemStack> taken = new ArrayList<>();
         Inventory inventory = player.getInventory();
         for (int slot = 0; slot < inventory.getContainerSize(); slot++) {
@@ -146,8 +147,10 @@ public final class Corpses {
             taken,
             level.dimension().identifier(),
             player.blockPosition(),
-            System.currentTimeMillis());
-        Mannequin marker = CorpseMarkers.create(player, level, player.position(), player.yBodyRot);
+            System.currentTimeMillis(),
+            worn,
+            player.getScale());
+        Mannequin marker = CorpseMarkers.create(player, level, player.position(), player.yBodyRot, corpse.worn, corpse.scale);
         corpse.marker = marker.getUUID();
         level.addFreshEntity(marker);
     }
@@ -163,7 +166,7 @@ public final class Corpses {
         CorpseMarkers.remove(level.getServer(), corpse);
         Vec3 look = Vec3.directionFromRotation(0.0F, player.getYRot());
         Vec3 at = player.position().add(look.x * SUMMON_DISTANCE, 0.0, look.z * SUMMON_DISTANCE);
-        Mannequin marker = CorpseMarkers.create(player, level, at, player.getYRot());
+        Mannequin marker = CorpseMarkers.create(player, level, at, player.getYRot(), corpse.worn, corpse.scale);
         corpse.marker = marker.getUUID();
         corpse.dimension = level.dimension().identifier();
         corpse.pos = marker.blockPosition();

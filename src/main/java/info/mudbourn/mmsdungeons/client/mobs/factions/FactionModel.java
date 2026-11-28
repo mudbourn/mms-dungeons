@@ -15,6 +15,8 @@ public class FactionModel extends PlayerModel {
 
     @Override
     public void setupAnim(AvatarRenderState state) {
+        // One model draws every member of a faction, so parts an origin's fur hid on the last member are shown again first.
+        this.root().getAllParts().forEach(part -> part.visible = true);
         super.setupAnim(state);
         if (!(state instanceof FactionRenderState faction)) {
             return;

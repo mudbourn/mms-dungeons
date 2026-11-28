@@ -2,6 +2,7 @@ package info.mudbourn.mmsdungeons.mobs.factions.entity;
 
 import info.mudbourn.mmsdungeons.mobs.factions.HumanFactions;
 import info.mudbourn.mmsdungeons.MmsDungeons;
+import info.mudbourn.mmsdungeons.corpse.CorpseMarkers;
 import info.mudbourn.mmsdungeons.corpse.MobCorpses;
 import info.mudbourn.mmsdungeons.dungeon.DungeonDimension;
 import info.mudbourn.mmsdungeons.mobs.factions.Faction;
@@ -14,6 +15,7 @@ import info.mudbourn.mmsdungeons.mobs.factions.FactionSpawns;
 import info.mudbourn.mmsdungeons.mobs.factions.FactionSupplies;
 import info.mudbourn.mmsdungeons.relations.FeudAware;
 import info.mudbourn.mmsdungeons.relations.FeudTargetGoal;
+import java.util.function.Predicate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -33,6 +35,8 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -138,12 +142,15 @@ public class FactionMember extends Monster implements RangedAttackMob, FeudAware
     private static final float[] DROP_CHANCE = {0.06f, 0.08f, 0.1f};
     private static final int TARGET_INTERVAL = 10;
     private static final float BONUS_LOOT_CHANCE = 0.25f;
+    // A drop chance above 1 drops the item whole, so a Periculum corpse keeps all of the gear.
+    private static final float PRESERVED_DROP_CHANCE = 2.0f;
     private static final float IDLE_EAT_HEALTH = 0.75f;
     private static final int IDLE_EAT_TICKS = 20;
 
     private final Faction faction;
     private final FactionCaster caster = new FactionCaster(this);
     private final FactionCleric cleric = new FactionCleric(this);
+    private final FactionDouse douse = new FactionDouse(this);
     private final FactionFlight flight = new FactionFlight(this);
     private final FactionTactics tactics = new FactionTactics(this);
     private final FactionTravel travel = new FactionTravel(this);
@@ -175,6 +182,8 @@ public class FactionMember extends Monster implements RangedAttackMob, FeudAware
     private boolean killedByPlayer;
     private final List<ItemStack> supplies = new ArrayList<>();
     private ItemStack stowedOffhand = ItemStack.EMPTY;
+    private ItemStack stowedForTool = ItemStack.EMPTY;
+    private boolean toolDrawn;
     private boolean consuming;
     private float exhaustion;
     private int foodCredit;
@@ -239,12 +248,14 @@ public class FactionMember extends Monster implements RangedAttackMob, FeudAware
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(0, new FactionDowned.DownedGoal(this));
         this.goalSelector.addGoal(1, new FactionDowned.ReviveGoal(this));
+        this.goalSelector.addGoal(1, new FactionPillar(this));
         this.goalSelector.addGoal(2, new FactionCombatGoal(this));
         this.goalSelector.addGoal(3, new FactionPeace.PeaceGoal(this));
         this.goalSelector.addGoal(4, new FactionPeace.FriendGoal(this));
         this.goalSelector.addGoal(4, new FactionWary(this));
         this.goalSelector.addGoal(4, new FactionTerritory.KeepApartGoal(this));
         this.goalSelector.addGoal(5, new FactionPursuits.FarmGoal(this));
+        this.goalSelector.addGoal(5, new FactionPursuits.HerdGoal(this));
         this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 0.8));
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this, FactionMember.class));
         this.targetSelector.addGoal(1, new FactionThreatSense(this));
@@ -583,7 +594,7 @@ public class FactionMember extends Monster implements RangedAttackMob, FeudAware
     }
 
     // A spot to crawl under: a solid block at head height, such as a fallen log, over a foot space with nothing solid in it, so air,
-    // grass, flowers and other blocks a mob walks through all count as open. Collision is read as this mob meets it.
+    // grass, flowers and other blocks a mob walks through all count as open. Leaves and other plants never make one. Collision is read as this mob meets it.
     private boolean lowGap(BlockPos pos) {
         BlockPos head = pos.above();
         if (!this.level().hasChunkAt(pos) || !this.level().hasChunkAt(head)) {
@@ -591,7 +602,9 @@ public class FactionMember extends Monster implements RangedAttackMob, FeudAware
         }
         CollisionContext context = CollisionContext.of(this);
         boolean openFeet = this.level().getBlockState(pos).getCollisionShape(this.level(), pos, context).isEmpty();
-        boolean solidHead = !this.level().getBlockState(head).getCollisionShape(this.level(), head, context).isEmpty();
+        BlockState headState = this.level().getBlockState(head);
+        boolean plant = headState.is(BlockTags.LEAVES) || headState.is(BlockTags.REPLACEABLE_BY_TREES);
+        boolean solidHead = !plant && !headState.getCollisionShape(this.level(), head, context).isEmpty();
         return openFeet && solidHead;
     }
 
@@ -754,6 +767,60 @@ public class FactionMember extends Monster implements RangedAttackMob, FeudAware
         this.sidearm = ItemStack.EMPTY;
     }
 
+    // Takes the supply that breaks the block fastest into the main hand, stowing what it held, and returns its speed.
+    float drawTool(BlockState state) {
+        this.stowTool();
+        int best = -1;
+        float bestSpeed = 1.0F;
+        for (int i = 0; i < this.supplies.size(); i++) {
+            float speed = this.supplies.get(i).getDestroySpeed(state);
+            if (speed > bestSpeed) {
+                best = i;
+                bestSpeed = speed;
+            }
+        }
+        if (best < 0) {
+            return 1.0F;
+        }
+        this.stopUsingItem();
+        this.stowedForTool = this.getMainHandItem();
+        this.setItemSlot(EquipmentSlot.MAINHAND, this.supplies.remove(best));
+        this.toolDrawn = true;
+        return bestSpeed;
+    }
+
+    // Takes the first supply that passes the test into the main hand, stowing what it held; true when it now holds one.
+    boolean drawSupply(Predicate<ItemStack> test) {
+        if (this.toolDrawn && test.test(this.getMainHandItem())) {
+            return true;
+        }
+        this.stowTool();
+        for (int i = 0; i < this.supplies.size(); i++) {
+            if (test.test(this.supplies.get(i))) {
+                this.stopUsingItem();
+                this.stowedForTool = this.getMainHandItem();
+                this.setItemSlot(EquipmentSlot.MAINHAND, this.supplies.remove(i));
+                this.toolDrawn = true;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Puts a drawn tool back in the pack and takes up what it held before.
+    void stowTool() {
+        if (!this.toolDrawn) {
+            return;
+        }
+        ItemStack tool = this.getMainHandItem();
+        if (!tool.isEmpty()) {
+            this.supplies.add(tool);
+        }
+        this.setItemSlot(EquipmentSlot.MAINHAND, this.stowedForTool);
+        this.stowedForTool = ItemStack.EMPTY;
+        this.toolDrawn = false;
+    }
+
     void holsterSidearm() {
         if (!this.sidearmDrawn()) {
             return;
@@ -792,6 +859,18 @@ public class FactionMember extends Monster implements RangedAttackMob, FeudAware
 
     public ItemStack cover(EquipmentSlot slot) {
         return this.entityData.get(coverData(slot));
+    }
+
+    // On the client an armor slot shows its cover, so every renderer, GeckoLib's 3D armor included, draws the cover over the real gear.
+    @Override
+    public ItemStack getItemBySlot(EquipmentSlot slot) {
+        if (this.level().isClientSide() && slot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR) {
+            ItemStack cover = this.cover(slot);
+            if (!cover.isEmpty()) {
+                return cover;
+            }
+        }
+        return super.getItemBySlot(slot);
     }
 
     public void setCover(EquipmentSlot slot, ItemStack stack) {
@@ -1065,12 +1144,13 @@ public class FactionMember extends Monster implements RangedAttackMob, FeudAware
         this.tickOrigin();
         this.tickUmbrella(level);
         this.climate.tick(level);
+        this.douse.tick(level);
         this.travel.tick(level);
         this.flight.tick(level);
         this.downedState.tick(level);
         this.powers.tickAlways(level);
         this.pressKeys();
-        if (!this.downed() && !this.crawling() && !this.roomToStand()) {
+        if (!this.downed() && !this.crawling() && this.onGround() && !this.onClimbable() && !this.roomToStand()) {
             this.setCrawling(true);
         } else if (!this.downed() && !this.armless() && this.crawling() && this.roomToStand() && (this.getNavigation().getPath() == null || !this.lowGapAhead(this.getNavigation().getPath(), CRAWL_LOOKAHEAD))) {
             this.setCrawling(false);
@@ -1169,6 +1249,9 @@ public class FactionMember extends Monster implements RangedAttackMob, FeudAware
         }
         FactionGear.equip(this, random);
         this.supplies.addAll(FactionSupplies.roll(this.faction, this.tier, random, level, this.blockPosition()));
+        if (FactionPursuits.farmer(this)) {
+            this.supplies.addAll(FactionSupplies.farmKit(this.supplies));
+        }
         this.stowUmbrella();
         if (origin == FactionOrigin.FLORAN) {
             this.supplies.add(FactionSupplies.water(FLORAN_WATER));
@@ -1220,6 +1303,9 @@ public class FactionMember extends Monster implements RangedAttackMob, FeudAware
         output.putInt("ShellPotions", this.powers.shellPotions());
         output.store("Sidearm", ItemStack.OPTIONAL_CODEC, this.sidearm);
         output.store("StowedMelee", ItemStack.OPTIONAL_CODEC, this.stowedMelee);
+        if (this.toolDrawn) {
+            output.store("StowedForTool", ItemStack.OPTIONAL_CODEC, this.stowedForTool);
+        }
     }
 
     @Override
@@ -1254,6 +1340,11 @@ public class FactionMember extends Monster implements RangedAttackMob, FeudAware
         this.powers.setShellPotions(input.getIntOr("ShellPotions", 0));
         this.sidearm = input.read("Sidearm", ItemStack.OPTIONAL_CODEC).orElse(ItemStack.EMPTY);
         this.stowedMelee = input.read("StowedMelee", ItemStack.OPTIONAL_CODEC).orElse(ItemStack.EMPTY);
+        input.read("StowedForTool", ItemStack.OPTIONAL_CODEC).ifPresent(stowed -> {
+            this.stowedForTool = stowed;
+            this.toolDrawn = true;
+            this.stowTool();
+        });
         this.downedState.load(input.getBooleanOr("Downed", false), input.getIntOr("DownedTicks", 0), input.getBooleanOr("SelfRevived", false));
     }
 
@@ -1265,7 +1356,15 @@ public class FactionMember extends Monster implements RangedAttackMob, FeudAware
         }
         List<ItemStack> loot = new ArrayList<>();
         this.lootSink = loot;
+        for (EquipmentSlot slot : EquipmentSlot.values()) {
+            this.setDropChance(slot, PRESERVED_DROP_CHANCE);
+        }
         super.dropAllDeathLoot(level, source);
+        // Other mods' drops, such as arrows stuck in the body, go into the corpse too.
+        for (ItemEntity dropped : level.getEntitiesOfClass(ItemEntity.class, this.getBoundingBox().inflate(1.0), item -> item.tickCount == 0)) {
+            loot.add(dropped.getItem().copy());
+            dropped.discard();
+        }
         List<ItemStack> bonus = new ArrayList<>();
         this.lootSink = bonus;
         this.dropFromLootTable(level, source, this.killedByPlayer);
@@ -1275,7 +1374,8 @@ public class FactionMember extends Monster implements RangedAttackMob, FeudAware
                 loot.add(stack);
             }
         }
-        MobCorpses.leave(level, this.position(), this.yBodyRot, "mms_dungeons:entity/factions/" + this.skin(), this.getName(), loot);
+        MobCorpses.leave(level, this.position(), this.yBodyRot, "mms_dungeons:entity/factions/" + this.skin(), this.getName(),
+            CorpseMarkers.wornBy(slot -> this.cover(slot).isEmpty() ? super.getItemBySlot(slot) : this.cover(slot)), this.getScale(), loot);
     }
 
     @Override

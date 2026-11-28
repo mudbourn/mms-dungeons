@@ -13,8 +13,10 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
@@ -51,6 +53,7 @@ final class FactionTactics {
     private static final double SAFE_DISTANCE = 8.0;
     private static final int STUCK_TICKS = 40;
     private static final double DIG_RANGE = 16.0;
+    private static final float WRONG_TOOL_PENALTY = 100.0f / 30.0f;
     private static final float MAX_HARDNESS = 5.0f;
     private static final int RETHINK_TICKS = 40;
     private static final double TARGET_RANGE = 16.0;
@@ -231,6 +234,11 @@ final class FactionTactics {
             return;
         }
         this.stuckTicks = 0;
+        // Jumps a step up the path instead of crawling.
+        if (path != null && !path.isDone() && path.getNextNodePos().getY() > this.mob.getBlockY() && this.mob.onGround()) {
+            this.mob.getJumpControl().jump();
+            return;
+        }
         // No way through on its feet: plans the route at crawl height, and crawls only when that route really runs under a block.
         this.mob.setCrawling(true);
         Path low = this.mob.getNavigation().createPath(target, 0);
@@ -259,8 +267,11 @@ final class FactionTactics {
             }
             this.digging = wall;
             this.digProgress = 0;
-            float hardness = level.getBlockState(wall).getDestroySpeed(level, wall);
-            this.digNeeded = 20 + Math.round(hardness * 30.0f);
+            BlockState state = level.getBlockState(wall);
+            float speed = this.mob.drawTool(state);
+            float hardness = state.getDestroySpeed(level, wall);
+            float penalty = state.requiresCorrectToolForDrops() && !this.mob.getMainHandItem().isCorrectToolForDrops(state) ? WRONG_TOOL_PENALTY : 1.0f;
+            this.digNeeded = 20 + Math.round(hardness * 30.0f * penalty / speed);
         }
         BlockPos wall = this.digging;
         if (this.mob.distanceToSqr(Vec3.atCenterOf(wall)) > 9.0) {
@@ -275,7 +286,13 @@ final class FactionTactics {
         }
         level.destroyBlockProgress(this.mob.getId(), wall, Math.min(9, this.digProgress * 10 / this.digNeeded));
         if (this.digProgress >= this.digNeeded) {
+            BlockState state = level.getBlockState(wall);
+            float hardness = state.getDestroySpeed(level, wall);
             level.destroyBlock(wall, true, this.mob, 512);
+            ItemStack held = this.mob.getMainHandItem();
+            if (held.has(DataComponents.TOOL) && hardness != 0.0f) {
+                held.hurtAndBreak(1, this.mob, EquipmentSlot.MAINHAND);
+            }
             this.stopDigging();
         }
         return true;
@@ -286,6 +303,7 @@ final class FactionTactics {
             level.destroyBlockProgress(this.mob.getId(), this.digging, -1);
         }
         this.digging = null;
+        this.mob.stowTool();
     }
 
     // The nearest solid block on the line from the mob's feet or head to the target.
